@@ -1,132 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - NotesRepo</title>
-  <link rel="stylesheet" href="/css/styles.css" />
-  <style>
-    body {
-      background: linear-gradient(135deg, #3498db, #2c3e50);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
-    .register-container {
-      background: white;
-      padding: 3rem;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 0.8rem;
-      font-size: 1rem;
-      color: white;
-      background-color: #3498db;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .btn-primary:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
-    }
-  </style>
-</head>
-<body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <a href="/" class="logo">NotesRepo</a>
-  </nav>
-
-  <!-- Register Container -->
-  <div class="register-container">
-    <div class="register-header">
-      <h1>Create Account</h1>
-      <p>Join NotesRepo to share and access educational resources</p>
-    </div>
-    
-    <div class="error-message" id="errorMessage"></div>
-
-    <form id="registerForm">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required placeholder="Enter your username" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="Enter your email" />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your password" />
-      </div>
-      <div class="form-group">
-        <label for="userType">I am a:</label>
-        <select id="userType" name="userType" required>
-          <option value="">Select User Type</option>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-        </select>
-      </div>
-      <button type="submit" class="btn-primary">Create Account</button>
-    </form>
-
-    <div class="footer-links">
-      <a href="login.html">Already have an account?</a>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById("registerForm").addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const username = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const userType = document.getElementById("userType").value;
-
-      try {
-        const response = await fetch("http://localhost:3000/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email, password, userType }),
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          document.getElementById("errorMessage").textContent = error.message;
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes-Repo App - Teacher Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        const data = await response.json();
-        localStorage.setItem("jwt", data.token);
-        window.location.href = data.location; // Redirect to homepage
-      } catch (error) {
-        console.error(error);
-        document.getElementById("errorMessage").textContent = "An error occurred. Please try again.";
-      }
-    });
-  </script>
+        body {
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .profile-logo {
+            width: 80px;
+            height: 80px;
+            background: #74ebd5;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            border: 3px solid #acb6e5;
+            animation: bounceIn 1s ease-out;
+        }
+
+        .profile-card h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .profile-card p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .upload-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #uploadForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #uploadForm input, #uploadForm textarea, #uploadForm select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        #uploadForm textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        #uploadForm button {
+            padding: 12px;
+            background: #74ebd5;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #uploadForm button:hover {
+            background: #acb6e5;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Add auth script -->
+    <script src="/js/auth.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000'; // Adjust to your backend URL
+        const token = localStorage.getItem('token') || new URLSearchParams(window.location.search).get('token');
+
+        if (!token) {
+            window.location.href = '/login.html'; // Redirect to login if no token
+        } else {
+            localStorage.setItem('token', token); // Store token for future requests
+        }
+
+        // Fetch User Data
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await response.json();
+                if (!response.ok) throw new Error(user.message);
+
+                if (user.userType !== 'teacher') {
+                    alert('Access denied. Only teachers can access this dashboard.');
+                    window.location.href = '/student-dashboard.html';
+                    return;
+                }
+
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('email').textContent = user.email;
+                document.getElementById('profileLogo').textContent = user.username.slice(0, 2).toUpperCase();
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                alert('Session expired or invalid. Please log in again.');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Handle Notes Upload
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('file', document.getElementById('file').files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/notes/`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message);
+
+                alert('Note uploaded successfully!');
+                document.getElementById('uploadForm').reset(); // Clear form after upload
+            } catch (error) {
+                console.error('Error uploading note:', error);
+                alert('Error uploading note: ' + error.message);
+            }
+        });
+
+        // Initialize Dashboard
+        fetchUserData();
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check for authentication
+            initAuth();
+            
+            // Load dashboard content only if authenticated
+            if (authState.token && authState.user) {
+                // Verify teacher role
+                if (authState.user.userType !== 'teacher') {
+                    window.location.href = "/student-dashboard";
+                    return;
+                }
+                
+                loadDashboardContent();
+            }
+        });
+        
+        async function loadDashboardContent() {
+            // Use the apiRequest wrapper which handles token refresh
+            try {
+                const response = await apiRequest('/api/notes/teacher-notes');
+                
+                if (!response.ok) {
+                    showError("Failed to load notes. Please try again later.");
+                    return;
+                }
+                
+                const data = await response.json();
+                // ... existing code to display notes ...
+            } catch (error) {
+                console.error("Error loading dashboard:", error);
+                showError("An error occurred while loading your notes.");
+            }
+        }
+
+        // Check authorization on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a token from localStorage to the query string for server validation
+            const token = localStorage.getItem('jwt');
+            if (token) {
+                // Add Authorization header to subsequent requests
+                const headers = new Headers();
+                headers.append('Authorization', `Bearer ${token}`);
+                
+                // Make a fetch request to current page with Authorization header
+                fetch(window.location.pathname, {
+                    headers: headers,
+                    credentials: 'include'
+                }).catch(error => {
+                    console.error('Error validating token:', error);
+                });
+            }
+            
+            checkAuth('teacher');
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/" class="logo">NotesRepo</a>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li class="teacher-only"><a href="/teacher-dashboard">Dashboard</a></li>
+                <li class="auth-only"><a href="/upload.html">Upload Notes</a></li>
+                <li class="auth-only">
+                    <button id="logoutBtn" class="btn-logout">Logout</button>
+                </li>
+                <li class="auth-only user-info">
+                    <span id="userInfo"></span>
+                </li>
+            </ul>
+            <div class="menu-toggle">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-logo" id="profileLogo"></div>
+            <h2 id="username"></h2>
+            <p id="email"></p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>Upload Notes</h2>
+            <form id="uploadForm">
+                <input type="text" id="title" placeholder="Title" required>
+                <textarea id="description" placeholder="Description" required></textarea>
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Math">Math</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="English">English</option>
+                    <option value="Programming">Programming</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="file" id="file" accept=".pdf,.docx,.txt" required>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

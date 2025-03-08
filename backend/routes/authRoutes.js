@@ -3,47 +3,89 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const passport = require("passport");
-const authenticateToken = require("../middleware/authMiddleware"); // Import the authenticateToken middleware
+const path = require("path");
+const crypto = require('crypto');
+const { authenticateToken, authorizeRole, verifyRefreshToken } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
+// Generate CSRF token
+const generateCSRFToken = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
 
-// Helper function to create a JWT token
-const generateToken = (user) => {
-  return jwt.sign(
-    { userId: user._id, email: user.email, userType: user.userType },
+// Helper function to create JWT tokens
+const generateTokens = (user) => {
+  // Access token - short lived (from env or default to 15 minutes)
+  const accessTokenExpiry = process.env.ACCESS_TOKEN_EXPIRY || '3600'; // 60 minutes in seconds by default
+  
+  // Create the token payload
+  const payload = { 
+    userId: user._id, 
+    email: user.email, 
+    userType: user.userType 
+  };
+  
+  // Log the payload and expiration for debugging
+  console.log("Token payload:", payload);
+  console.log("Token will expire in:", accessTokenExpiry, "seconds");
+  console.log("Token will expire at:", new Date(Date.now() + parseInt(accessTokenExpiry) * 1000));
+  
+  const accessToken = jwt.sign(
+    payload,
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: `${accessTokenExpiry}s` }
   );
+  
+  // Refresh token - longer lived (from env or default to 7 days)
+  const refreshTokenExpiry = process.env.REFRESH_TOKEN_EXPIRY || '604800'; // 7 days in seconds
+  
+  const refreshToken = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+    { expiresIn: `${refreshTokenExpiry}s` }
+  );
+  
+  // Generate CSRF token
+  const csrfToken = generateCSRFToken();
+  
+  return { accessToken, refreshToken, csrfToken };
+};
+
+// Cookie options for HTTP-only cookies
+const cookieOptions = {
+  httpOnly: process.env.COOKIE_HTTP_ONLY === 'true', // Makes cookie inaccessible to client-side JavaScript
+  secure: process.env.COOKIE_SECURE === 'true', // Only send cookie over HTTPS in production
+  sameSite: process.env.COOKIE_SAME_SITE || 'strict', // Protects against CSRF attacks
+  maxAge: (parseInt(process.env.REFRESH_TOKEN_EXPIRY) || 604800) * 1000, // Convert seconds to milliseconds
+  path: '/' // Cookie available across the entire site
 };
 
 router.get("/signup.html", (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', '..', 'frontend', 'src', 'signup.html'));
+  res.sendFile(path.resolve(__dirname, '..', '..', 'frontend', process.env.NODE_ENV === 'production' ? 'dist' : 'src', 'signup.html'));
 });
 
-
-router.get("/user/me", authenticateToken, async (req, res) => { 
-
-
-    try {
-    const user = await User.findById(req.user.userId).select("-password"); 
+router.get("/user/me", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-        if (!user) return res.status(404).json({ message: "User not found" });
-        res.json(user);
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 // 🔒 Login route
 router.post("/login", async (req, res) => {
   try {
+    console.log("Login attempt:", req.body.email);
     const { email, password } = req.body;
 
     // Validate input
     if (!email || !password) {
+      console.log("Missing email or password");
       return res.status(400).json({ 
         success: false,
         message: "Email and password are required" 
@@ -53,6 +95,7 @@ router.post("/login", async (req, res) => {
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found:", email);
       return res.status(401).json({ 
         success: false,
         message: "Invalid email or password" 
@@ -61,6 +104,7 @@ router.post("/login", async (req, res) => {
 
     // For Google OAuth users who don't have a password
     if (!user.password) {
+      console.log("User has no password (OAuth user):", email);
       return res.status(401).json({ 
         success: false,
         message: "Please login with Google" 
@@ -68,43 +112,140 @@ router.post("/login", async (req, res) => {
     }
 
     // Verify password
+    console.log("Verifying password for:", email);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("Password verification failed for:", email);
       return res.status(401).json({ 
         success: false,
         message: "Invalid email or password" 
       });
     }
+    
+    console.log("Password verified successfully for:", email);
 
-    // Generate token
-    const token = generateToken(user);
+    // Generate tokens
+    const { accessToken, refreshToken, csrfToken } = generateTokens(user);
+
+    // Set refresh token as HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, cookieOptions);
+    
+    // Set CSRF token as a regular cookie (accessible to JavaScript)
+    res.cookie('csrf_token', csrfToken, { 
+      ...cookieOptions,
+      httpOnly: false // Make accessible to client JavaScript
+    });
+
+    // Log token information (remove in production)
+    console.log(`Login successful for ${email}. Tokens generated.`);
+    console.log(`CSRF token set: ${csrfToken.substring(0, 10)}...`);
 
     // Determine redirect URL
     let redirectUrl = "/index.html";
     if (user.userType === "student") {
-      redirectUrl = "/student-dashboard.html";
+      redirectUrl = "/student-dashboard";
     } else if (user.userType === "teacher") {
-      redirectUrl = "/teacher-dashboard.html";
+      redirectUrl = "/teacher-dashboard";
     }
 
-    // Send response
+    // Send response with access token (but not refresh token)
     res.json({
       success: true,
-      token,
-      userType: user.userType,
+      accessToken: accessToken, // Use consistent naming (accessToken instead of token)
       user: {
         id: user._id,
         email: user.email,
         username: user.username,
         userType: user.userType
       },
+      csrfToken: csrfToken,
       location: redirectUrl
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Server error during login" 
+      message: "Internal server error during login",
+      details: error.message
+    });
+  }
+});
+
+// Refresh token endpoint
+router.post("/refresh-token", verifyRefreshToken, async (req, res) => {
+  try {
+    // Get user from database
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Generate new tokens
+    const { accessToken, refreshToken, csrfToken } = generateTokens(user);
+    
+    // Set new refresh token as HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, cookieOptions);
+    
+    // Update CSRF token
+    res.cookie('csrf_token', csrfToken, { 
+      ...cookieOptions,
+      httpOnly: false 
+    });
+    
+    // Log refreshed tokens (remove in production)
+    console.log(`Tokens refreshed for user ${user._id}`);
+    console.log(`New CSRF token set: ${csrfToken.substring(0, 10)}...`);
+    
+    // Send new access token with consistent naming
+    res.json({ 
+      accessToken: accessToken,
+      csrfToken: csrfToken 
+    });
+  } catch (error) {
+    console.error("Token refresh error:", error);
+    res.status(500).json({ 
+      message: "Error refreshing token",
+      details: error.message
+    });
+  }
+});
+
+// Logout route
+router.post("/logout", (req, res) => {
+  // Clear the refresh token cookie
+  res.clearCookie('refreshToken', {
+    ...cookieOptions,
+    maxAge: 0
+  });
+  
+  // Clear CSRF token
+  res.clearCookie('csrf_token', {
+    ...cookieOptions,
+    httpOnly: false,
+    maxAge: 0
+  });
+  
+  res.json({ success: true, message: "Logged out successfully" });
+});
+
+// CSRF token endpoint
+router.get("/csrf-token", (req, res) => {
+  try {
+    // Generate a new CSRF token
+    const csrfToken = generateCSRFToken();
+    
+    // Set CSRF token as a cookie accessible to JavaScript
+    res.cookie('csrf_token', csrfToken, { 
+      ...cookieOptions,
+      httpOnly: false // Make accessible to client JavaScript
+    });
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error generating CSRF token:", error);
+    res.status(500).json({ 
+      message: "Error generating security token",
+      details: error.message
     });
   }
 });
@@ -122,11 +263,25 @@ router.post("/register", async (req, res) => {
     if (!["student", "teacher"].includes(userType)) {
       return res.status(400).json({ message: "Invalid user type" });
     }
+    
+    // Validate password strength
+    const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ 
+        message: "Password must be at least 6 characters long, contain at least one number and one uppercase letter." 
+      });
+    }
 
-    // Check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Check if email exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Check if username exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: "Username already taken" });
     }
 
     // Hash password
@@ -143,13 +298,27 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    // Generate token
-    const token = generateToken(user);
+    // Generate tokens
+    const { accessToken, refreshToken, csrfToken } = generateTokens(user);
+    
+    // Set refresh token as HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, cookieOptions);
+    
+    // Set CSRF token as a regular cookie (accessible to JavaScript)
+    res.cookie('csrf_token', csrfToken, { 
+      ...cookieOptions,
+      httpOnly: false // Make accessible to client JavaScript
+    });
+    
+    // Log token information (remove in production)
+    console.log(`Registration successful for ${email}. Tokens generated.`);
+    console.log(`CSRF token set: ${csrfToken.substring(0, 10)}...`);
 
     // Send response
     res.status(201).json({
-      token,
+      token: accessToken,
       userType: user.userType,
+      csrfToken: csrfToken,
       user: {
         id: user._id,
         email: user.email,
@@ -159,87 +328,17 @@ router.post("/register", async (req, res) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Server error during registration" });
+    res.status(500).json({ message: "Server error during registration", error: error.message });
   }
 });
 
 // Get current user
-router.get("/me", async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "No token provided" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId).select("-password");
-    
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.json(user);
-  } catch (error) {
-    console.error("Get user error:", error);
-    res.status(500).json({ message: "Server error while getting user data" });
-  }
-});
-
-// Google OAuth routes
-router.get("/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"]
-  })
-);
-
-router.get("/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect: "/login" }),
-  (req, res) => {
-    try {
-      const token = generateToken(req.user);
-      const redirectUrl = req.user.userType === "teacher" ? "/teacher-dashboard" : "/student-dashboard";
-      
-      // Redirect with token
-      res.redirect(`${redirectUrl}?token=${token}`);
-    } catch (error) {
-      console.error("Google callback error:", error);
-      res.redirect("/login?error=auth_failed");
-    }
-  }
-);
-
-// Check if user exists by email
-router.post("/check-user", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required"
-      });
-    }
-
-    // Check if user exists
-    const user = await User.findOne({ email }).select("email userType");
-    
-    res.json({
-      success: true,
-      exists: !!user,
-      userType: user?.userType
-    });
-  } catch (error) {
-    console.error("Check user error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while checking user"
-    });
-  }
-});
-
-// 🔥 Global error handler middleware
-router.use((err, req, res, next) => {
-  res.status(500).json({ message: "Internal Server Error" });
+router.get("/me", authenticateToken, (req, res) => {
+  res.json({
+    userId: req.user.userId,
+    email: req.user.email,
+    userType: req.user.userType
+  });
 });
 
 module.exports = router;

@@ -184,8 +184,54 @@
             }
         }
     </style>
+    <!-- Add auth script -->
+    <script src="/js/auth.js"></script>
+    <script>
+        // Check authorization on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a token from localStorage to the query string for server validation
+            const token = localStorage.getItem('jwt');
+            if (token) {
+                // Add Authorization header to subsequent requests
+                const headers = new Headers();
+                headers.append('Authorization', `Bearer ${token}`);
+                
+                // Make a fetch request to current page with Authorization header
+                fetch(window.location.pathname, {
+                    headers: headers,
+                    credentials: 'include'
+                }).catch(error => {
+                    console.error('Error validating token:', error);
+                });
+            }
+            
+            checkAuth('student');
+        });
+    </script>
 </head>
 <body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/" class="logo">NotesRepo</a>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li class="student-only"><a href="/student-dashboard">Dashboard</a></li>
+                <li class="auth-only"><a href="/upload.html">Upload Notes</a></li>
+                <li class="auth-only">
+                    <button id="logoutBtn" class="btn-logout">Logout</button>
+                </li>
+                <li class="auth-only user-info">
+                    <span id="userInfo"></span>
+                </li>
+            </ul>
+            <div class="menu-toggle">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+
     <div class="dashboard">
         <!-- Profile Card -->
         <div class="profile-card">
@@ -197,7 +243,7 @@
         <!-- Notes Section -->
         <div class="notes-section">
             <h2>Study Notes</h2>
-            <div class="notes-list" id="notesList"></div>
+            <div class="notes-list" id="notes-list"></div>
         </div>
     </div>
 
@@ -211,93 +257,6 @@
         </div>
     </div>
 
-    <script>
-        const API_BASE_URL = 'http://localhost:3000'; // Adjust to your backend URL
-        const token = localStorage.getItem('token') || new URLSearchParams(window.location.search).get('token');
-
-        if (!token) {
-            window.location.href = '/login.html'; // Redirect to login if no token
-        } else {
-            localStorage.setItem('token', token); // Store token for future requests
-        }
-
-        // Fetch User Data
-        async function fetchUserData() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/user/me`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const user = await response.json();
-                if (!response.ok) throw new Error(user.message);
-
-                document.getElementById('username').textContent = user.username;
-                document.getElementById('email').textContent = user.email;
-                document.getElementById('profileLogo').textContent = user.username.slice(0, 2).toUpperCase();
-            } catch (error) {
-                console.error('Error fetching user:', error);
-                alert('Session expired or invalid. Please log in again.');
-                window.location.href = '/login.html';
-            }
-        }
-
-        // Fetch Notes
-        async function fetchNotes() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/notes/`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const notes = await response.json();
-                if (!response.ok) throw new Error(notes.message);
-
-                const notesList = document.getElementById('notesList');
-                notesList.innerHTML = '';
-                notes.forEach((note, index) => {
-                    const noteItem = document.createElement('div');
-                    noteItem.className = 'note-item';
-                    noteItem.style = `--delay: ${index * 0.2}s`;
-                    noteItem.innerHTML = `
-                        <span>${note.title} (${note.category})</span>
-                        <button onclick="viewNote('${note._id}')">View</button>
-                    `;
-                    notesList.appendChild(noteItem);
-                });
-            } catch (error) {
-                console.error('Error fetching notes:', error);
-                document.getElementById('notesList').innerHTML = '<p>Error loading notes.</p>';
-            }
-        }
-
-        // View Note Details
-        async function viewNote(noteId) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/notes/${noteId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const note = await response.json();
-                if (!response.ok) throw new Error(note.message);
-
-                document.getElementById('noteTitle').textContent = note.title;
-                document.getElementById('noteContent').textContent = note.description;
-                document.getElementById('noteFileLink').href = note.fileUrl;
-                document.getElementById('noteModal').style.display = 'flex';
-            } catch (error) {
-                console.error('Error fetching note:', error);
-                alert('Error loading note details.');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('noteModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('noteModal');
-            if (event.target === modal) closeModal();
-        }
-
-        // Initialize Dashboard
-        fetchUserData();
-        fetchNotes();
-    </script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

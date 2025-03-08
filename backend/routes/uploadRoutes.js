@@ -1,68 +1,69 @@
 const express = require("express");
 const multer = require("multer");
-const jwt = require("jsonwebtoken");
 const noteController = require("../controllers/noteController");
+const path = require("path");
+const { authenticateToken, authorizeRole } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Configure storage for file uploads
 const storage = multer.diskStorage({
   destination: process.env.UPLOADS_PATH || "uploads/",
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
-
-// Multer configuration with file type and size validation
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
-    ];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error("Only PDF, DOCX, and TXT files are allowed"));
-    }
-    cb(null, true);
+  filename: (req, file, cb) => {
+    // Create a safe filename
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   },
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
 
-// Middleware for authentication
-const authenticate = (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Access denied. No token provided." });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId; // Ensure this matches your JWT payload structure
-
-    next();
-  } catch (error) {
-    console.error("Authentication error:", error.message);
-    return res.status(401).json({ message: "Invalid or expired token" });
+// Validate file type by both extension and MIME type
+const fileFilter = (req, file, cb) => {
+  // Get file extension
+  const ext = path.extname(file.originalname).toLowerCase();
+  
+  // Check both extension and MIME type
+  const allowedExtensions = ['.pdf', '.docx', '.txt'];
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+  
+  if (allowedExtensions.includes(ext) && allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF, DOCX, and TXT files are allowed!"), false);
   }
 };
 
-// Upload route: first process file upload, then call createNote controller
-router.post(
-  "/",
-  upload.single("file"), // Ensure file upload runs before authentication
-  authenticate,
-  async (req, res, next) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ message: "File upload is required" });
-      }
-      next();
-    } catch (error) {
-      console.error("File upload error:", error.message);
-      return res.status(500).json({ message: "Error processing file upload" });
-    }
+// Configure multer with our settings
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB size limit
   },
-  noteController.createNote
+});
+
+// 📤 Upload Routes - Teachers only can upload notes
+router.post("/", 
+  authenticateToken, 
+  authorizeRole(['teacher']), 
+  upload.single("file"), 
+  noteController.uploadNote
+);
+
+// Get teacher's uploaded notes
+router.get("/teacher-notes", 
+  authenticateToken, 
+  authorizeRole(['teacher']), 
+  noteController.getTeacherNotes
+);
+
+// Get student-accessible notes
+router.get("/user-notes", 
+  authenticateToken, 
+  noteController.getUserNotes
 );
 
 module.exports = router;
