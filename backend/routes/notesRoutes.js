@@ -4,20 +4,35 @@ const { authenticateToken, authorizeRole } = require("../middleware/authMiddlewa
 
 const router = express.Router();
 
-// 📝 Notes Routes - All authenticated users can access
-router.get("/", authenticateToken, noteController.getNotes);
-router.get("/:id", authenticateToken, noteController.getNoteById);
-
-// 📝 Notes Routes - Only teachers can modify notes
-router.put("/:id", 
+// Get all user-accessible notes (for students)
+router.get("/user-notes", 
   authenticateToken, 
-  authorizeRole(['teacher']),
-  noteController.updateNote
+  noteController.getUserNotes
 );
 
+// Get teacher's uploaded notes
+router.get("/teacher-notes", 
+  authenticateToken, 
+  authorizeRole(['teacher']), 
+  noteController.getTeacherNotes
+);
+
+// Download a note
+router.get("/download/:id", 
+  authenticateToken, 
+  noteController.downloadNote
+);
+
+// Get a specific note
+router.get("/:id", 
+  authenticateToken, 
+  noteController.getNote
+);
+
+// Delete a note (teachers only)
 router.delete("/:id", 
   authenticateToken, 
-  authorizeRole(['teacher']),
+  authorizeRole(['teacher']), 
   noteController.deleteNote
 );
 

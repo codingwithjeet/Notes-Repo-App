@@ -23,7 +23,20 @@ const PORT = process.env.PORT || 3000; // 🎯 Set port
 // Ensure uploads directory exists
 const uploadsDir = process.env.UPLOADS_PATH || "./uploads";
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log(`✅ Uploads directory created at ${uploadsDir}`);
+  } catch (error) {
+    console.error(`❌ Error creating uploads directory: ${error.message}`);
+  }
+}
+
+// Check and set proper permissions for uploads directory
+try {
+  fs.chmodSync(uploadsDir, 0o755);
+  console.log(`✅ Permissions set for uploads directory`);
+} catch (error) {
+  console.error(`❌ Error setting permissions for uploads directory: ${error.message}`);
 }
 
 // Middleware 🔧
@@ -48,8 +61,27 @@ app.use(cors({
   },
   credentials: true, // Important for cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-CSRF-Token']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
 }));
+
+// Debugging middleware to log all requests and responses
+app.use((req, res, next) => {
+  const start = Date.now();
+  console.log(`📥 ${req.method} ${req.url} - Request received`);
+  
+  // Log request body for non-file uploads
+  if (req.method !== 'GET' && !req.headers['content-type']?.includes('multipart/form-data')) {
+    console.log('Request body:', req.body);
+  }
+  
+  // Log when the response is finished
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`📤 ${req.method} ${req.url} - Response: ${res.statusCode} (${duration}ms)`);
+  });
+  
+  next();
+});
 
 // Security headers middleware
 app.use((req, res, next) => {
@@ -165,6 +197,40 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", uploadRoutes);
 app.use("/api/notes", notesRoutes);
+
+// CSRF Protection
+app.use(function(req, res, next) {
+  // Skip CSRF check for GET requests and non-API routes
+  if (req.method === 'GET' || !req.path.startsWith('/api/')) {
+    return next();
+  }
+  
+  // Skip CSRF check for multipart form data (file uploads)
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.includes('multipart/form-data')) {
+    console.log('Skipping CSRF check for file upload');
+    return next();
+  }
+  
+  // Check for CSRF token in headers
+  const csrfToken = req.headers['x-csrf-token'];
+  const cookieCsrfToken = req.cookies.csrf_token;
+  
+  if (!csrfToken || !cookieCsrfToken || csrfToken !== cookieCsrfToken) {
+    console.log('CSRF token validation failed:', { 
+      headerToken: csrfToken ? 'present' : 'missing',
+      cookieToken: cookieCsrfToken ? 'present' : 'missing',
+      match: csrfToken === cookieCsrfToken
+    });
+    
+    return res.status(403).json({ 
+      message: 'CSRF token missing or invalid',
+      error: 'CSRF verification failed'
+    });
+  }
+  
+  next();
+});
 
 // Create a middleware to verify access to protected pages
 const verifyPageAccess = (allowedRoles) => {
@@ -307,11 +373,36 @@ app.use((req, res, next) => {
   next();
 });
 
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Server error:', err);
-  res.status(500).json({ message: "Internal server error" });
+// Start server 🚀
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📁 File uploads directory: ${process.env.UPLOADS_PATH || "./uploads"}`);
 });
 
-// Start server 🚀
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}!`));
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  
+  // Handle multer errors
+  if (err.name === 'MulterError') {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File too large' });
+    }
+    return res.status(400).json({ message: `Upload error: ${err.message}` });
+  }
+  
+  // Handle validation errors
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({ 
+      message: 'Validation error', 
+      errors: Object.values(err.errors).map(e => e.message) 
+    });
+  }
+  
+  // Default error response
+  res.status(500).json({ 
+    message: 'An error occurred', 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});

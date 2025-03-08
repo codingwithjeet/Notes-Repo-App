@@ -6,40 +6,101 @@ const path = require('path');
 // Upload a new note (for teachers)
 exports.uploadNote = async (req, res) => {
   try {
+    console.log('Starting note upload process');
+    
+    if (!req.file) {
+      console.error('No file found in request');
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    console.log('File details:', {
+      path: req.file.path,
+      originalname: req.file.originalname,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    });
+
     const { title, description, category } = req.body;
-
-    if (!title || !description || !category || !req.file) {
-      return res.status(400).json({ message: "All fields (title, description, category, and file) are required" });
+    console.log('Note details:', { title, description, category });
+    
+    if (!title || !description || !category) {
+      // Delete the uploaded file if request is invalid
+      console.error('Missing required fields');
+      if (req.file && req.file.path) {
+        fs.unlinkSync(req.file.path);
+      }
+      return res.status(400).json({ message: 'Please provide title, description, and category' });
     }
 
-    // Validate title length
-    if (title.length < 3 || title.length > 100) {
-      return res.status(400).json({ message: "Title must be between 3 and 100 characters" });
+    console.log('Request user:', req.user);
+
+    // Make sure we have all required user data
+    if (!req.user || !req.userId) {
+      console.error('Missing user data in request');
+      if (req.file && req.file.path) {
+        fs.unlinkSync(req.file.path);
+      }
+      return res.status(401).json({ message: 'User authentication data missing' });
     }
 
-    // Validate description length
-    if (description.length < 10 || description.length > 500) {
-      return res.status(400).json({ message: "Description must be between 10 and 500 characters" });
-    }
-
-    // File path saved by multer
-    const fileUrl = req.file.path;
-
+    // Create new note
     const newNote = new Note({
       title,
       description,
       category,
-      fileUrl,
-      user: req.user.userId, // Now using req.user.userId from JWT
+      teacherId: req.userId,
+      teacher: req.user.email || 'Teacher',
+      filePath: req.file.path,
+      fileOriginalName: req.file.originalname,
+      fileSize: req.file.size,
+      fileType: req.file.mimetype
     });
 
-    await newNote.save();
-    res.status(201).json({ message: "Note created successfully", note: newNote });
+    console.log('Created new note object:', newNote);
 
-    console.log("✅ New note created:", newNote);
+    // Save to database
+    const savedNote = await newNote.save();
+    console.log('Note saved successfully with ID:', savedNote._id);
+    
+    res.status(201).json({
+      message: 'Note uploaded successfully',
+      note: {
+        id: savedNote._id,
+        title: savedNote.title,
+        description: savedNote.description,
+        category: savedNote.category,
+        uploadDate: savedNote.uploadDate,
+        downloadUrl: `/api/notes/download/${savedNote._id}`
+      }
+    });
   } catch (error) {
-    console.error("❌ Error creating note:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error uploading note:', error);
+    
+    // Delete the uploaded file if saving to database fails
+    if (req.file && req.file.path) {
+      try {
+        fs.unlinkSync(req.file.path);
+        console.log('Deleted temporary file after error:', req.file.path);
+      } catch (unlinkError) {
+        console.error('Error deleting temporary file:', unlinkError);
+      }
+    }
+    
+    // Send detailed error response for debugging
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: 'Validation error', 
+        errors: validationErrors,
+        details: error.message
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Failed to upload note', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 
@@ -58,120 +119,105 @@ exports.getNotes = async (req, res) => {
 // Get notes uploaded by the teacher
 exports.getTeacherNotes = async (req, res) => {
   try {
-    // Get notes created by this teacher
-    const notes = await Note.find({ user: req.user.userId });
+    const teacherId = req.userId;
+    const notes = await Note.find({ teacherId })
+      .sort({ uploadDate: -1 });
+    
     res.status(200).json(notes);
   } catch (error) {
-    console.error("❌ Error fetching teacher notes:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error fetching teacher notes:', error);
+    res.status(500).json({ message: 'Failed to fetch your notes', error: error.message });
   }
 };
 
 // Get notes for students to access
 exports.getUserNotes = async (req, res) => {
   try {
-    // For students, return all notes
-    // For teachers, return their own notes
-    let notes;
-    
-    if (req.user.userType === 'student') {
-      notes = await Note.find().populate('user', 'username');
-    } else {
-      notes = await Note.find({ user: req.user.userId });
-    }
+    const notes = await Note.find({})
+      .select('title description category uploadDate teacher')
+      .sort({ uploadDate: -1 });
     
     res.status(200).json(notes);
   } catch (error) {
-    console.error("❌ Error fetching user notes:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error fetching notes:', error);
+    res.status(500).json({ message: 'Failed to fetch notes', error: error.message });
   }
 };
 
 // Get a specific note
-exports.getNoteById = async (req, res) => {
+exports.getNote = async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
+    const noteId = req.params.id;
+    const note = await Note.findById(noteId);
     
     if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-    
-    // For non-teacher users, check if they have access
-    if (req.user.userType !== 'teacher' && note.user.toString() !== req.user.userId) {
-      // Check if note is marked as restricted
-      if (note.isRestricted) {
-        return res.status(403).json({ message: "You don't have permission to access this note" });
-      }
+      return res.status(404).json({ message: 'Note not found' });
     }
     
     res.status(200).json(note);
   } catch (error) {
-    console.error("❌ Error fetching note:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error fetching note:', error);
+    res.status(500).json({ message: 'Failed to fetch note', error: error.message });
   }
 };
 
-// Update a note (teachers only)
-exports.updateNote = async (req, res) => {
+// Download a note
+exports.downloadNote = async (req, res) => {
   try {
-    const { title, description, category, isRestricted } = req.body;
-    
-    // Find the note
-    const note = await Note.findById(req.params.id);
+    const noteId = req.params.id;
+    const note = await Note.findById(noteId);
     
     if (!note) {
-      return res.status(404).json({ message: "Note not found" });
+      return res.status(404).json({ message: 'Note not found' });
     }
     
-    // Check if user owns this note
-    if (note.user.toString() !== req.user.userId) {
-      return res.status(403).json({ message: "You don't have permission to update this note" });
+    // Check if file exists
+    if (!fs.existsSync(note.filePath)) {
+      return res.status(404).json({ message: 'File not found' });
     }
     
-    // Update fields if provided
-    if (title) note.title = title;
-    if (description) note.description = description;
-    if (category) note.category = category;
-    if (isRestricted !== undefined) note.isRestricted = isRestricted;
+    // Set appropriate headers
+    res.setHeader('Content-Disposition', `attachment; filename="${note.fileOriginalName}"`);
+    res.setHeader('Content-Type', note.fileType);
     
-    await note.save();
-    res.status(200).json({ message: "Note updated successfully", note });
+    // Stream the file to the client
+    const fileStream = fs.createReadStream(note.filePath);
+    fileStream.pipe(res);
   } catch (error) {
-    console.error("❌ Error updating note:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error downloading note:', error);
+    res.status(500).json({ message: 'Failed to download note', error: error.message });
   }
 };
 
 // Delete a note (teachers only)
 exports.deleteNote = async (req, res) => {
   try {
-    // Find the note
-    const note = await Note.findById(req.params.id);
+    const noteId = req.params.id;
+    const teacherId = req.userId;
+    
+    const note = await Note.findById(noteId);
     
     if (!note) {
-      return res.status(404).json({ message: "Note not found" });
+      return res.status(404).json({ message: 'Note not found' });
     }
     
-    // Check if user owns this note
-    if (note.user.toString() !== req.user.userId) {
-      return res.status(403).json({ message: "You don't have permission to delete this note" });
+    // Ensure the teacher owns this note
+    if (note.teacherId.toString() !== teacherId) {
+      return res.status(403).json({ message: 'You are not authorized to delete this note' });
     }
     
-    // Delete the associated file if it exists
-    if (note.fileUrl) {
-      const filePath = path.resolve(note.fileUrl);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+    // Delete the file from the filesystem
+    if (fs.existsSync(note.filePath)) {
+      fs.unlinkSync(note.filePath);
     }
     
-    // Delete the note from the database
-    await Note.findByIdAndDelete(req.params.id);
+    // Delete from database
+    await Note.findByIdAndDelete(noteId);
     
-    res.status(200).json({ message: "Note deleted successfully" });
+    res.status(200).json({ message: 'Note deleted successfully' });
   } catch (error) {
-    console.error("❌ Error deleting note:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error deleting note:', error);
+    res.status(500).json({ message: 'Failed to delete note', error: error.message });
   }
 };
 
@@ -181,7 +227,7 @@ module.exports = {
   getNotes: exports.getNotes,
   getTeacherNotes: exports.getTeacherNotes,
   getUserNotes: exports.getUserNotes,
-  getNoteById: exports.getNoteById,
-  updateNote: exports.updateNote,
+  getNote: exports.getNote,
+  downloadNote: exports.downloadNote,
   deleteNote: exports.deleteNote,
 };

@@ -13,309 +13,993 @@
         }
 
         body {
-            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            animation: bgPulse 10s infinite alternate;
         }
 
         .dashboard {
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px;
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
+            grid-template-columns: 1fr 3fr;
+            gap: 25px;
             animation: fadeIn 1s ease-out;
         }
 
         /* Profile Card */
         .profile-card {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             text-align: center;
             animation: slideInLeft 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
         }
 
         .profile-logo {
-            width: 80px;
-            height: 80px;
-            background: #74ebd5;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
+            margin: 0 auto 20px;
+            font-size: 40px;
             font-weight: bold;
             color: #fff;
-            border: 3px solid #acb6e5;
+            border: 5px solid #fff;
             animation: bounceIn 1s ease-out;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .profile-card h2 {
-            font-size: 22px;
+            font-size: 1.8rem;
             color: #333;
             margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease-out both;
         }
 
         .profile-card p {
-            font-size: 16px;
+            font-size: 1.1rem;
             color: #666;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
         }
 
-        /* Upload Section */
-        .upload-section {
-            background: #fff;
+        .teacher-info {
+            background: rgba(58, 123, 213, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .teacher-info p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .teacher-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .teacher-info i {
+            margin-right: 10px;
+            color: #3a7bd5;
+            font-size: 1.1rem;
+        }
+
+        /* Upload and Management Section */
+        .management-section {
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             animation: slideInRight 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            overflow: hidden;
         }
 
-        .upload-section h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab:hover {
+            color: #3a7bd5;
+        }
+
+        .tab.active {
+            color: #3a7bd5;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+            animation: fadeIn 0.5s ease-out;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Upload Form */
         #uploadForm {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
-        #uploadForm input, #uploadForm textarea, #uploadForm select {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        #uploadForm textarea {
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
             resize: vertical;
-            min-height: 100px;
         }
 
-        #uploadForm button {
-            padding: 12px;
-            background: #74ebd5;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
+        .file-input-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.1), rgba(0, 210, 255, 0.1));
+            border: 2px dashed #3a7bd5;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            color: #3a7bd5;
+            font-weight: 500;
         }
 
-        #uploadForm button:hover {
-            background: #acb6e5;
+        .file-input-label:hover {
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.2), rgba(0, 210, 255, 0.2));
+        }
+
+        #file {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .upload-btn {
+            padding: 16px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(58, 123, 213, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(58, 123, 213, 0.4);
+        }
+
+        /* My Notes Section */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .note-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-header {
+            padding: 20px;
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.1), rgba(0, 210, 255, 0.1));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .note-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(58, 123, 213, 0.2);
+            color: #3a7bd5;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .note-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .note-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .note-footer {
+            display: flex;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-action {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            color: #3a7bd5;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .note-action:hover {
+            background: rgba(58, 123, 213, 0.1);
+        }
+
+        .note-action:not(:last-child) {
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-action i {
+            font-size: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #888;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: zoomIn 0.4s ease-out;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: white;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-message {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+            border-left: 4px solid #2ed573;
+        }
+
+        .error-message {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+            border-left: 4px solid #ff4757;
         }
 
         /* Animations */
+        @keyframes bgPulse {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
         @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
+            from { transform: translateX(-100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-
         @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
+            from { transform: translateX(100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         @keyframes bounceIn {
             0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+        
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
+            
+            .profile-card {
+                margin-bottom: 20px;
+            }
+            
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Add auth script -->
     <script src="/js/auth.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3000'; // Adjust to your backend URL
-        const token = localStorage.getItem('token') || new URLSearchParams(window.location.search).get('token');
-
-        if (!token) {
-            window.location.href = '/login.html'; // Redirect to login if no token
-        } else {
-            localStorage.setItem('token', token); // Store token for future requests
-        }
-
-        // Fetch User Data
-        async function fetchUserData() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/user/me`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const user = await response.json();
-                if (!response.ok) throw new Error(user.message);
-
-                if (user.userType !== 'teacher') {
-                    alert('Access denied. Only teachers can access this dashboard.');
-                    window.location.href = '/student-dashboard.html';
-                    return;
-                }
-
-                document.getElementById('username').textContent = user.username;
-                document.getElementById('email').textContent = user.email;
-                document.getElementById('profileLogo').textContent = user.username.slice(0, 2).toUpperCase();
-            } catch (error) {
-                console.error('Error fetching user:', error);
-                alert('Session expired or invalid. Please log in again.');
-                window.location.href = '/login.html';
-            }
-        }
-
-        // Handle Notes Upload
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('title', document.getElementById('title').value);
-            formData.append('description', document.getElementById('description').value);
-            formData.append('category', document.getElementById('category').value);
-            formData.append('file', document.getElementById('file').files[0]);
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/notes/`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.message);
-
-                alert('Note uploaded successfully!');
-                document.getElementById('uploadForm').reset(); // Clear form after upload
-            } catch (error) {
-                console.error('Error uploading note:', error);
-                alert('Error uploading note: ' + error.message);
-            }
-        });
-
-        // Initialize Dashboard
-        fetchUserData();
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Check for authentication
-            initAuth();
-            
-            // Load dashboard content only if authenticated
-            if (authState.token && authState.user) {
-                // Verify teacher role
-                if (authState.user.userType !== 'teacher') {
-                    window.location.href = "/student-dashboard";
-                    return;
-                }
-                
-                loadDashboardContent();
-            }
-        });
-        
-        async function loadDashboardContent() {
-            // Use the apiRequest wrapper which handles token refresh
-            try {
-                const response = await apiRequest('/api/notes/teacher-notes');
-                
-                if (!response.ok) {
-                    showError("Failed to load notes. Please try again later.");
-                    return;
-                }
-                
-                const data = await response.json();
-                // ... existing code to display notes ...
-            } catch (error) {
-                console.error("Error loading dashboard:", error);
-                showError("An error occurred while loading your notes.");
-            }
-        }
+        // Global variables for state management
+        let currentTab = 'upload';
+        let myNotes = [];
+        let csrfToken = '';
 
         // Check authorization on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Add a token from localStorage to the query string for server validation
             const token = localStorage.getItem('jwt');
-            if (token) {
-                // Add Authorization header to subsequent requests
-                const headers = new Headers();
-                headers.append('Authorization', `Bearer ${token}`);
-                
-                // Make a fetch request to current page with Authorization header
-                fetch(window.location.pathname, {
-                    headers: headers,
-                    credentials: 'include'
-                }).catch(error => {
-                    console.error('Error validating token:', error);
+            if (!token) {
+                window.location.href = '/login.html'; // Redirect to login if no token
+                return;
+            }
+
+            // Get CSRF token from cookie
+            csrfToken = getCookie('csrf_token');
+            
+            // Initialize the dashboard
+            initDashboard();
+            checkAuth('teacher');
+            fetchUserData();
+            fetchMyNotes();
+        });
+
+        // Get cookie helper function
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return '';
+        }
+
+        // Initialize dashboard UI elements
+        function initDashboard() {
+            // Set up tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.getAttribute('data-tab'));
                 });
+            });
+
+            // Set up file input display
+            const fileInput = document.getElementById('file');
+            const fileNameDisplay = document.getElementById('fileName');
+            
+            fileInput.addEventListener('change', function() {
+                fileNameDisplay.textContent = this.files.length ? this.files[0].name : 'No file selected';
+            });
+
+            // Set up form submission
+            const uploadForm = document.getElementById('uploadForm');
+            uploadForm.addEventListener('submit', uploadNote);
+        }
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Update current tab
+            currentTab = tabName;
+            
+            // Update tab UI
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Update content UI
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                if (content.id === `${tabName}Content`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Refresh content if needed
+            if (tabName === 'notes') {
+                fetchMyNotes();
+            }
+        }
+
+        // Fetch user data
+        async function fetchUserData() {
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await response.json();
+                
+                // Update UI with user data
+                document.getElementById('username').textContent = userData.username || 'Teacher';
+                document.getElementById('email').textContent = userData.email || 'teacher@example.com';
+                document.getElementById('profileLogo').textContent = 
+                    userData.username ? userData.username.substring(0, 2).toUpperCase() : 'T';
+                
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                showError('Failed to load user profile');
+            }
+        }
+
+        // Fetch teacher's uploaded notes
+        async function fetchMyNotes() {
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await fetch('/api/notes/teacher-notes', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch notes');
+                }
+                
+                const notes = await response.json();
+                myNotes = notes; // Store notes in global variable
+                displayMyNotes(notes);
+                
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+                const notesGrid = document.getElementById('notesGrid');
+                notesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Couldn't load your notes. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display teacher's notes in the UI
+        function displayMyNotes(notes) {
+            const notesGrid = document.getElementById('notesGrid');
+            
+            if (!notes || notes.length === 0) {
+                notesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>You haven't uploaded any notes yet. Use the Upload tab to share study materials with your students.</p>
+                    </div>
+                `;
+                return;
             }
             
-            checkAuth('teacher');
-        });
+            notesGrid.innerHTML = '';
+            notes.forEach(note => {
+                const date = new Date(note.uploadDate || new Date()).toLocaleDateString();
+                const noteCard = document.createElement('div');
+                noteCard.className = 'note-card';
+                
+                noteCard.innerHTML = `
+                    <div class="note-header">
+                        <div class="note-title">${note.title || 'Untitled Note'}</div>
+                        <span class="note-category">${note.category || 'Uncategorized'}</span>
+                    </div>
+                    <div class="note-body">
+                        <p class="note-description">${note.description || 'No description provided'}</p>
+                        <div class="note-meta">
+                            <span>Uploaded: ${date}</span>
+                            <span>${formatFileSize(note.fileSize)}</span>
+                        </div>
+                    </div>
+                    <div class="note-footer">
+                        <div class="note-action" onclick="previewNote('${note._id}')">
+                            <i class="fas fa-eye"></i> Preview
+                        </div>
+                        <div class="note-action" onclick="downloadNote('${note._id}')">
+                            <i class="fas fa-download"></i> Download
+                        </div>
+                        <div class="note-action" onclick="deleteNote('${note._id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </div>
+                    </div>
+                `;
+                
+                notesGrid.appendChild(noteCard);
+            });
+        }
+
+        // Helper to format file size
+        function formatFileSize(bytes) {
+            if (!bytes) return 'Unknown size';
+            
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return `${Math.round(bytes / Math.pow(1024, i), 2)} ${sizes[i]}`;
+        }
+
+        // Upload a new note
+        async function uploadNote(event) {
+            event.preventDefault();
+            
+            // Show loading state
+            const uploadBtn = document.getElementById('uploadBtn');
+            const originalBtnText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            uploadBtn.disabled = true;
+            
+            // Hide any previous status messages
+            document.getElementById('uploadSuccess').style.display = 'none';
+            document.getElementById('uploadError').style.display = 'none';
+            
+            try {
+                const token = localStorage.getItem('jwt');
+                const formData = new FormData();
+                
+                // Get form values
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const category = document.getElementById('category').value;
+                const file = document.getElementById('file').files[0];
+                
+                // Validate form values
+                if (!title || !description || !category || !file) {
+                    throw new Error('Please fill all required fields');
+                }
+                
+                // Check file size
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    throw new Error('File size exceeds 10MB limit');
+                }
+                
+                // Check file type
+                const allowedTypes = ['pdf', 'docx', 'doc', 'txt', 'ppt', 'pptx'];
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                if (!allowedTypes.includes(fileExt)) {
+                    throw new Error(`Only ${allowedTypes.join(', ')} files are allowed`);
+                }
+                
+                // Append form values to FormData
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('category', category);
+                formData.append('file', file);
+                
+                console.log('Uploading file:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
+                
+                // Send API request - note: no need to set content-type for FormData
+                const response = await fetch('/api/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                    throw new Error('Server response was not valid JSON');
+                }
+                
+                if (!response.ok) {
+                    console.error('Server error response:', result);
+                    throw new Error(result.message || result.error || 'Upload failed');
+                }
+                
+                console.log('Upload successful:', result);
+                
+                // Show success message
+                document.getElementById('uploadSuccess').style.display = 'flex';
+                
+                // Reset form
+                document.getElementById('uploadForm').reset();
+                document.getElementById('fileName').textContent = 'No file selected';
+                
+                // Refresh notes list
+                fetchMyNotes();
+                
+            } catch (error) {
+                console.error('Error uploading note:', error);
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = error.message || 'Failed to upload note';
+                document.getElementById('uploadError').style.display = 'flex';
+            } finally {
+                // Restore button state
+                uploadBtn.innerHTML = originalBtnText;
+                uploadBtn.disabled = false;
+            }
+        }
+
+        // Preview a note
+        function previewNote(noteId) {
+            const note = myNotes.find(n => n._id === noteId);
+            if (!note) return;
+            
+            // Populate modal with note data
+            document.getElementById('previewTitle').textContent = note.title || 'Untitled Note';
+            document.getElementById('previewDescription').textContent = note.description || 'No description provided';
+            document.getElementById('previewCategory').textContent = note.category || 'Uncategorized';
+            document.getElementById('previewDate').textContent = new Date(note.uploadDate || new Date()).toLocaleDateString();
+            document.getElementById('previewDownload').onclick = () => downloadNote(noteId);
+            
+            // Show modal
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+
+        // Close preview modal
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // Download a note
+        function downloadNote(noteId) {
+            window.location.href = `/api/notes/download/${noteId}`;
+        }
+
+        // Delete a note
+        async function deleteNote(noteId) {
+            if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await fetch(`/api/notes/${noteId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete note');
+                }
+                
+                // Refresh notes list
+                fetchMyNotes();
+                
+            } catch (error) {
+                console.error('Error deleting note:', error);
+                alert('Failed to delete note. Please try again later.');
+            }
+        }
+
+        // Display error message
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = message;
+            document.getElementById('uploadError').style.display = 'flex';
+        }
     </script>
 </head>
 <body>
-    <nav class="navbar" id="navbar">
-        <div class="container">
-            <a href="/" class="logo">NotesRepo</a>
-            <ul class="nav-links">
-                <li><a href="/" class="active">Home</a></li>
-                <li class="teacher-only"><a href="/teacher-dashboard">Dashboard</a></li>
-                <li class="auth-only"><a href="/upload.html">Upload Notes</a></li>
-                <li class="auth-only">
-                    <button id="logoutBtn" class="btn-logout">Logout</button>
-                </li>
-                <li class="auth-only user-info">
-                    <span id="userInfo"></span>
-                </li>
-            </ul>
-            <div class="menu-toggle">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-        </div>
-    </nav>
-
     <div class="dashboard">
         <!-- Profile Card -->
         <div class="profile-card">
-            <div class="profile-logo" id="profileLogo"></div>
-            <h2 id="username"></h2>
-            <p id="email"></p>
+            <div class="profile-logo" id="profileLogo">T</div>
+            <h2 id="username">Teacher Name</h2>
+            <p id="email">teacher@example.com</p>
+            
+            <div class="teacher-info">
+                <p><i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard</p>
+                <p><i class="fas fa-upload"></i> Upload study materials</p>
+                <p><i class="fas fa-tasks"></i> Manage your notes</p>
+            </div>
         </div>
 
-        <!-- Upload Section -->
-        <div class="upload-section">
-            <h2>Upload Notes</h2>
-            <form id="uploadForm">
-                <input type="text" id="title" placeholder="Title" required>
-                <textarea id="description" placeholder="Description" required></textarea>
-                <select id="category" required>
-                    <option value="">Select Category</option>
-                    <option value="Math">Math</option>
-                    <option value="Science">Science</option>
-                    <option value="History">History</option>
-                    <option value="English">English</option>
-                    <option value="Programming">Programming</option>
-                    <option value="Other">Other</option>
-                </select>
-                <input type="file" id="file" accept=".pdf,.docx,.txt" required>
-                <button type="submit">Upload</button>
-            </form>
+        <!-- Management Section -->
+        <div class="management-section">
+            <div class="tabs">
+                <div class="tab active" data-tab="upload">
+                    <i class="fas fa-upload"></i> Upload Notes
+                </div>
+                <div class="tab" data-tab="notes">
+                    <i class="fas fa-book"></i> My Notes
+                </div>
+            </div>
+            
+            <!-- Upload Tab Content -->
+            <div id="uploadContent" class="tab-content active">
+                <div id="uploadSuccess" class="status-message success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Note uploaded successfully!
+                </div>
+                
+                <div id="uploadError" class="status-message error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i> <span id="errorMsg">Error uploading note</span>
+                </div>
+                
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" placeholder="Enter a title for your notes" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Provide a detailed description of the content" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="">Select a category</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="History">History</option>
+                            <option value="Literature">Literature</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload File</label>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-label" for="file">
+                                <i class="fas fa-cloud-upload-alt"></i> Choose a file or drag it here
+                            </label>
+                            <input type="file" id="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" required>
+                        </div>
+                        <div id="fileName" class="file-name">No file selected</div>
+                    </div>
+                    
+                    <button type="submit" id="uploadBtn" class="upload-btn">
+                        <i class="fas fa-upload"></i> Upload Note
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Notes Tab Content -->
+            <div id="notesContent" class="tab-content">
+                <div id="notesGrid" class="notes-grid">
+                    <!-- Notes will be loaded here dynamically -->
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading your notes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="previewTitle">Note Title</div>
+                <div class="modal-close" onclick="closePreviewModal()">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p><strong>Description:</strong></p>
+                <p id="previewDescription">Note description will appear here.</p>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Category:</strong> <span id="previewCategory">Category</span></p>
+                    <p><strong>Uploaded:</strong> <span id="previewDate">Date</span></p>
+                </div>
+                
+                <button id="previewDownload" class="upload-btn" style="margin-top: 20px;">
+                    <i class="fas fa-download"></i> Download Note
+                </button>
+            </div>
         </div>
     </div>
 </body>

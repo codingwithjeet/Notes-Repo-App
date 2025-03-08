@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,103 +26,242 @@
             width: 100%;
             max-width: 1200px;
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
+            grid-template-columns: 1fr 3fr;
+            gap: 25px;
             animation: fadeIn 1s ease-out;
         }
 
         /* Profile Card */
         .profile-card {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             text-align: center;
             animation: slideInLeft 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
         }
 
         .profile-logo {
-            width: 100px;
-            height: 100px;
-            background: #74ebd5;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #6e8efb, #a777e3);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 15px;
-            font-size: 36px;
+            margin: 0 auto 20px;
+            font-size: 40px;
             font-weight: bold;
             color: #fff;
-            border: 4px solid #acb6e5;
+            border: 5px solid #fff;
             animation: bounceIn 1s ease-out;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .profile-logo:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .profile-card h2, .profile-card p {
+        .profile-card h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
             animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .profile-card p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .student-info {
+            background: rgba(110, 142, 251, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .student-info p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .student-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .student-info i {
+            margin-right: 10px;
+            color: #6e8efb;
+            font-size: 1.1rem;
         }
 
         /* Notes Section */
         .notes-section {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             animation: slideInRight 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         .notes-section h2 {
-            font-size: 24px;
+            font-size: 2rem;
             color: #333;
-            margin-bottom: 20px;
             animation: fadeInDown 0.8s ease-out;
+        }
+
+        .notes-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out 0.2s both;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            background: rgba(110, 142, 251, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(45deg, #6e8efb, #a777e3);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.3);
         }
 
         .notes-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .notes-list::-webkit-scrollbar {
+            width: 6px;
+            background: transparent;
+        }
+
+        .notes-list::-webkit-scrollbar-thumb {
+            background: rgba(110, 142, 251, 0.5);
+            border-radius: 10px;
         }
 
         .note-item {
             background: #f9f9f9;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             animation: slideInUp 0.6s ease-out var(--delay);
+            border-left: 5px solid #6e8efb;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .note-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .note-item span {
-            font-size: 18px;
+        .note-info {
+            flex: 1;
+        }
+
+        .note-title {
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #333;
+            margin-bottom: 5px;
             animation: fadeIn 0.5s ease-out;
         }
 
-        .note-item button {
-            padding: 8px 15px;
-            background: #74ebd5;
+        .note-details {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            gap: 20px;
+        }
+
+        .note-category {
+            background: rgba(110, 142, 251, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #6e8efb;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .note-btn {
+            padding: 10px 15px;
+            background: linear-gradient(45deg, #6e8efb, #a777e3);
             border: none;
             border-radius: 5px;
             color: #fff;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            animation: popIn 0.5s ease-out;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 5px 10px rgba(110, 142, 251, 0.2);
         }
 
-        .note-item button:hover {
-            background: #acb6e5;
-            transform: scale(1.05);
+        .note-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(110, 142, 251,.3);
+        }
+
+        .note-btn i {
+            font-size: 1.1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #888;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ccc;
         }
 
         /* Modal */
@@ -137,53 +276,142 @@
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s ease-out;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
         }
 
         .modal-content {
             background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
             animation: zoomIn 0.4s ease-out;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .modal-content h3, .modal-content p, .modal-content a {
+        .modal-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
             animation: fadeInUp 0.4s ease-out both;
         }
 
+        .modal-content p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #666;
+            animation: fadeInUp 0.4s 0.1s ease-out both;
+        }
+
+        .modal-content a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #6e8efb, #a777e3);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.4s 0.2s ease-out both;
+            box-shadow: 0 8px 15px rgba(110, 142, 251, 0.2);
+        }
+
+        .modal-content a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(110, 142, 251, 0.3);
+        }
+
         .close-btn {
-            float: right;
-            font-size: 20px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #333;
+            color: #888;
             animation: spinIn 0.5s ease-out;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .close-btn:hover {
+            color: #333;
+            background: rgba(0, 0, 0, 0.05);
             transform: rotate(90deg);
         }
 
         /* Animations */
-        @keyframes bgPulse { /* ... unchanged ... */ }
-        @keyframes fadeIn { /* ... unchanged ... */ }
-        @keyframes slideInLeft { /* ... unchanged ... */ }
-        @keyframes slideInRight { /* ... unchanged ... */ }
-        @keyframes slideInUp { /* ... unchanged ... */ }
-        @keyframes fadeInUp { /* ... unchanged ... */ }
-        @keyframes fadeInDown { /* ... unchanged ... */ }
-        @keyframes bounceIn { /* ... unchanged ... */ }
-        @keyframes popIn { /* ... unchanged ... */ }
-        @keyframes zoomIn { /* ... unchanged ... */ }
-        @keyframes spinIn { /* ... unchanged ... */ }
+        @keyframes bgPulse {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes spinIn {
+            from { transform: rotate(-180deg); opacity: 0; }
+            to { transform: rotate(0); opacity: 1; }
+        }
 
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+        
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
+            
+            .profile-card {
+                margin-bottom: 20px;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Add auth script -->
     <script src="/js/auth.js"></script>
     <script>
@@ -206,57 +434,171 @@
             }
             
             checkAuth('student');
+            fetchNotes();
         });
+
+        // Fetch notes from the server
+        async function fetchNotes() {
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await fetch('/api/notes/user-notes', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch notes');
+                }
+                
+                const notes = await response.json();
+                displayNotes(notes);
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+                const notesList = document.getElementById('notes-list');
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>Couldn't load notes. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display notes in the UI
+        function displayNotes(notes) {
+            const notesList = document.getElementById('notes-list');
+            
+            if (notes.length === 0) {
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>No notes available yet. Check back later!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-item';
+                noteElement.style = `--delay: ${index * 0.1}s`;
+                
+                noteElement.innerHTML = `
+                    <div class="note-info">
+                        <div class="note-title">${note.title}</div>
+                        <div class="note-details">
+                            <span>By: ${note.teacher || 'Teacher'}</span>
+                            <span>Date: ${new Date(note.uploadDate).toLocaleDateString()}</span>
+                            <span class="note-category">${note.category}</span>
+                        </div>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-btn view-btn" data-id="${note._id}" onclick="viewNote('${note._id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="note-btn download-btn" data-id="${note._id}" onclick="downloadNote('${note._id}')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                `;
+                
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        // Filter notes by category
+        function filterNotes(category) {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            const clickedButton = document.querySelector(`.filter-btn[data-category="${category}"]`);
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+            
+            // Implement the filtering logic
+            // This would involve fetching notes with the category filter or filtering the existing notes
+        }
+
+        // View note details
+        function viewNote(noteId) {
+            const modal = document.getElementById('noteModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalDownload = document.getElementById('modalDownload');
+            
+            // Fetch note details or use already fetched data
+            // For demonstration, we'll use placeholder data
+            modalTitle.textContent = "Note Title"; // Replace with actual note title
+            modalDescription.textContent = "Note description will appear here."; // Replace with actual description
+            modalDownload.href = `/api/notes/download/${noteId}`; // Use actual download endpoint
+            
+            modal.style.display = 'flex';
+        }
+
+        // Download note
+        function downloadNote(noteId) {
+            window.location.href = `/api/notes/download/${noteId}`;
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('noteModal');
+            modal.style.display = 'none';
+        }
     </script>
 </head>
 <body>
-    <nav class="navbar" id="navbar">
-        <div class="container">
-            <a href="/" class="logo">NotesRepo</a>
-            <ul class="nav-links">
-                <li><a href="/" class="active">Home</a></li>
-                <li class="student-only"><a href="/student-dashboard">Dashboard</a></li>
-                <li class="auth-only"><a href="/upload.html">Upload Notes</a></li>
-                <li class="auth-only">
-                    <button id="logoutBtn" class="btn-logout">Logout</button>
-                </li>
-                <li class="auth-only user-info">
-                    <span id="userInfo"></span>
-                </li>
-            </ul>
-            <div class="menu-toggle">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-        </div>
-    </nav>
-
     <div class="dashboard">
         <!-- Profile Card -->
         <div class="profile-card">
             <div class="profile-logo" id="profileLogo"></div>
-            <h2 id="username"></h2>
-            <p id="email"></p>
+            <h2 id="username">Student Name</h2>
+            <p id="email">student@example.com</p>
+            
+            <div class="student-info">
+                <p><i class="fas fa-graduation-cap"></i> Student Dashboard</p>
+                <p><i class="fas fa-book"></i> Access study materials</p>
+                <p><i class="fas fa-download"></i> Download notes</p>
+            </div>
         </div>
 
         <!-- Notes Section -->
         <div class="notes-section">
-            <h2>Study Notes</h2>
-            <div class="notes-list" id="notes-list"></div>
+            <div class="notes-header">
+                <h2>Study Materials</h2>
+            </div>
+            
+            <div class="notes-filters">
+                <button class="filter-btn active" data-category="all" onclick="filterNotes('all')">All</button>
+                <button class="filter-btn" data-category="Mathematics" onclick="filterNotes('Mathematics')">Mathematics</button>
+                <button class="filter-btn" data-category="Science" onclick="filterNotes('Science')">Science</button>
+                <button class="filter-btn" data-category="History" onclick="filterNotes('History')">History</button>
+                <button class="filter-btn" data-category="Literature" onclick="filterNotes('Literature')">Literature</button>
+            </div>
+            
+            <div class="notes-list" id="notes-list">
+                <!-- Notes will be loaded here dynamically -->
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading notes...</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Note Detail Modal -->
     <div class="modal" id="noteModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <h3 id="noteTitle"></h3>
-            <p id="noteContent"></p>
-            <a id="noteFileLink" href="#" target="_blank">View File</a>
+            <span class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></span>
+            <h3 id="modalTitle">Note Title</h3>
+            <p id="modalDescription">Note description will appear here.</p>
+            <a href="#" id="modalDownload" class="note-btn">
+                <i class="fas fa-download"></i> Download Note
+            </a>
         </div>
     </div>
-
-    <script src="/js/main.js"></script>
 </body>
 </html>
