@@ -1,0 +1,17 @@
+{
+  "verbose": true,
+  "watch": [
+    "server.js",
+    "backend/**/*"
+  ],
+  "ignore": [
+    "frontend/**/*",
+    "node_modules/**/*",
+    "*.test.js",
+    "*.spec.js"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js,json,env"
+} 

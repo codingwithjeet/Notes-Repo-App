@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes-Repo App - Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: bgPulse 10s infinite alternate;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .profile-logo {
+            width: 100px;
+            height: 100px;
+            background: #74ebd5;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            border: 4px solid #acb6e5;
+            animation: bounceIn 1s ease-out;
+        }
+
+        .profile-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-card h2, .profile-card p {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        /* Notes Section */
+        .notes-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .notes-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .note-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideInUp 0.6s ease-out var(--delay);
+        }
+
+        .note-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-item span {
+            font-size: 18px;
+            color: #333;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .note-item button {
+            padding: 8px 15px;
+            background: #74ebd5;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            animation: popIn 0.5s ease-out;
+        }
+
+        .note-item button:hover {
+            background: #acb6e5;
+            transform: scale(1.05);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            animation: zoomIn 0.4s ease-out;
+        }
+
+        .modal-content h3, .modal-content p, .modal-content a {
+            animation: fadeInUp 0.4s ease-out both;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            animation: spinIn 0.5s ease-out;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Animations */
+        @keyframes bgPulse { /* ... unchanged ... */ }
+        @keyframes fadeIn { /* ... unchanged ... */ }
+        @keyframes slideInLeft { /* ... unchanged ... */ }
+        @keyframes slideInRight { /* ... unchanged ... */ }
+        @keyframes slideInUp { /* ... unchanged ... */ }
+        @keyframes fadeInUp { /* ... unchanged ... */ }
+        @keyframes fadeInDown { /* ... unchanged ... */ }
+        @keyframes bounceIn { /* ... unchanged ... */ }
+        @keyframes popIn { /* ... unchanged ... */ }
+        @keyframes zoomIn { /* ... unchanged ... */ }
+        @keyframes spinIn { /* ... unchanged ... */ }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-logo" id="profileLogo"></div>
+            <h2 id="username"></h2>
+            <p id="email"></p>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="notes-section">
+            <h2>Study Notes</h2>
+            <div class="notes-list" id="notesList"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3 id="noteTitle"></h3>
+            <p id="noteContent"></p>
+            <a id="noteFileLink" href="#" target="_blank">View File</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000'; // Adjust to your backend URL
+        const token = localStorage.getItem('token') || new URLSearchParams(window.location.search).get('token');
+
+        if (!token) {
+            window.location.href = '/login.html'; // Redirect to login if no token
+        } else {
+            localStorage.setItem('token', token); // Store token for future requests
+        }
+
+        // Fetch User Data
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await response.json();
+                if (!response.ok) throw new Error(user.message);
+
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('email').textContent = user.email;
+                document.getElementById('profileLogo').textContent = user.username.slice(0, 2).toUpperCase();
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                alert('Session expired or invalid. Please log in again.');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Fetch Notes
+        async function fetchNotes() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/notes/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const notes = await response.json();
+                if (!response.ok) throw new Error(notes.message);
+
+                const notesList = document.getElementById('notesList');
+                notesList.innerHTML = '';
+                notes.forEach((note, index) => {
+                    const noteItem = document.createElement('div');
+                    noteItem.className = 'note-item';
+                    noteItem.style = `--delay: ${index * 0.2}s`;
+                    noteItem.innerHTML = `
+                        <span>${note.title} (${note.category})</span>
+                        <button onclick="viewNote('${note._id}')">View</button>
+                    `;
+                    notesList.appendChild(noteItem);
+                });
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+                document.getElementById('notesList').innerHTML = '<p>Error loading notes.</p>';
+            }
+        }
+
+        // View Note Details
+        async function viewNote(noteId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/notes/${noteId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const note = await response.json();
+                if (!response.ok) throw new Error(note.message);
+
+                document.getElementById('noteTitle').textContent = note.title;
+                document.getElementById('noteContent').textContent = note.description;
+                document.getElementById('noteFileLink').href = note.fileUrl;
+                document.getElementById('noteModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error fetching note:', error);
+                alert('Error loading note details.');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('noteModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('noteModal');
+            if (event.target === modal) closeModal();
+        }
+
+        // Initialize Dashboard
+        fetchUserData();
+        fetchNotes();
+    </script>
+</body>
+</html>

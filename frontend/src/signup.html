@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - NotesRepo</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(44, 62, 80, 0.9);
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+
+    .logo {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* Signup Box */
+    .signup-container {
+      background: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+      color: #2c3e50;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signup-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .signup-header p {
+      color: #7f8c8d;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      background: rgba(231, 76, 60, 0.1);
+      padding: 0.5rem;
+      border-radius: 5px;
+      display: none;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      color: white;
+      background-color: #3498db;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+    }
+
+    .footer-links {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-links a {
+      color: #3498db;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .signup-container {
+        width: 90%;
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">NotesRepo</a>
+  </nav>
+
+  <div class="signup-container">
+    <div class="signup-header">
+      <h1>Create Account</h1>
+      <p>Join NotesRepo to share and access educational resources</p>
+    </div>
+    
+    <div class="error-message" id="errorMessage"></div>
+
+    <form id="signupForm" onsubmit="handleSignup(event)">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" required placeholder="Enter your full name" />
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required placeholder="Enter your email" />
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Create Password</label>
+        <input type="password" id="password" required placeholder="Enter your password" />
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required placeholder="Re-enter your password" />
+      </div>
+      
+      <div class="form-group">
+        <label for="userType">I am a:</label>
+        <select id="userType" required>
+          <option value="">Select User Type</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+    
+    <div class="footer-links">
+      <a href="login.html">Already have an account?</a>
+      <a href="/forgot-password">Forgot Password?</a>
+    </div>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

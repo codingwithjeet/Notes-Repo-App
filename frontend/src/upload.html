@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Notes - NotesRepo</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #2c3e50;
+      width: 100%;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      text-align: center;
+    }
+
+    .logo {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* Upload Box */
+    .upload-container {
+      margin-top: 80px;
+      width: 400px;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .upload-header h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .upload-header p {
+      color: #7f8c8d;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+
+    .error-message, .success-message {
+      display: none;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    .error-message {
+      color: red;
+      background-color: #ffe6e6;
+    }
+
+    .success-message {
+      color: green;
+      background-color: #e6ffe6;
+    }
+
+    /* File Upload Styling */
+    #file {
+      padding: 8px;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      background-color: #ecf0f1;
+    }
+
+    #fileLabel {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/index.html" class="logo">NotesRepo</a>
+  </nav>
+
+  <!-- Upload Box -->
+  <div class="upload-container">
+    <div class="upload-header">
+      <h1>Upload Notes</h1>
+      <p>Share your notes with the community</p>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+
+    <!-- Upload Form -->
+    <form id="uploadForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" required placeholder="Enter note title" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" required placeholder="Brief description of notes" />
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" required>
+          <option value="">Select a category</option>
+          <option value="Mathematics">Mathematics</option>
+          <option value="Science">Science</option>
+          <option value="History">History</option>
+          <option value="Literature">Literature</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="file">Upload File</label>
+        <input type="file" id="file" required accept=".pdf,.docx,.txt" />
+        <span id="fileLabel">No file selected</span>
+      </div>
+
+      <button type="submit" class="btn-primary">Upload</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const uploadForm = document.getElementById("uploadForm");
+      const errorMessage = document.getElementById("errorMessage");
+      const successMessage = document.getElementById("successMessage");
+      const fileInput = document.getElementById("file");
+      const fileLabel = document.getElementById("fileLabel");
+      const token = localStorage.getItem("jwt");
+
+      if (!token) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Update file label when a file is selected
+      fileInput.addEventListener("change", function () {
+        fileLabel.textContent = this.files.length ? this.files[0].name : "No file selected";
+      });
+
+      uploadForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const title = document.getElementById("title").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const category = document.getElementById("category").value;
+        const file = fileInput.files[0];
+
+        // Validation
+        if (!title || !description || !category || !file) {
+          showError("All fields are required.");
+          return;
+        }
+
+        const allowedFormats = ["pdf", "docx", "txt"];
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        
+        if (!allowedFormats.includes(fileExt)) {
+          showError("Invalid file type. Only PDF, DOCX, or TXT allowed.");
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+          showError("File size must be under 5MB.");
+          return;
+        }
+
+        errorMessage.style.display = "none";
+        successMessage.style.display = "none";
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("category", category);
+        formData.append("file", file);
+
+        try {
+          const response = await fetch("http://localhost:3000/api/upload", {
+            method: "POST",
+            body: formData,
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+
+          if (!response.ok) throw new Error("Upload failed.");
+
+          showSuccess("File uploaded successfully!");
+          uploadForm.reset();
+          fileLabel.textContent = "No file selected";
+        } catch (error) {
+          showError(error.message);
+        }
+      });
+
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+      }
+
+      function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

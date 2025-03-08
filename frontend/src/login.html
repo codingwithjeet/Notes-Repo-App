@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - NotesRepo</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      color: white;
+      background-color: #3498db;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="logo">NotesRepo</a>
+  </nav>
+
+  <!-- Login Container -->
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Welcome Back</h1>
+      <p>Sign in to continue to NotesRepo</p>
+    </div>
+    
+    <div class="error-message" id="errorMessage"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email" autocomplete="email" />
+
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password" />
+
+      </div>
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+
+    <div class="footer-links">
+      <a href="/forgot-password">Forgot Password?</a>
+      <a href="signup.html">Create Account</a>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
