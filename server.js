@@ -137,6 +137,8 @@ app.use((req, res, next) => {
   // Log CSRF information (remove in production)
   console.log(`CSRF Check - URL: ${originalUrl}, Method: ${req.method}`);
   console.log(`Header Token: ${csrfToken ? 'Present' : 'Missing'}, Cookie Token: ${cookieToken ? 'Present' : 'Missing'}`);
+  console.log('Request headers:', req.headers);
+  console.log('Content-type:', req.get('Content-Type'));
   
   if (!csrfToken || !cookieToken) {
     console.warn(`CSRF token missing - Header: ${!!csrfToken}, Cookie: ${!!cookieToken}`);
@@ -195,8 +197,9 @@ mongoose
 
 // Route registration 🚦
 app.use("/api/auth", authRoutes);
-app.use("/api/notes", uploadRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api/notes", notesRoutes);
+app.use("/api/notes", uploadRoutes);  // Temporary fix to support both endpoints
 
 // CSRF Protection
 app.use(function(req, res, next) {
@@ -209,6 +212,8 @@ app.use(function(req, res, next) {
   const contentType = req.headers['content-type'] || '';
   if (contentType.includes('multipart/form-data')) {
     console.log('Skipping CSRF check for file upload');
+    console.log('Upload URL:', originalUrl);
+    console.log('Upload headers:', req.headers);
     return next();
   }
   

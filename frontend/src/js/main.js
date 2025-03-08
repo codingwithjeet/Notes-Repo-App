@@ -395,11 +395,14 @@ async function handleUpload(event) {
     formData.append("file", document.getElementById("file").files[0]);
 
     try {
+        // Get CSRF token
+        const csrfToken = getCookie("csrf_token");
+        
         const response = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
             headers: { 
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
             }
         });
 

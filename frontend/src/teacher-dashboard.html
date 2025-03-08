@@ -781,11 +781,22 @@
                 
                 console.log('Uploading file:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
                 
+                // Refresh CSRF token from cookie
+                csrfToken = getCookie('csrf_token');
+                
+                // Check CSRF token
+                if (!csrfToken) {
+                    throw new Error('CSRF token missing. Try refreshing the page.');
+                }
+                
+                console.log('Using CSRF token:', csrfToken);
+                
                 // Send API request - note: no need to set content-type for FormData
-                const response = await fetch('/api/notes', {
+                const response = await fetch('/api/upload', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'X-CSRF-Token': csrfToken
                     },
                     body: formData
                 });
