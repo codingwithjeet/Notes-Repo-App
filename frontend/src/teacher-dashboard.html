@@ -631,12 +631,16 @@
                 }
                 
                 const userData = await response.json();
+                const userName = userData.username || 'Teacher';
                 
                 // Update UI with user data
-                document.getElementById('username').textContent = userData.username || 'Teacher';
+                document.getElementById('username').textContent = userName;
                 document.getElementById('email').textContent = userData.email || 'teacher@example.com';
                 document.getElementById('profileLogo').textContent = 
                     userData.username ? userData.username.substring(0, 2).toUpperCase() : 'T';
+                
+                // Update teacher info with personalized message
+                document.querySelector('.teacher-info p:first-child i').nextSibling.textContent = ` Welcome, ${userName}!`;
                 
             } catch (error) {
                 console.error('Error fetching user data:', error);

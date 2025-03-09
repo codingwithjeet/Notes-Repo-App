@@ -20,15 +20,27 @@
             align-items: center;
             padding: 20px;
             animation: bgPulse 10s infinite alternate;
+            /* Improved scrolling for desktop */
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Focus styles for keyboard navigation - desktop accessibility */
+        :focus {
+            outline: 3px solid #fff;
+            outline-offset: 2px;
         }
 
         .dashboard {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             display: grid;
             grid-template-columns: 1fr 3fr;
             gap: 25px;
             animation: fadeIn 1s ease-out;
+            /* Better height handling for desktop */
+            min-height: calc(100vh - 40px);
+            align-items: start;
         }
 
         /* Profile Card */
@@ -42,6 +54,9 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             height: fit-content;
+            /* Sticky positioning for desktop */
+            position: sticky;
+            top: 20px;
         }
 
         .profile-logo {
@@ -116,6 +131,10 @@
             animation: slideInRight 0.8s ease-out;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Better height handling for desktop */
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
         }
 
         .notes-header {
@@ -124,6 +143,9 @@
             align-items: center;
             margin-bottom: 25px;
             animation: fadeInDown 0.8s ease-out;
+            /* Improved layout for desktop */
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .notes-section h2 {
@@ -132,11 +154,45 @@
             animation: fadeInDown 0.8s ease-out;
         }
 
+        /* Search bar - desktop enhancement */
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .search-input:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6e8efb;
+            font-size: 1.2rem;
+        }
+
         .notes-filters {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
             animation: fadeInDown 0.8s ease-out 0.2s both;
+            /* Better wrapping for desktop */
+            flex-wrap: wrap;
         }
 
         .filter-btn {
@@ -164,16 +220,29 @@
             max-height: 500px;
             overflow-y: auto;
             padding-right: 10px;
+            /* Better height for desktop */
+            flex-grow: 1;
+            max-height: calc(100vh - 200px);
         }
 
+        /* Desktop-specific scrollbar styling */
         .notes-list::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
             background: transparent;
+        }
+
+        .notes-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
         }
 
         .notes-list::-webkit-scrollbar-thumb {
             background: rgba(110, 142, 251, 0.5);
             border-radius: 10px;
+        }
+
+        .notes-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(110, 142, 251, 0.8);
         }
 
         .note-item {
@@ -187,11 +256,19 @@
             animation: slideInUp 0.6s ease-out var(--delay);
             border-left: 5px solid #6e8efb;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            /* Better desktop interaction */
+            cursor: pointer;
         }
 
         .note-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Keyboard focus for accessibility */
+        .note-item:focus-within {
+            outline: 3px solid #6e8efb;
+            outline-offset: 2px;
         }
 
         .note-info {
@@ -211,6 +288,8 @@
             color: #666;
             display: flex;
             gap: 20px;
+            /* Better wrapping for desktop */
+            flex-wrap: wrap;
         }
 
         .note-category {
@@ -224,6 +303,8 @@
         .note-actions {
             display: flex;
             gap: 10px;
+            /* Better wrapping for desktop */
+            flex-wrap: wrap;
         }
 
         .note-btn {
@@ -246,6 +327,12 @@
             box-shadow: 0 8px 15px rgba(110, 142, 251,.3);
         }
 
+        /* Keyboard focus for accessibility */
+        .note-btn:focus {
+            outline: 3px solid #fff;
+            outline-offset: 2px;
+        }
+
         .note-btn i {
             font-size: 1.1rem;
         }
@@ -264,7 +351,7 @@
             color: #ccc;
         }
 
-        /* Modal */
+        /* Modal - Enhanced for desktop */
         .modal {
             display: none;
             position: fixed;
@@ -285,10 +372,13 @@
             padding: 30px;
             border-radius: 15px;
             width: 90%;
-            max-width: 600px;
+            max-width: 800px; /* Wider for desktop */
             animation: zoomIn 0.4s ease-out;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
             position: relative;
+            /* Better desktop scrolling */
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-content h3 {
@@ -298,117 +388,129 @@
             animation: fadeInUp 0.4s ease-out both;
         }
 
-        .modal-content p {
-            margin-bottom: 25px;
-            line-height: 1.6;
-            color: #666;
-            animation: fadeInUp 0.4s 0.1s ease-out both;
-        }
-
-        .modal-content a {
-            display: inline-block;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #6e8efb, #a777e3);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 500;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.4s 0.2s ease-out both;
-            box-shadow: 0 8px 15px rgba(110, 142, 251, 0.2);
-        }
-
-        .modal-content a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px rgba(110, 142, 251, 0.3);
-        }
-
-        .close-btn {
+        /* Close button - better positioning for desktop */
+        .close-modal {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             font-size: 1.5rem;
-            cursor: pointer;
             color: #888;
-            animation: spinIn 0.5s ease-out;
-            transition: all 0.3s ease;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 10;
         }
 
-        .close-btn:hover {
+        .close-modal:hover {
             color: #333;
-            background: rgba(0, 0, 0, 0.05);
-            transform: rotate(90deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .profile-card {
+                position: static;
+            }
+            
+            .notes-section {
+                min-height: auto;
+            }
+            
+            .notes-list {
+                max-height: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .notes-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .notes-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 10px;
+                flex-wrap: nowrap;
+            }
+            
+            .note-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .note-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
 
         /* Animations */
-        @keyframes bgPulse {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes slideInLeft {
-            from { transform: translateX(-100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+
         @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
         @keyframes fadeInDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes bounceIn {
             0% { transform: scale(0); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+
         @keyframes zoomIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes spinIn {
-            from { transform: rotate(-180deg); opacity: 0; }
-            to { transform: rotate(0); opacity: 1; }
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .dashboard {
-                grid-template-columns: 1fr 2fr;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .profile-card {
-                margin-bottom: 20px;
-            }
+        @keyframes bgPulse {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -434,8 +536,41 @@
             }
             
             checkAuth('student');
+            fetchUserData();
             fetchNotes();
         });
+
+        // Fetch user data
+        async function fetchUserData() {
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await response.json();
+                const userName = userData.username || 'Student';
+                
+                // Update UI with user data
+                document.getElementById('username').textContent = userName;
+                document.getElementById('email').textContent = userData.email || 'student@example.com';
+                document.getElementById('profileLogo').textContent = 
+                    userData.username ? userData.username.substring(0, 2).toUpperCase() : 'S';
+                
+                // Update student info with personalized message
+                document.querySelector('.student-info p:first-child i').nextSibling.textContent = ` Welcome, ${userName}!`;
+                
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                console.log('Failed to load user profile');
+            }
+        }
 
         // Fetch notes from the server
         async function fetchNotes() {
@@ -569,6 +704,12 @@
         <div class="notes-section">
             <div class="notes-header">
                 <h2>Study Materials</h2>
+                
+                <!-- Search Bar - New for desktop -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search notes..." aria-label="Search notes">
+                </div>
             </div>
             
             <div class="notes-filters">
