@@ -526,6 +526,49 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .toast i {
+            margin-right: 8px;
+        }
+        
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        
+        .toast.error {
+            background-color: #F44336;
+        }
+        
+        .toast.loading {
+            background-color: #2196F3;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Add auth script -->
@@ -852,7 +895,11 @@
             document.getElementById('previewDescription').textContent = note.description || 'No description provided';
             document.getElementById('previewCategory').textContent = note.category || 'Uncategorized';
             document.getElementById('previewDate').textContent = new Date(note.uploadDate || new Date()).toLocaleDateString();
-            document.getElementById('previewDownload').onclick = () => downloadNote(noteId);
+            
+            // Update download button to use the downloadNote function
+            const downloadBtn = document.getElementById('previewDownload');
+            downloadBtn.href = "javascript:void(0)";
+            downloadBtn.onclick = function() { downloadNote(noteId); };
             
             // Show modal
             document.getElementById('previewModal').style.display = 'flex';
@@ -865,7 +912,68 @@
 
         // Download a note
         function downloadNote(noteId) {
-            window.location.href = `/api/notes/download/${noteId}`;
+            // Create a loading indicator
+            const loadingToast = document.createElement('div');
+            loadingToast.className = 'toast loading';
+            loadingToast.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+            document.body.appendChild(loadingToast);
+            
+            // Use fetch with authentication to get the file
+            fetch(`/api/notes/download/${noteId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Download failed');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Find the note to get the original filename
+                const note = myNotes.find(n => n._id === noteId);
+                const filename = note?.fileOriginalName || 'note-download';
+                
+                // Create a download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                document.body.removeChild(loadingToast);
+                
+                // Show success message
+                const successToast = document.createElement('div');
+                successToast.className = 'toast success';
+                successToast.innerHTML = '<i class="fas fa-check"></i> Download successful!';
+                document.body.appendChild(successToast);
+                
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    document.body.removeChild(successToast);
+                }, 3000);
+            })
+            .catch(error => {
+                console.error('Download error:', error);
+                document.body.removeChild(loadingToast);
+                
+                // Show error message
+                const errorToast = document.createElement('div');
+                errorToast.className = 'toast error';
+                errorToast.innerHTML = '<i class="fas fa-exclamation-circle"></i> Download failed. Please try again.';
+                document.body.appendChild(errorToast);
+                
+                // Remove error message after 3 seconds
+                setTimeout(() => {
+                    document.body.removeChild(errorToast);
+                }, 3000);
+            });
         }
 
         // Delete a note

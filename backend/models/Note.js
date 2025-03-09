@@ -51,7 +51,7 @@ const noteSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Add a virtual field for download URL
+// Add a virtual field for download URL (authenticated users only)
 noteSchema.virtual('downloadUrl').get(function() {
   return `/api/notes/download/${this._id}`;
 });

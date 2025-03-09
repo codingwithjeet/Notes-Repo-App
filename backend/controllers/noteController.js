@@ -2,6 +2,7 @@ const Note = require("../models/Note");
 const User = require("../models/User");
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 
 // Upload a new note (for teachers)
 exports.uploadNote = async (req, res) => {
@@ -134,7 +135,7 @@ exports.getTeacherNotes = async (req, res) => {
 exports.getUserNotes = async (req, res) => {
   try {
     const notes = await Note.find({})
-      .select('title description category uploadDate teacher')
+      .select('title description category uploadDate teacher downloadUrl')
       .sort({ uploadDate: -1 });
     
     res.status(200).json(notes);
@@ -148,13 +149,22 @@ exports.getUserNotes = async (req, res) => {
 exports.getNote = async (req, res) => {
   try {
     const noteId = req.params.id;
+    
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return res.status(400).json({ message: 'Invalid note ID format' });
+    }
+    
     const note = await Note.findById(noteId);
     
     if (!note) {
       return res.status(404).json({ message: 'Note not found' });
     }
     
-    res.status(200).json(note);
+    // Return note with download URL
+    res.status(200).json({
+      ...note.toObject(),
+      downloadUrl: `/api/notes/download/${note._id}`
+    });
   } catch (error) {
     console.error('Error fetching note:', error);
     res.status(500).json({ message: 'Failed to fetch note', error: error.message });
@@ -165,6 +175,11 @@ exports.getNote = async (req, res) => {
 exports.downloadNote = async (req, res) => {
   try {
     const noteId = req.params.id;
+    
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return res.status(400).json({ message: 'Invalid note ID format' });
+    }
+    
     const note = await Note.findById(noteId);
     
     if (!note) {
@@ -173,15 +188,30 @@ exports.downloadNote = async (req, res) => {
     
     // Check if file exists
     if (!fs.existsSync(note.filePath)) {
-      return res.status(404).json({ message: 'File not found' });
+      console.error(`File not found at path: ${note.filePath}`);
+      return res.status(404).json({ message: 'File not found on server' });
     }
     
+    // Get file stats
+    const stats = fs.statSync(note.filePath);
+    
     // Set appropriate headers
-    res.setHeader('Content-Disposition', `attachment; filename="${note.fileOriginalName}"`);
-    res.setHeader('Content-Type', note.fileType);
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(note.fileOriginalName)}"`);
+    res.setHeader('Content-Type', note.fileType || 'application/octet-stream');
+    res.setHeader('Content-Length', stats.size);
+    
+    // Optional: Log download activity
+    console.log(`User ${req.userId || 'anonymous'} downloaded note: ${note.title} (${note._id})`);
     
     // Stream the file to the client
     const fileStream = fs.createReadStream(note.filePath);
+    fileStream.on('error', (error) => {
+      console.error('Error streaming file:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Error streaming file' });
+      }
+    });
+    
     fileStream.pipe(res);
   } catch (error) {
     console.error('Error downloading note:', error);

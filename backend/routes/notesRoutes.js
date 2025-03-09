@@ -17,7 +17,7 @@ router.get("/teacher-notes",
   noteController.getTeacherNotes
 );
 
-// Download a note
+// Download a note (authenticated users only)
 router.get("/download/:id", 
   authenticateToken, 
   noteController.downloadNote
