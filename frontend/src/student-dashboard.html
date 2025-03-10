@@ -1,28 +1,847 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes-Repo App - Student Dashboard</title>
+  <!-- Google Fonts for improved typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* CSS Variables for easy theming */
+    :root {
+      --primary-color: #6e8efb;
+      --secondary-color: #a777e3;
+      --accent-color: #ff6b6b;
+      --light-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255, 255, 255, 0.2);
+      --text-color: #333;
+      --subtext-color: #666;
+    }
+    
+    /* Global resets and typography */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Animated gradient background */
+    body {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Focus styles for accessibility */
+    :focus {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    
+    .dashboard {
+      width: 100%;
+      max-width: 1400px;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 25px;
+      animation: fadeIn 1s ease-out;
+      min-height: calc(100vh - 40px);
+      align-items: start;
+    }
+    
+    /* Profile Card */
+    .profile-card {
+      background: var(--light-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: slideInLeft 0.8s ease-out;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    .profile-logo {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+      font-weight: bold;
+      color: #fff;
+      border: 5px solid #fff;
+      animation: bounceIn 1s ease-out;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .profile-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    .profile-card h2 {
+      font-size: 1.8rem;
+      color: var(--text-color);
+      margin-bottom: 10px;
+      animation: fadeInUp 0.8s ease-out both;
+    }
+    .profile-card p {
+      font-size: 1.1rem;
+      color: var(--subtext-color);
+      margin-bottom: 25px;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    .student-info {
+      background: rgba(110, 142, 251, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    .student-info p {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .student-info i {
+      margin-right: 10px;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, var(--accent-color), #ff8e8e);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(255, 107, 107, 0.2);
+    }
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(255, 107, 107, 0.3);
+    }
+    .logout-btn:active {
+      transform: translateY(0);
+    }
+    
+    /* Notes Section */
+    .notes-section {
+      background: var(--light-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: slideInRight 0.8s ease-out;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      min-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+    }
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      animation: fadeInDown 0.8s ease-out;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .notes-section h2 {
+      font-size: 2rem;
+      color: var(--text-color);
+      animation: fadeInDown 0.8s ease-out;
+    }
+    .search-container {
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 20px;
+      padding-left: 45px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #fff;
+    }
+    .search-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
+    }
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+    .notes-filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      animation: fadeInDown 0.8s ease-out 0.2s both;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 15px;
+      background: rgba(110, 142, 251, 0.2);
+      border: none;
+      border-radius: 30px;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(110, 142, 251, 0.3);
+    }
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+      padding-right: 10px;
+      flex-grow: 1;
+      max-height: calc(100vh - 200px);
+    }
+    .notes-list::-webkit-scrollbar {
+      width: 8px;
+      background: transparent;
+    }
+    .notes-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+    }
+    .notes-list::-webkit-scrollbar-thumb {
+      background: rgba(110, 142, 251, 0.5);
+      border-radius: 10px;
+    }
+    .notes-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(110, 142, 251, 0.8);
+    }
+    .note-item {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: slideInUp 0.6s ease-out var(--delay);
+      border-left: 5px solid var(--primary-color);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+    .note-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .note-info {
+      flex: 1;
+    }
+    .note-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 5px;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .note-details {
+      font-size: 0.9rem;
+      color: var(--subtext-color);
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .note-category {
+      background: rgba(110, 142, 251, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--primary-color);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(-50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideInUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .dashboard { grid-template-columns: 1fr 2fr; }
+    }
+    @media (max-width: 992px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .profile-card { position: static; }
+      .notes-section { min-height: auto; }
+      .notes-list { max-height: 600px; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .notes-header { flex-direction: column; align-items: flex-start; }
+      .search-container { max-width: 100%; width: 100%; }
+      .notes-filters { width: 100%; overflow-x: auto; padding-bottom: 10px; flex-wrap: nowrap; }
+      .note-item { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+  <script src="/js/auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    let currentTab = 'notes';
+    let myNotes = [];
+    let csrfToken = '';
+    let currentCategory = 'all'; // Track the currently selected category
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      csrfToken = getCookie('csrf_token');
+      initDashboard();
+      checkAuth('student');
+      fetchUserData();
+      fetchNotes();
+      
+      // Add event listener for logout button
+      document.querySelector('.logout-btn').addEventListener('click', logout);
+    });
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return '';
+    }
+
+    function initDashboard() {
+      const searchInput = document.querySelector('.search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          filterNotesBySearch(searchTerm);
+        });
+      }
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = btn.getAttribute('data-category');
+          currentCategory = category; // Update current category
+          filterNotes(category);
+        });
+      });
+    }
+
+    function filterNotesBySearch(searchTerm) {
+      const noteItems = document.querySelectorAll('.note-item');
+      noteItems.forEach(item => {
+        const title = item.querySelector('.note-title').textContent.toLowerCase();
+        const category = item.querySelector('.note-category').textContent.toLowerCase();
+        const teacher = item.querySelector('.note-details span:first-child')
+          ? item.querySelector('.note-details span:first-child').textContent.toLowerCase()
+          : '';
+        item.style.display = (title.includes(searchTerm) || category.includes(searchTerm) || teacher.includes(searchTerm)) ? 'flex' : 'none';
+      });
+    }
+
+    function filterNotes(category) {
+      // Update UI to show which button is active
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-category') === category);
+      });
+      
+      // Update current category and re-render notes
+      currentCategory = category;
+      renderNotes();
+    }
+
+    async function fetchUserData() {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('/api/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch user data');
+        const userData = await response.json();
+        const userName = userData.name || userData.fullName || userData.username || 'Student';
+        const initials = userName.split(' ').map(name => name[0]).join('').toUpperCase();
+        document.getElementById('username').textContent = userName;
+        document.getElementById('welcomeMessage').textContent = `Welcome, ${userName}`;
+        document.querySelector('.profile-logo').textContent = initials;
+        document.getElementById('email').textContent = userData.email || 'student@example.com';
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function fetchNotes() {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('/api/notes/user-notes', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch notes');
+        const notes = await response.json();
+        myNotes = notes;
+        renderNotes();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function renderNotes() {
+      const notesList = document.querySelector('.notes-list');
+      notesList.innerHTML = '';
+      
+      // Filter notes based on current category
+      const filteredNotes = currentCategory === 'all' 
+        ? myNotes 
+        : myNotes.filter(note => 
+            note.category && note.category.toLowerCase() === currentCategory.toLowerCase()
+          );
+      
+      if (!filteredNotes.length) {
+        notesList.innerHTML = `<div class="empty-state"><i class="fas fa-info-circle"></i><p>No notes available${currentCategory !== 'all' ? ' for ' + currentCategory : ''}</p></div>`;
+        return;
+      }
+      
+      filteredNotes.forEach(note => {
+        const noteItem = document.createElement('div');
+        noteItem.className = 'note-item';
+        noteItem.style.setProperty('--delay', '0.1s');
+        noteItem.innerHTML = `
+          <div class="note-info">
+            <div class="note-title">${note.title}</div>
+            <div class="note-details">
+              <span>${note.teacher || 'Teacher Name'}</span>
+              <span class="note-category">${note.category}</span>
+            </div>
+          </div>
+          <div class="note-actions">
+            <button class="note-btn" onclick="viewNote('${note._id}')"><i class="fas fa-eye"></i> View</button>
+          </div>
+        `;
+        notesList.appendChild(noteItem);
+      });
+    }
+
+    function viewNote(noteId) {
+      // Get JWT token for authentication
+      const token = localStorage.getItem('jwt');
+      
+      // Create a notification that the download is starting
+      const notification = document.createElement('div');
+      notification.style.position = 'fixed';
+      notification.style.bottom = '20px';
+      notification.style.right = '20px';
+      notification.style.backgroundColor = 'rgba(110, 142, 251, 0.9)';
+      notification.style.color = 'white';
+      notification.style.padding = '15px 20px';
+      notification.style.borderRadius = '10px';
+      notification.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+      notification.style.zIndex = '1000';
+      notification.textContent = 'Opening note...';
+      document.body.appendChild(notification);
+      
+      // Variable to store response for later use
+      let responseData;
+      
+      // Create a direct download link using a fetch request
+      fetch(`/api/notes/download/${noteId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to download note');
+        }
+        responseData = response;
+        return response.blob();
+      })
+      .then(blob => {
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create an anchor element and trigger a download
+        const a = document.createElement('a');
+        a.href = url;
+        
+        // Try to get filename from Content-Disposition header, or use a default
+        let filename = `note-${noteId}.pdf`;
+        const contentDisposition = responseData.headers.get('Content-Disposition');
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+          if (filenameMatch && filenameMatch[1]) {
+            filename = filenameMatch[1].replace(/['"]/g, '');
+          }
+        }
+        
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        
+        notification.textContent = 'Note downloaded successfully!';
+        notification.style.backgroundColor = 'rgba(75, 181, 67, 0.9)';
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error downloading note:', error);
+        notification.textContent = 'Error downloading note. Please try again.';
+        notification.style.backgroundColor = 'rgba(255, 76, 76, 0.9)';
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      });
+    }
+
+    // Add logout function
+    function logout() {
+      // Clear JWT from localStorage
+      localStorage.removeItem('jwt');
+      
+      // Clear any cookies (including refresh tokens if present)
+      document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
+      // Redirect to homepage instead of login page
+      window.location.href = '/';
+    }
+
+    // Initialize particles.js with optimized settings for better performance
+    function initParticles() {
+      // Reduce particle count on mobile for better performance
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 30 : 80;
+      const particleSpeed = isMobile ? 1 : 2;
+
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": particleCount, // Dynamically set based on device
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#ffffff"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 1,
+              "color": "rgba(255, 255, 255, 0.3)"
+            }
+          },
+          "opacity": {
+            "value": 0.8,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.4,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 4,
+              "size_min": 2,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.6,
+            "width": 1.5
+          },
+          "move": {
+            "enable": true,
+            "speed": particleSpeed, // Dynamically set based on device
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": !isMobile, // Disable hover effects on mobile
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.8
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": isMobile ? 2 : 3
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": false // Disable retina detection for better performance
+      });
+    }
+
+    // Initialize particles
+    initParticles();
+
+    // Reinitialize on resize with debounce for better performance
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initParticles, 250);
+    });
+  </script>
+  <script>
+  particlesJS('particles-js', {
+    "particles": {
+      "number": {
+        "value": 80,
+        "density": {
+          "enable": true,
+          "value_area": 800
+        }
+      },
+      "color": {
+        "value": "#ffffff"
+      },
+      "shape": {
+        "type": "circle",
+        "stroke": {
+          "width": 0,
+          "color": "#000000"
+        },
+        "polygon": {
+          "nb_sides": 5
+        },
+        "image": {
+          "src": "img/github.svg",
+          "width": 100,
+          "height": 100
+        }
+      },
+      "opacity": {
+        "value": 0.5,
+        "random": false,
+        "anim": {
+          "enable": false,
+          "speed": 1,
+          "opacity_min": 0.1,
+          "sync": false
+        }
+      },
+      "size": {
+        "value": 3,
+        "random": true,
+        "anim": {
+          "enable": false,
+          "speed": 40,
+          "size_min": 0.1,
+          "sync": false
+        }
+      },
+      "line_linked": {
+        "enable": true,
+        "distance": 150,
+        "color": "#ffffff",
+        "opacity": 0.4,
+        "width": 1
+      },
+      "move": {
+        "enable": true,
+        "speed": 6,
+        "direction": "none",
+        "random": false,
+        "straight": false,
+        "out_mode": "out",
+        "bounce": false,
+        "attract": {
+          "enable": false,
+          "rotateX": 600,
+          "rotateY": 1200
+        }
+      }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": {
+        "onhover": {
+          "enable": true,
+          "mode": "repulse"
+        },
+        "onclick": {
+          "enable": true,
+          "mode": "push"
+        },
+        "resize": true
+      },
+      "modes": {
+        "grab": {
+          "distance": 400,
+          "line_linked": {
+            "opacity": 1
+          }
+        },
+        "bubble": {
+          "distance": 400,
+          "size": 40,
+          "duration": 2,
+          "opacity": 8,
+          "speed": 3
+        },
+        "repulse": {
+          "distance": 200,
+          "duration": 0.4
+        },
+        "push": {
+          "particles_nb": 4
+        },
+        "remove": {
+          "particles_nb": 2
+        }
+      }
+    },
+    "retina_detect": true
+  });
+</script>
 </head>
 <body>
-    <div id="particles-js"></div>
+  <div id="particles-js"></div>
+  <div class="main-content">
     <div class="dashboard">
-        <div class="card">
-            <h2>Welcome, Student!</h2>
-            <p>Here is your dashboard.</p>
+      <div class="profile-card">
+        <div class="profile-logo">S</div>
+        <h2 id="welcomeMessage">Welcome, <span id="username">Student Name</span></h2>
+        <p id="email">student@example.com</p>
+        <div class="student-info">
+          <p><i class="fas fa-book"></i> Course: Computer Science</p>
         </div>
-        <div class="card">
-            <h2>Assignments</h2>
-            <p>Check your assignments here.</p>
+        <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+      <div class="notes-section">
+        <div class="notes-header">
+          <h2>Your Notes</h2>
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search notes..." />
+          </div>
         </div>
-        <div class="card">
-            <h2>Grades</h2>
-            <p>View your grades here.</p>
+        <div class="notes-filters">
+          <button class="filter-btn active" data-category="all">All</button>
+          <button class="filter-btn" data-category="statistics">Statistics</button>
+          <button class="filter-btn" data-category="computer science">Computer Science</button>
+          <button class="filter-btn" data-category="literature">Literature</button>
         </div>
+        <div class="notes-list">
+          <!-- Dynamically rendered note items will appear here -->
+        </div>
+      </div>
     </div>
-    <script src="particles.min.js"></script>
-    <script src="scripts.js"></script>
+  </div>
 </body>
 </html>
