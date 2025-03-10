@@ -14,12 +14,36 @@ body {
     /* Improved scrolling for desktop */
     scroll-behavior: smooth;
     overflow-x: hidden;
+    /* Desktop optimization */
+    min-width: 1024px;
+    font-size: 16px;
 }
 
 /* Focus styles for keyboard navigation - desktop accessibility */
 :focus {
     outline: 3px solid #3498db;
     outline-offset: 2px;
+}
+
+/* Custom scrollbar for desktop - better UX */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+    border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* Navbar */
@@ -33,6 +57,8 @@ body {
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     animation: slideDown 0.5s ease-in-out;
+    /* Desktop optimization */
+    height: 70px;
 }
 
 .nav-content {
@@ -48,13 +74,15 @@ body {
     font-size: 1.8rem;
     font-weight: bold;
     text-decoration: none;
-    /* Better hover effect for desktop */
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    /* Desktop hover effect */
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .logo:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
+    color: #3498db;
+    /* Desktop enhancement */
+    transform: scale(1.05);
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
 }
 
 /* Navigation Links */
@@ -643,30 +671,11 @@ footer {
     40% { transform: scale(1.5); }
 }
 
-/* Desktop-specific scrollbar styling */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #3498db;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #2980b9;
-}
-
-/* Adjustments for Extra Large Screens */
+/* Desktop optimization - wide screen layout adjustments */
 @media (min-width: 1600px) {
     .features-grid {
         grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
     }
     
     .nav-content, .features, .container {
@@ -675,56 +684,58 @@ footer {
     
     body {
         font-size: 18px;
+        line-height: 1.7;
+    }
+    
+    .section {
+        padding: 5rem 2rem;
+    }
+    
+    .hero {
+        min-height: 700px;
     }
 }
 
-/* Adjustments for Large Desktop Screens */
 @media (min-width: 1200px) and (max-width: 1599px) {
     .container {
-        max-width: 1140px;
+        max-width: 1200px;
         margin: 0 auto;
     }
     
     .hero h1 {
-        font-size: 3.5rem;
+        font-size: 3.8rem;
     }
     
     .hero p {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        max-width: 800px;
     }
 }
 
-/* Adjustments for Small Screens */
-@media (max-width: 1024px) {
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-
-    .hero p {
-        font-size: 1.2rem;
-    }
-
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Cursor styling for desktop */
+button, 
+a, 
+.dropdown, 
+input[type="submit"] {
+    cursor: pointer;
 }
 
-@media (max-width: 768px) {
-    .hero {
-        padding: 8rem 2rem 4rem;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-    }
-    
-    .hero p {
-        font-size: 1rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
+/* Large screen transitions */
+.feature-card,
+.btn,
+.step-content,
+.preview-card,
+.section-cta {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Desktop hover feedback */
+.feature-card:hover,
+.preview-card:hover,
+.step-content:hover,
+.section-cta:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* Floating Shapes for How It Works Section */

@@ -23,6 +23,8 @@
             /* Improved scrolling for desktop */
             scroll-behavior: smooth;
             overflow-x: hidden;
+            /* Desktop optimization */
+            min-width: 1024px;
         }
 
         /* Focus styles for keyboard navigation - desktop accessibility */
@@ -35,7 +37,7 @@
             width: 100%;
             max-width: 1400px;
             display: grid;
-            grid-template-columns: 1fr 3fr;
+            grid-template-columns: 300px 1fr;
             gap: 25px;
             animation: fadeIn 1s ease-out;
             /* Better height handling for desktop */
@@ -48,15 +50,12 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            animation: slideInLeft 0.8s ease-out;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            height: fit-content;
-            /* Sticky positioning for desktop */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 20px;
+            /* Desktop optimization - always visible on scroll */
+            height: calc(100vh - 40px);
+            overflow-y: auto;
         }
 
         .profile-logo {
@@ -438,18 +437,21 @@
         /* Responsive Design */
         @media (max-width: 1200px) {
             .dashboard {
-                grid-template-columns: 1fr 2fr;
+                max-width: 1140px;
+                grid-template-columns: 280px 1fr;
             }
         }
 
         @media (max-width: 992px) {
             .dashboard {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
             
             .profile-card {
-                position: static;
+                position: relative;
+                top: 0;
+                height: auto;
+                max-width: 100%;
             }
             
             .notes-section {
@@ -478,9 +480,6 @@
             
             .notes-filters {
                 width: 100%;
-                overflow-x: auto;
-                padding-bottom: 10px;
-                flex-wrap: nowrap;
             }
             
             .note-item {
@@ -583,6 +582,78 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Desktop-specific enhancements */
+        .dashboard-content {
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+            padding-right: 15px;
+            /* Smooth scrolling */
+            scroll-behavior: smooth;
+        }
+
+        /* Desktop optimized scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        /* Enhanced tooltip for desktop */
+        [data-tooltip] {
+            position: relative;
+            cursor: help;
+        }
+
+        [data-tooltip]:hover::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        [data-tooltip]:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

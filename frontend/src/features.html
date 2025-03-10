@@ -4,111 +4,407 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Features - NotesRepo</title>
-  <link rel="stylesheet" href="/css/styles.css" />
+  
+  <!-- Google Fonts, Font Awesome, and Animation Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
   <style>
-    .page-header {
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #f72585;
+      --dark: #222831;
+      --light: #f8f9fa;
+      --accent: #4cc9f0;
+      --text: #2d3748;
+      --text-light: #718096;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255,255,255,0.2);
+      --gradient-bg: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.25s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Optimize transitions - specific properties instead of "all" for better performance */
+    .btn-primary, .feature-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+    
+    /* Use hardware acceleration for smoother animations */
+    .feature-card, .page-header h1, .page-header p {
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    
+    body {
+      background: var(--light);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 37, 47, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-content {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    
+    .nav-links a {
       color: white;
-      padding: 5rem 2rem 3rem;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      font-size: 1.1rem;
+    }
+    
+    .nav-links .login-btn {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .nav-links .signup-btn {
+      background-color: var(--secondary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+    }
+    
+    /* Header with Particles */
+    .page-header {
+      position: relative;
+      background: var(--gradient-bg);
+      padding: 8rem 2rem 5rem;
       text-align: center;
-      margin-bottom: 3rem;
+      color: #fff;
+      overflow: hidden;
+    }
+    
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
     }
     
     .page-header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      animation: fadeIn 1s ease forwards;
+      background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Fallback for non-webkit browsers */
+      line-height: 1.2;
     }
     
     .page-header p {
-      font-size: 1.3rem;
-      max-width: 800px;
+      font-size: 1.5rem;
+      max-width: 700px;
       margin: 0 auto;
-      opacity: 0.9;
+      opacity: 0.95;
+      animation: fadeIn 1.5s ease forwards;
+      font-weight: 300;
+      line-height: 1.6;
     }
     
-    .content-section {
-      padding-bottom: 5rem;
+    /* Optimize animations with transform3d for GPU acceleration */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate3d(0, 20px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     
-    .additional-features {
-      margin-top: 5rem;
-      background-color: #f8f9fa;
-      padding: 4rem 0;
+    /* Features Section */
+    .features-section {
+      padding: 8rem 2rem;
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
     
-    .additional-features::before {
-      content: "";
+    .shape {
       position: absolute;
-      top: -100px;
+      opacity: 0.3;
+      z-index: 0;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+    
+    .shape-1 {
+      background-color: var(--primary);
+      width: 300px;
+      height: 300px;
+      top: 20%;
       left: -100px;
-      width: 200px;
-      height: 200px;
-      background: rgba(52, 152, 219, 0.1);
-      border-radius: 50%;
+      animation: morph 15s linear infinite alternate;
     }
     
-    .additional-features::after {
-      content: "";
+    .shape-2 {
+      background-color: var(--secondary);
+      width: 350px;
+      height: 350px;
+      bottom: -100px;
+      right: -100px;
+      animation: morph 20s linear infinite alternate;
+    }
+    
+    @keyframes morph {
+      0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      25% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+      50% { border-radius: 30% 70% 70% 30% / 70% 30% 70% 30%; }
+      75% { border-radius: 70% 30% 30% 70% / 30% 70% 30% 70%; }
+      100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    }
+    
+    .section-title {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      position: relative;
+      z-index: 1;
+      padding-bottom: 1rem;
+    }
+    
+    .section-title::after {
+      content: '';
       position: absolute;
-      bottom: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: rgba(231, 76, 60, 0.1);
-      border-radius: 50%;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
     }
     
-    .compare-plans {
-      margin-top: 5rem;
-      text-align: center;
+    .section-desc {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+      color: var(--text-light);
+      position: relative;
+      z-index: 1;
     }
     
-    .compare-plans h2 {
-      margin-bottom: 2rem;
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin-top: 3rem;
+      position: relative;
+      z-index: 1;
     }
     
-    .plans-table {
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
-      border-collapse: collapse;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 20px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, background-color 0.4s ease;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       overflow: hidden;
     }
     
-    .plans-table th,
-    .plans-table td {
-      padding: 1.2rem;
-      text-align: center;
-      border-bottom: 1px solid #e1e1e1;
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
     
-    .plans-table th {
-      background-color: #2c3e50;
-      color: white;
+    .feature-card:hover {
+      transform: translate3d(0, -15px, 0);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+    
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2) rotate(5deg);
+    }
+    
+    .feature-icon {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Fallback for non-webkit browsers */
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
       font-weight: 600;
     }
     
-    .plans-table tr:nth-child(even) {
-      background-color: #f8f9fa;
+    .feature-card p {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      line-height: 1.7;
     }
     
-    .plans-table tr:hover {
-      background-color: #e9f2f9;
+    /* CTA Section */
+    .section-cta {
+      text-align: center;
+      padding: 6rem 2rem;
+      background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      position: relative;
+      overflow: hidden;
     }
     
-    .check-icon {
-      color: #2ecc71;
+    .cta-btn {
+      display: inline-block;
+      padding: 1.2rem 2.5rem;
       font-size: 1.2rem;
+      text-decoration: none;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      background: linear-gradient(45deg, var(--primary) 0%, var(--primary-dark) 100%);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      margin-top: 2rem;
     }
     
-    .x-icon {
-      color: #e74c3c;
-      font-size: 1.2rem;
+    .cta-btn:hover {
+      transform: translate3d(0, -5px, 0) scale(1.02);
+      box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
+    }
+    
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, var(--primary-dark) 0%, var(--primary) 100%);
+      z-index: -1;
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+    
+    .cta-btn:hover::before {
+      opacity: 1;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .navbar.scrolled {
+        padding: 0.8rem 1rem;
+      }
+      
+      .nav-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .nav-links a {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .page-header p {
+        font-size: 1.2rem;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      .plans-table-container {
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
@@ -116,8 +412,9 @@
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="nav-content">
-      <a href="/" class="logo">NotesRepo</a>
+      <a href="index.html" class="logo">NotesRepo</a>
       <div class="nav-links">
+        <a href="index.html">Home</a>
         <a href="features.html">Features</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="login.html" class="login-btn">Login</a>
@@ -126,183 +423,214 @@
     </div>
   </nav>
 
-  <!-- Page Header -->
+  <!-- Header with Particles -->
   <header class="page-header">
-    <h1>NotesRepo Features</h1>
-    <p>Discover the powerful tools and capabilities that make NotesRepo the perfect platform for educational collaboration</p>
+    <div id="particles-js"></div>
+    <div class="header-content" data-aos="fade-up">
+      <h1>Powerful Features to Enhance Your Learning</h1>
+      <p>Discover all the tools and features that make NotesRepo the perfect platform for educational collaboration</p>
+    </div>
   </header>
 
   <!-- Features Section -->
-  <section class="section features-section content-section">
-    <div class="container">
-      <h2 class="section-title">Core Features</h2>
-      <p class="section-desc">Everything you need to share knowledge and empower learning</p>
-      
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-cloud-upload-alt"></i>
-          </div>
-          <h3>Easy Note Sharing</h3>
-          <p>Upload and share your notes, assignments, and study materials with just a few clicks.</p>
+  <section class="features-section">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    
+    <h2 class="section-title" data-aos="fade-up">Key Features</h2>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Everything you need to collaborate, share knowledge, and succeed in your educational journey</p>
+    
+    <div class="features-grid">
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
         </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-search"></i>
-          </div>
-          <h3>Smart Search</h3>
-          <p>Find exactly what you need with our powerful search functionality that scans through content and tags.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <h3>Community Collaboration</h3>
-          <p>Connect with classmates and teachers to collaborate on projects and share knowledge.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-lock"></i>
-          </div>
-          <h3>Secure Access</h3>
-          <p>Control who sees your uploads with private, public, or group-specific sharing settings.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-mobile-alt"></i>
-          </div>
-          <h3>Mobile Friendly</h3>
-          <p>Access your study materials anytime, anywhere with our responsive mobile interface.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-bell"></i>
-          </div>
-          <h3>Smart Notifications</h3>
-          <p>Stay updated with notifications about new uploads, comments, and interactions.</p>
-        </div>
+        <h3>Easy Note Sharing</h3>
+        <p>Upload notes, presentations, and study materials in various formats. Share with classmates and study groups with just a few clicks.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Additional Features Section -->
-  <section class="additional-features">
-    <div class="container">
-      <h2 class="section-title">Additional Features</h2>
-      <p class="section-desc">Beyond the basics, NotesRepo offers advanced capabilities for a superior learning experience</p>
       
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-comments"></i>
-          </div>
-          <h3>Discussions & Comments</h3>
-          <p>Engage in conversations about study materials with inline comments and discussion threads.</p>
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-icon">
+          <i class="fas fa-lock"></i>
         </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-file-pdf"></i>
-          </div>
-          <h3>Multi-Format Support</h3>
-          <p>Upload and view documents in various formats including PDF, DOCX, PPT, images, and more.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-star"></i>
-          </div>
-          <h3>Rating System</h3>
-          <p>Rate and review study materials to help others find the highest quality resources.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-bookmark"></i>
-          </div>
-          <h3>Bookmarking</h3>
-          <p>Save your favorite resources for quick access later when you need them.</p>
-        </div>
+        <h3>Privacy Control</h3>
+        <p>Control who can access your uploads with flexible privacy options. Share publicly or restrict to specific classmates or groups.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Compare Plans Section -->
-  <section class="compare-plans">
-    <div class="container">
-      <h2 class="section-title">Compare Plans</h2>
-      <p class="section-desc">Choose the plan that fits your needs</p>
       
-      <table class="plans-table">
-        <thead>
-          <tr>
-            <th>Features</th>
-            <th>Student</th>
-            <th>Teacher</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Note Uploads</td>
-            <td>Up to 2 GB</td>
-            <td>Up to 10 GB</td>
-          </tr>
-          <tr>
-            <td>File Formats</td>
-            <td>All formats</td>
-            <td>All formats</td>
-          </tr>
-          <tr>
-            <td>Collaboration</td>
-            <td><i class="fas fa-check check-icon"></i></td>
-            <td><i class="fas fa-check check-icon"></i></td>
-          </tr>
-          <tr>
-            <td>Smart Search</td>
-            <td><i class="fas fa-check check-icon"></i></td>
-            <td><i class="fas fa-check check-icon"></i></td>
-          </tr>
-          <tr>
-            <td>Private Sharing</td>
-            <td><i class="fas fa-check check-icon"></i></td>
-            <td><i class="fas fa-check check-icon"></i></td>
-          </tr>
-          <tr>
-            <td>Analytics</td>
-            <td><i class="fas fa-times x-icon"></i></td>
-            <td><i class="fas fa-check check-icon"></i></td>
-          </tr>
-          <tr>
-            <td>Class Management</td>
-            <td><i class="fas fa-times x-icon"></i></td>
-            <td><i class="fas fa-check check-icon"></i></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="feature-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h3>Discussion Forums</h3>
+        <p>Engage in discussions about specific topics, ask questions, and get answers from your peers and teachers.</p>
+      </div>
+      
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="feature-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <h3>Smart Search</h3>
+        <p>Quickly find the notes and materials you need with our advanced search capability that even looks inside documents.</p>
+      </div>
+      
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Mobile Friendly</h3>
+        <p>Access your study materials anytime, anywhere with our responsive design that works beautifully on all devices.</p>
+      </div>
+      
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="700">
+        <div class="feature-icon">
+          <i class="fas fa-bell"></i>
+        </div>
+        <h3>Notifications</h3>
+        <p>Stay updated with notifications when new content is shared in your courses or when someone responds to your questions.</p>
+      </div>
     </div>
   </section>
 
   <!-- CTA Section -->
-  <section class="section-cta" style="margin: 5rem auto;">
-    <p>Ready to experience these features for yourself?</p>
-    <a href="signup.html" class="btn btn-primary">Join NotesRepo Today</a>
+  <section class="section-cta">
+    <h2 class="section-title" data-aos="fade-up">Ready to Get Started?</h2>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Join thousands of students and educators already using NotesRepo</p>
+    <a href="signup.html" class="cta-btn" data-aos="fade-up" data-aos-delay="200">Sign Up Now</a>
   </section>
 
+  <!-- Script Section -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // Sticky Navbar Effect
-    window.addEventListener("scroll", function () {
-      const navbar = document.getElementById("navbar");
-      if (window.scrollY > 50) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
-      }
+    // Initialize AOS animations
+    document.addEventListener('DOMContentLoaded', function() {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: false
+      });
+    });
+
+    // Initialize particles.js with optimized settings for better performance
+    function initParticles() {
+      // Reduce particle count on mobile for better performance
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 30 : 80;
+      const particleSpeed = isMobile ? 1 : 2;
+      
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": particleCount, // Dynamically set based on device
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#ffffff"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 1,
+              "color": "rgba(255, 255, 255, 0.3)"
+            }
+          },
+          "opacity": {
+            "value": 0.8,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.4,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 4,
+              "size_min": 2,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.6,
+            "width": 1.5
+          },
+          "move": {
+            "enable": true,
+            "speed": particleSpeed, // Dynamically set based on device
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": !isMobile, // Disable hover effects on mobile
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 180,
+              "line_linked": {
+                "opacity": 1
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": isMobile ? 2 : 6
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": false // Disable retina detection for better performance
+      });
+    }
+    
+    // Initialize particles
+    initParticles();
+    
+    // Reinitialize on resize with debounce for better performance
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initParticles, 250);
     });
   </script>
 </body>
-</html> 
+</html>

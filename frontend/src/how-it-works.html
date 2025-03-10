@@ -4,61 +4,283 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How It Works - NotesRepo</title>
-  <link rel="stylesheet" href="/css/styles.css" />
+  
+  <!-- Google Fonts, Font Awesome, and Animation Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
   <style>
-    .page-header {
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #f72585;
+      --dark: #222831;
+      --light: #f8f9fa;
+      --accent: #4cc9f0;
+      --text: #2d3748;
+      --text-light: #718096;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255,255,255,0.2);
+      --gradient-bg: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
+    }
+    
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Optimize transitions */
+    .btn-primary, .step, .cta-btn {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+    
+    /* Better animation performance */
+    .step, .page-header h1, .page-header p, .intro-content, .accordion-item {
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    
+    body {
+      background-color: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 37, 47, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-content {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
       color: white;
-      padding: 5rem 2rem 3rem;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+    }
+    
+    .login-btn, .signup-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+    }
+    
+    .login-btn {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .signup-btn {
+      background-color: var(--secondary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+    }
+    
+    /* Page Header with Particles */
+    .page-header {
+      background: var(--gradient-bg);
+      color: white;
+      padding: 8rem 2rem 5rem;
       text-align: center;
-      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
     }
     
     .page-header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Fallback for non-webkit browsers */
+      line-height: 1.2;
     }
     
     .page-header p {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       max-width: 800px;
       margin: 0 auto;
-      opacity: 0.9;
+      opacity: 0.95;
+      font-weight: 300;
+      line-height: 1.6;
     }
     
-    .content-section {
-      padding-bottom: 5rem;
-    }
-    
+    /* Intro Section */
     .intro-section {
-      padding: 4rem 0;
+      padding: 8rem 0;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shape {
+      position: absolute;
+      opacity: 0.3;
+      z-index: 0;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+    
+    .shape-1 {
+      background-color: var(--primary);
+      width: 300px;
+      height: 300px;
+      top: 20%;
+      left: -100px;
+      animation: morph 15s linear infinite alternate;
+    }
+    
+    .shape-2 {
+      background-color: var(--secondary);
+      width: 350px;
+      height: 350px;
+      bottom: -100px;
+      right: -100px;
+      animation: morph 20s linear infinite alternate;
+    }
+    
+    @keyframes morph {
+      0% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      }
+      25% {
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+      }
+      50% {
+        border-radius: 30% 70% 70% 30% / 70% 30% 70% 30%;
+      }
+      75% {
+        border-radius: 70% 30% 30% 70% / 30% 70% 30% 70%;
+      }
+      100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      }
     }
     
     .intro-content {
       max-width: 900px;
       margin: 0 auto;
-      padding: 2rem;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 3rem;
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    
+    /* Optimize box shadows and transforms */
+    .intro-content:hover {
+      transform: translate3d(0, -10px, 0);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+    
+    .intro-content h2 {
+      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
+      color: var(--dark);
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    
+    .intro-content h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
     }
     
     .intro-content p {
       font-size: 1.2rem;
       line-height: 1.8;
-      color: #555;
+      color: var(--text-light);
       margin-bottom: 2rem;
     }
     
+    /* Video Container Animation */
     .video-container {
       margin-top: 3rem;
       position: relative;
       overflow: hidden;
       padding-top: 56.25%; /* 16:9 Aspect Ratio */
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      transform: perspective(1000px) rotateX(0deg) translateZ(0);
+      transition: transform 0.5s ease;
+    }
+    
+    /* Optimize video container animations */
+    .video-container:hover {
+      transform: perspective(1000px) rotateX(2deg) translateZ(0);
     }
     
     .video-placeholder {
@@ -67,87 +289,381 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #34495e;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-size: 1.5rem;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .video-placeholder:hover {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     }
     
     .video-placeholder i {
-      font-size: 4rem;
-      margin-right: 1rem;
+      font-size: 5rem;
+      margin-right: 1.5rem;
+      color: white;
+      animation: pulse 2s infinite;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
     
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    
+    /* How It Works Section */
+    .how-works-section {
+      position: relative;
+      overflow: hidden;
+      padding: 8rem 2rem;
+      background-color: rgba(248, 249, 250, 0.8);
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 1rem;
+      z-index: 1;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+    
+    .section-desc {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 0 auto 4rem;
+      color: var(--text-light);
+      max-width: 800px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .process-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+    }
+    
+    .step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .step:hover {
+      transform: translate3d(0, -15px, 0);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .step:hover::before {
+      opacity: 1;
+    }
+    
+    .step-number {
+      font-size: 5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Fallback for non-webkit browsers */
+      margin-bottom: 1.5rem;
+      line-height: 1;
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      opacity: 0.2;
+      transition: all 0.3s ease;
+    }
+    
+    .step:hover .step-number {
+      transform: scale(1.2);
+      opacity: 0.3;
+    }
+    
+    .step-content {
+      text-align: center;
+      width: 100%;
+    }
+    
+    .step-icon {
+      margin-bottom: 1.5rem;
+    }
+    
+    .step-icon i {
+      font-size: 3.5rem;
+      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Fallback for non-webkit browsers */
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    
+    .step:hover .step-icon i {
+      transform: scale(1.2) rotate(5deg);
+    }
+    
+    .step-content h3 {
+      font-size: 2rem;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .step-content p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    
+    .step-image {
+      margin-top: 2rem;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    
+    .step-image img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    
+    .step-image:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* FAQ Section */
     .faq-section {
-      padding: 4rem 0;
-      background-color: #f8f9fa;
-      margin-top: 4rem;
+      padding: 8rem 2rem;
+      position: relative;
+      overflow: hidden;
     }
     
     .faq-container {
       max-width: 900px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
     
-    .faq-item {
-      margin-bottom: 1.5rem;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .accordion-item {
+      background: var(--card-bg);
+      border-radius: 15px;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--card-border);
       transition: all 0.3s ease;
     }
     
-    .faq-item:hover {
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
+    .accordion-item:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transform: translate3d(0, -5px, 0);
     }
     
-    .faq-question {
+    .accordion-header {
       padding: 1.5rem;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 1.2rem;
       font-weight: 600;
-      color: #2c3e50;
-      transition: all 0.3s ease;
+      color: var(--dark);
+      transition: background 0.3s ease;
     }
     
-    .faq-question:hover {
-      background-color: #f8f9fa;
+    .accordion-header:hover {
+      background-color: rgba(76, 201, 240, 0.05);
     }
     
-    .faq-answer {
-      padding: 0 1.5rem;
-      height: 0;
-      overflow: hidden;
-      transition: all 0.3s ease;
+    .accordion-header i {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
     }
     
-    .faq-answer p {
-      padding-bottom: 1.5rem;
-      line-height: 1.6;
-      color: #555;
-    }
-    
-    .faq-item.active .faq-answer {
-      height: auto;
-    }
-    
-    .faq-item.active .faq-question {
-      border-bottom: 1px solid #eee;
-    }
-    
-    .faq-item.active .faq-toggle i {
+    .accordion-item.active .accordion-header i {
       transform: rotate(180deg);
     }
     
-    .faq-toggle i {
-      transition: transform 0.3s ease;
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .accordion-item.active .accordion-content {
+      max-height: 500px;
+    }
+    
+    .accordion-body {
+      padding: 0 1.5rem 1.5rem;
+      color: var(--text-light);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      padding: 6rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta-btn {
+      display: inline-block;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.2rem;
+      text-decoration: none;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      background: linear-gradient(45deg, var(--primary) 0%, var(--primary-dark) 100%);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      margin-top: 2rem;
+    }
+    
+    .cta-btn:hover {
+      transform: translate3d(0, -5px, 0) scale(1.02);
+      box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
+    }
+    
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, var(--primary-dark) 0%, var(--primary) 100%);
+      z-index: -1;
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+    
+    .cta-btn:hover::before {
+      opacity: 1;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .nav-links a {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .page-header p {
+        font-size: 1.2rem;
+      }
+      
+      .intro-content {
+        padding: 2rem;
+      }
+      
+      .intro-content h2 {
+        font-size: 2rem;
+      }
+      
+      .step {
+        padding: 2rem;
+      }
+      
+      .step-number {
+        font-size: 4rem;
+      }
+      
+      .step-content h3 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
@@ -155,8 +671,9 @@
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="nav-content">
-      <a href="/" class="logo">NotesRepo</a>
+      <a href="index.html" class="logo">NotesRepo</a>
       <div class="nav-links">
+        <a href="index.html">Home</a>
         <a href="features.html">Features</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="login.html" class="login-btn">Login</a>
@@ -165,178 +682,165 @@
     </div>
   </nav>
 
-  <!-- Page Header -->
+  <!-- Header with Particles -->
   <header class="page-header">
-    <h1>How NotesRepo Works</h1>
-    <p>Discover how to make the most of our platform with this step-by-step guide</p>
+    <div id="particles-js"></div>
+    <div class="header-content" data-aos="fade-up">
+      <h1>How NotesRepo Works</h1>
+      <p>A simple guide to help you get started and make the most of our platform</p>
+    </div>
   </header>
 
   <!-- Intro Section -->
   <section class="intro-section">
-    <div class="container">
-      <div class="intro-content">
-        <h2>Welcome to NotesRepo</h2>
-        <p>NotesRepo is designed to make educational resource sharing simple, efficient, and collaborative. Whether you're a student looking for study materials or a teacher sharing resources with your class, our platform provides the tools you need to succeed.</p>
-        <p>Follow the steps below to get started with NotesRepo and discover how our platform can enhance your educational journey.</p>
-        
-        <div class="video-container">
-          <div class="video-placeholder">
-            <i class="fas fa-play-circle"></i>
-            <span>Watch our quick introduction video</span>
-          </div>
+    <div class="shape shape-1"></div>
+    
+    <div class="intro-content" data-aos="fade-up">
+      <h2>Making Education Collaborative</h2>
+      <p>NotesRepo is designed to simplify how educational materials are shared and accessed. Whether you're a student looking for study resources or a teacher wanting to distribute materials, our platform makes the process seamless and efficient.</p>
+      
+      <div class="video-container" data-aos="fade-up" data-aos-delay="200">
+        <div class="video-placeholder">
+          <i class="fas fa-play-circle"></i>
+          <span>Watch our introduction video</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- How It Works Section -->
-  <section id="how-it-works" class="section how-works-section content-section">
-    <div class="floating-shape shape-1"></div>
-    <div class="floating-shape shape-2"></div>
-    <div class="floating-shape shape-3"></div>
+  <section class="how-works-section">
+    <div class="shape shape-2"></div>
     
-    <div class="container">
-      <h2 class="section-title">The Process</h2>
-      <p class="section-desc">Get started with NotesRepo in just a few simple steps</p>
-      
+    <h2 class="section-title" data-aos="fade-up">Getting Started</h2>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Follow these simple steps to begin your NotesRepo journey</p>
+    
+    <div class="process-container">
       <div class="steps-container">
-        <div class="step">
+        <div class="step" data-aos="fade-up" data-aos-delay="200">
           <div class="step-number">1</div>
           <div class="step-content">
             <div class="step-icon">
               <i class="fas fa-user-plus"></i>
             </div>
             <h3>Create Your Account</h3>
-            <p>Sign up as either a student or teacher with your email address and set up your profile.</p>
-            <div class="step-image">
-              <img src="https://images.unsplash.com/photo-1484807352052-23338990c6c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Create account">
-            </div>
+            <p>Sign up for a free account using your email address. Choose whether you're joining as a student or teacher to access features tailored to your needs.</p>
           </div>
         </div>
         
-        <div class="step">
+        <div class="step" data-aos="fade-up" data-aos-delay="300">
           <div class="step-number">2</div>
           <div class="step-content">
             <div class="step-icon">
-              <i class="fas fa-file-upload"></i>
+              <i class="fas fa-book"></i>
             </div>
-            <h3>Upload Your Materials</h3>
-            <p>Share your notes, assignments, presentations, or any educational content in various formats.</p>
-            <div class="step-image">
-              <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Upload materials">
-            </div>
+            <h3>Set Up Your Profile</h3>
+            <p>Complete your profile by adding your educational institution, subjects, and areas of interest. This helps us connect you with relevant content and like-minded users.</p>
           </div>
         </div>
         
-        <div class="step">
+        <div class="step" data-aos="fade-up" data-aos-delay="400">
           <div class="step-number">3</div>
           <div class="step-content">
             <div class="step-icon">
-              <i class="fas fa-tags"></i>
+              <i class="fas fa-cloud-upload-alt"></i>
             </div>
-            <h3>Organize with Tags</h3>
-            <p>Add relevant tags and descriptions to make your content easily discoverable by others.</p>
-            <div class="step-image">
-              <img src="https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Organize with tags">
-            </div>
+            <h3>Upload Your Materials</h3>
+            <p>Share your notes, presentations, or study guides by uploading them to the platform. You can organize them by subject, course, or topic for easy access later.</p>
           </div>
         </div>
         
-        <div class="step">
+        <div class="step" data-aos="fade-up" data-aos-delay="500">
           <div class="step-number">4</div>
           <div class="step-content">
             <div class="step-icon">
-              <i class="fas fa-users-cog"></i>
+              <i class="fas fa-share-alt"></i>
             </div>
-            <h3>Connect and Collaborate</h3>
-            <p>Follow other users, join subject groups, and collaborate on shared educational resources.</p>
-            <div class="step-image">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Connect and collaborate">
-            </div>
+            <h3>Share and Collaborate</h3>
+            <p>Invite classmates or students to view and collaborate on your materials. Control privacy settings to determine who can access your content.</p>
           </div>
         </div>
         
-        <div class="step">
+        <div class="step" data-aos="fade-up" data-aos-delay="600">
           <div class="step-number">5</div>
           <div class="step-content">
             <div class="step-icon">
-              <i class="fas fa-laptop-house"></i>
+              <i class="fas fa-search"></i>
             </div>
-            <h3>Access Anywhere</h3>
-            <p>Browse and download resources from any device, anytime you need them for your studies.</p>
-            <div class="step-image">
-              <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Access anywhere">
-            </div>
+            <h3>Discover and Learn</h3>
+            <p>Use our smart search to find educational materials relevant to your courses. Save favorite resources and build your personal learning library.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-  
+
   <!-- FAQ Section -->
   <section class="faq-section">
-    <div class="container">
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <p class="section-desc">Get answers to common questions about using NotesRepo</p>
-      
-      <div class="faq-container">
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>How do I create an account?</span>
-            <div class="faq-toggle">
-              <i class="fas fa-chevron-down"></i>
-            </div>
-          </div>
-          <div class="faq-answer">
-            <p>Creating an account is easy! Click the "Sign Up" button in the top navigation, choose whether you're a student or teacher, and fill in your details. Once you verify your email, you'll be ready to start using NotesRepo.</p>
-          </div>
-        </div>
-        
-        <div class="faq-item">
-          <div class="faq-question">
+    <div class="shape shape-1"></div>
+    
+    <h2 class="section-title" data-aos="fade-up">Frequently Asked Questions</h2>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Find quick answers to common questions about using NotesRepo</p>
+    
+    <div class="faq-container">
+      <div class="accordion" data-aos="fade-up" data-aos-delay="200">
+        <div class="accordion-item">
+          <div class="accordion-header">
             <span>What file formats can I upload?</span>
-            <div class="faq-toggle">
-              <i class="fas fa-chevron-down"></i>
-            </div>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <div class="faq-answer">
-            <p>NotesRepo supports a wide range of file formats including PDF, DOCX, PPT, TXT, images (JPG, PNG), and more. If you're on the free plan, you can upload PDF and TXT files. Student and Teacher plans support all available formats.</p>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              NotesRepo supports a wide range of file formats including PDF, DOCX, PPTX, images (JPG, PNG), Excel spreadsheets, and even audio files for recorded lectures. This ensures you can share educational content in whatever format works best.
+            </div>
           </div>
         </div>
         
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>How do I share my notes with specific people?</span>
-            <div class="faq-toggle">
-              <i class="fas fa-chevron-down"></i>
-            </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Is my content secure on NotesRepo?</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <div class="faq-answer">
-            <p>When uploading or editing your notes, you can set privacy options. Choose "Public" to share with everyone, "Private" to keep them just for yourself, or "Specific Users/Groups" to share with selected classmates or classes. You can also generate shareable links with optional passwords.</p>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              Yes, we take security seriously. You control the privacy settings for all your uploads, deciding whether they're public, limited to specific users, or completely private. Our servers use encryption to protect your data, and we never share your personal information with third parties.
+            </div>
           </div>
         </div>
         
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>Is there a mobile app available?</span>
-            <div class="faq-toggle">
-              <i class="fas fa-chevron-down"></i>
-            </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>How do I organize my materials by course?</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <div class="faq-answer">
-            <p>While we don't have a dedicated mobile app yet, our website is fully responsive and works great on mobile devices. You can access all features through your mobile browser. A dedicated app is in our development roadmap for the future.</p>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              When uploading materials, you can assign them to specific courses, subjects, or topics. You can also create custom collections to organize related content together. This makes it easy for you and others to find what they need quickly.
+            </div>
           </div>
         </div>
         
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>How can teachers use NotesRepo in their classroom?</span>
-            <div class="faq-toggle">
-              <i class="fas fa-chevron-down"></i>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Can teachers monitor student access to materials?</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              Yes, teacher accounts include analytics features that show which students have accessed materials, how much time they've spent reviewing them, and which resources are most popular. This provides valuable insight into student engagement with course content.
             </div>
           </div>
-          <div class="faq-answer">
-            <p>Teachers can create class groups where they can share materials with students, track who has accessed resources, create assignments, and facilitate discussions. The Teacher Plan includes analytics to see which materials are most used and helpful to students.</p>
+        </div>
+        
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Is NotesRepo available on mobile devices?</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              Absolutely! NotesRepo is fully responsive and works on smartphones, tablets, and desktop computers. We also have dedicated mobile apps for iOS and Android, giving you access to your educational materials wherever you are.
+            </div>
           </div>
         </div>
       </div>
@@ -344,34 +848,159 @@
   </section>
 
   <!-- CTA Section -->
-  <section class="section-cta" style="margin: 5rem auto;">
-    <p>Ready to get started with NotesRepo?</p>
-    <a href="signup.html" class="btn btn-primary">Create Your Account Today</a>
+  <section class="cta-section">
+    <h2 class="section-title" data-aos="fade-up">Ready to Get Started?</h2>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Join thousands of students and teachers already using NotesRepo</p>
+    <a href="signup.html" class="cta-btn" data-aos="fade-up" data-aos-delay="200">Create Your Account</a>
   </section>
 
+  <!-- Script Section -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // Sticky Navbar Effect
-    window.addEventListener("scroll", function () {
-      const navbar = document.getElementById("navbar");
-      if (window.scrollY > 50) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
-      }
+    // Initialize AOS animations
+    document.addEventListener('DOMContentLoaded', function() {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: false
+      });
     });
-    
-    // FAQ Toggle
-    document.querySelectorAll('.faq-question').forEach(question => {
-      question.addEventListener('click', () => {
-        const item = question.parentElement;
+
+    // Accordions functionality
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      header.addEventListener('click', () => {
         item.classList.toggle('active');
       });
     });
+
+    // Initialize particles.js with optimized settings for better performance
+    function initParticles() {
+      // Reduce particle count on mobile for better performance
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 30 : 80;
+      const particleSpeed = isMobile ? 1 : 2;
+      
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": particleCount, // Dynamically set based on device
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#ffffff"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 1,
+              "color": "rgba(255, 255, 255, 0.3)"
+            }
+          },
+          "opacity": {
+            "value": 0.8,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.4,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 4,
+              "size_min": 2,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.6,
+            "width": 1.5
+          },
+          "move": {
+            "enable": true,
+            "speed": particleSpeed, // Dynamically set based on device
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": !isMobile, // Disable hover effects on mobile
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 180,
+              "line_linked": {
+                "opacity": 1
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": isMobile ? 2 : 6
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": false // Disable retina detection for better performance
+      });
+    }
     
-    // Video placeholder click
+    // Initialize particles
+    initParticles();
+    
+    // Reinitialize on resize with debounce for better performance
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initParticles, 250);
+    });
+    
+    // Video placeholder click functionality
     document.querySelector('.video-placeholder').addEventListener('click', function() {
-      alert('Video would play here in production version');
+      alert('Video playback would start here in the full implementation.');
     });
   </script>
 </body>
-</html> 
+</html>

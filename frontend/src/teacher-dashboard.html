@@ -13,22 +13,45 @@
         }
 
         body {
-            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            animation: bgPulse 10s infinite alternate;
+            animation: bgPulse 15s infinite alternate;
+            /* Improved scrolling for desktop */
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            /* Desktop optimization */
+            min-width: 1024px;
         }
 
         .dashboard {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1600px;
             display: grid;
-            grid-template-columns: 1fr 3fr;
-            gap: 25px;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
             animation: fadeIn 1s ease-out;
+            /* Better height handling for desktop */
+            min-height: calc(100vh - 40px);
+            align-items: start;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            /* Desktop optimization - sticky sidebar */
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Profile Card */
@@ -538,20 +561,28 @@
         /* Responsive Design */
         @media (max-width: 992px) {
             .dashboard {
-                grid-template-columns: 1fr 2fr;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .dual-panel {
+                grid-template-columns: 1fr;
             }
         }
         
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
+            .main-content {
+                max-height: none;
+                overflow-y: visible;
             }
             
-            .profile-card {
-                margin-bottom: 20px;
-            }
-            
-            .notes-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -597,6 +628,113 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Desktop-specific enhancements */
+        /* Custom scrollbar for better desktop UX */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        /* Enhanced desktop tooltips */
+        [data-tooltip] {
+            position: relative;
+            cursor: help;
+        }
+
+        [data-tooltip]:hover::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        [data-tooltip]:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        /* Desktop optimized dual panel view */
+        .dual-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            /* Desktop optimization - better grid layout */
+            grid-auto-rows: minmax(220px, auto);
+        }
+
+        .course-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            /* Desktop hover effect */
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

@@ -5,21 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - NotesRepo</title>
   <!-- Google Fonts for a modern look -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="/css/styles.css" />
   <style>
     /* Global Styles */
-    body {
-      font-family: 'Montserrat', sans-serif;
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2c3e50;
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --light: #f8f9fa;
+      --dark: #1a1a2e;
+      --text: #333;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #3498db, #2c3e50);
-      background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite;
+      transition: all 0.25s ease;
+    }
+
+    /* Optimize transitions - specific properties instead of "all" for better performance */
+    .btn-primary, .home-button {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .form-group input, .form-group select, .footer-links a {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    /* Use hardware acceleration for smoother animations */
+    body, .signup-container, .btn-primary, .home-button {
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--light);
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(125deg, #6a11cb 0%, #2575fc 100%);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* Particles container */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     @keyframes gradientAnimation {
@@ -31,131 +92,350 @@
     /* Signup Container */
     .signup-container {
       background: rgba(255, 255, 255, 0.9);
-      padding: 2.5rem;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
       width: 100%;
-      max-width: 800px;
+      max-width: 850px;
       text-align: center;
       animation: fadeInUp 0.8s ease;
-      color: #2c3e50;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .signup-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
+      z-index: -1;
+      animation: pulseGlow 10s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translate3d(0, 40px, -50px); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
 
     /* Header */
     .signup-header h1 {
-      font-size: 2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
       margin-bottom: 0.5rem;
-      color: #333;
+      color: var(--dark); /* Fallback for browsers that don't support gradients */
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* Standard alternative to text-fill-color */
+      animation: headingFadeIn 1s ease;
+    }
+
+    @keyframes headingFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .signup-header p {
-      color: #1a365d;
+      color: var(--secondary);
       font-size: 1.1rem;
-      font-weight: 600;
-      margin: 1rem auto 2rem;
-      line-height: 1.5;
-      padding: 0.8rem;
-      background: #ffffff;
+      font-weight: 400;
+      margin: 1.5rem auto 2.5rem;
+      line-height: 1.6;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.8);
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       max-width: 100%;
-      border-left: 4px solid #3498db;
+      border-left: 4px solid var(--primary);
+      animation: fadeInSlide 1.2s ease;
+      transform: translateZ(10px);
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translate3d(-30px, 0, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 10px); }
     }
 
     /* Messages */
     .error-message {
-      color: #e74c3c;
+      color: var(--error);
       background: rgba(231, 76, 60, 0.1);
-      padding: 0.5rem;
-      border-radius: 5px;
+      padding: 0.8rem;
+      border-radius: 8px;
       display: none;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--error);
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
 
     .success-message {
-      color: #2ecc71;
+      color: var(--success);
       background: rgba(46, 204, 113, 0.1);
-      padding: 0.5rem;
-      border-radius: 5px;
+      padding: 0.8rem;
+      border-radius: 8px;
       display: none;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--success);
+      animation: popIn 0.5s ease;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     /* Form Styles */
-    .form-group {
-      text-align: left;
-      margin-bottom: 1.2rem;
-      display: inline-block;
-      width: 45%;
-      margin-right: 4%;
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
 
-    .form-group:nth-child(2n) {
-      margin-right: 0;
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      width: 48%;
+      position: relative;
+      animation: formItemFadeIn 0.5s ease;
+      animation-fill-mode: both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.2s; }
+    .form-group:nth-child(2) { animation-delay: 0.3s; }
+    .form-group:nth-child(3) { animation-delay: 0.4s; }
+    .form-group:nth-child(4) { animation-delay: 0.5s; }
+    .form-group:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes formItemFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      margin-bottom: 0.6rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--secondary);
+      transition: all 0.3s;
+      transform-origin: left;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
+    .form-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      pointer-events: none;
+      transition: all 0.3s;
     }
 
     .form-group input,
     .form-group select {
       width: 100%;
-      padding: 0.8rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      padding: 0.9rem 1rem 0.9rem 3rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
       font-size: 1rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.8);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      transition: all 0.3s;
     }
 
     .form-group input:focus,
     .form-group select:focus {
       outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+      background-color: #fff;
     }
 
+    .form-group input:focus + .input-icon,
+    .form-group select:focus + .input-icon {
+      color: var(--primary);
+    }
+
+    .form-group input:focus ~ i {
+      color: var(--primary);
+    }
+
+    /* Password validation indicators */
+    .password-strength {
+      height: 5px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      display: none;
+    }
+
+    .password-strength span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .password-criteria {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .password-match {
+      font-size: 0.8rem;
+      margin-top: 5px;
+      color: #777;
+      display: none;
+    }
+
+    /* Button style */
     .btn-primary {
       width: 100%;
-      padding: 0.8rem;
-      font-size: 1rem;
+      padding: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #fff;
-      background-color: #3498db;
+      background: linear-gradient(45deg, var(--primary), var(--primary-dark));
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
     }
 
     .btn-primary:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
+      transform: translateY(-5px);
+      box-shadow: 0 7px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Loading state */
+    .btn-primary.loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .btn-primary.loading::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
     .footer-links {
-      margin-top: 1.5rem;
+      margin-top: 2rem;
       display: flex;
       justify-content: space-between;
+      animation: fadeIn 1s ease;
+      animation-delay: 0.8s;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .footer-links a {
-      color: #3498db;
+      color: var(--primary);
       text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.3s;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .footer-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary);
+      transition: width 0.3s ease;
     }
 
     .footer-links a:hover {
-      color: #2980b9;
-      text-decoration: underline;
+      color: var(--primary-dark);
+    }
+
+    .footer-links a:hover::after {
+      width: 100%;
     }
 
     /* Responsive adjustments */
@@ -167,13 +447,73 @@
 
       .form-group {
         width: 100%;
-        margin-right: 0;
+      }
+
+      .signup-header h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Home button */
+    .home-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      color: var(--primary);
+      padding: 12px 20px;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-family: 'Montserrat', sans-serif;
+      z-index: 100;
+      transform: translateY(0);
+      animation: bounceIn 0.6s ease 1s backwards;
+    }
+
+    .home-button i {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+
+    .home-button:hover {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+      transform: translateY(-5px);
+    }
+
+    .home-button:active {
+      transform: translateY(0);
+    }
+
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+      70% { transform: scale(1.05) translateY(-5px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .home-button {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
       }
     }
   </style>
   <script src="/js/auth.js"></script>
 </head>
 <body>
+  <!-- Particles Background -->
+  <div id="particles-js"></div>
+
   <!-- Signup Container -->
   <div class="signup-container">
     <div class="signup-header">
@@ -187,34 +527,58 @@
     <form id="signupForm" onsubmit="handleSignup(event)">
       <div class="form-group">
         <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" required placeholder="Enter your full name" />
+        <div class="input-container">
+          <input type="text" id="fullName" required placeholder="Enter your full name" />
+          <i class="input-icon fas fa-user"></i>
+        </div>
       </div>
       
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" required placeholder="Enter your email" />
+        <div class="input-container">
+          <input type="email" id="email" required placeholder="Enter your email" />
+          <i class="input-icon fas fa-envelope"></i>
+        </div>
       </div>
       
       <div class="form-group">
         <label for="password">Create Password</label>
-        <input type="password" id="password" required placeholder="Enter your password" />
+        <div class="input-container">
+          <input type="password" id="password" required placeholder="Enter your password" />
+          <i class="input-icon fas fa-lock"></i>
+          <i class="fas fa-eye-slash toggle-password"></i>
+        </div>
+        <div class="password-strength">
+          <span></span>
+        </div>
+        <div class="password-criteria">
+          At least 8 characters with letters, numbers & symbols
+        </div>
       </div>
       
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" required placeholder="Re-enter your password" />
+        <div class="input-container">
+          <input type="password" id="confirmPassword" required placeholder="Re-enter your password" />
+          <i class="input-icon fas fa-lock"></i>
+          <i class="fas fa-eye-slash toggle-password"></i>
+        </div>
+        <div class="password-match"></div>
       </div>
       
       <div class="form-group">
         <label for="userType">I am a:</label>
-        <select id="userType" required>
-          <option value="">Select User Type</option>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-        </select>
+        <div class="input-container">
+          <select id="userType" required>
+            <option value="">Select User Type</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+          <i class="input-icon fas fa-user-graduate"></i>
+        </div>
       </div>
       
-      <button type="submit" class="btn-primary">Create Account</button>
+      <button type="submit" class="btn-primary" id="submitBtn">Create Account</button>
     </form>
     
     <div class="footer-links">
@@ -222,6 +586,271 @@
       <a href="/forgot-password">Forgot Password?</a>
     </div>
   </div>
+
   <script src="/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Initialize particles.js with optimized settings for better performance
+    function initParticles() {
+      // Reduce particle count on mobile for better performance
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 30 : 50;
+      const particleSpeed = isMobile ? 1 : 1.5;
+      
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": particleCount, // Dynamically set based on device
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#ffffff"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            }
+          },
+          "opacity": {
+            "value": 0.5,
+            "random": false,
+            "anim": {
+              "enable": false,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 3,
+            "random": true,
+            "anim": {
+              "enable": false,
+              "speed": 40,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.4,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": particleSpeed, // Dynamically set based on device
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": !isMobile, // Disable hover effects on mobile
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.8
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": isMobile ? 2 : 3
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": false
+      });
+    }
+    
+    // Initialize particles
+    initParticles();
+    
+    // Reinitialize on resize with debounce for better performance
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initParticles, 250);
+    });
+
+    // Password visibility toggle - optimized
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const input = this.previousElementSibling.previousElementSibling;
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        
+        // Use requestAnimationFrame for smoother UI updates
+        requestAnimationFrame(() => {
+          input.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      });
+    });
+
+    // Password strength indicator
+    const passwordInput = document.getElementById('password');
+    const strengthIndicator = document.querySelector('.password-strength');
+    const strengthBar = document.querySelector('.password-strength span');
+    const passwordCriteria = document.querySelector('.password-criteria');
+    
+    passwordInput.addEventListener('focus', function() {
+      strengthIndicator.style.display = 'block';
+      passwordCriteria.style.display = 'block';
+    });
+
+    passwordInput.addEventListener('input', function() {
+      const value = this.value;
+      let strength = 0;
+      
+      if (value.length >= 8) strength += 1;
+      if (value.match(/[a-z]/)) strength += 1;
+      if (value.match(/[A-Z]/)) strength += 1;
+      if (value.match(/[0-9]/)) strength += 1;
+      if (value.match(/[^a-zA-Z0-9]/)) strength += 1;
+      
+      switch (strength) {
+        case 0:
+          strengthBar.style.width = '0%';
+          strengthBar.style.background = '#e74c3c';
+          break;
+        case 1:
+          strengthBar.style.width = '20%';
+          strengthBar.style.background = '#e74c3c';
+          break;
+        case 2:
+          strengthBar.style.width = '40%';
+          strengthBar.style.background = '#f39c12';
+          break;
+        case 3:
+          strengthBar.style.width = '60%';
+          strengthBar.style.background = '#f39c12';
+          break;
+        case 4:
+          strengthBar.style.width = '80%';
+          strengthBar.style.background = '#2ecc71';
+          break;
+        case 5:
+          strengthBar.style.width = '100%';
+          strengthBar.style.background = '#2ecc71';
+          break;
+      }
+    });
+
+    // Password match indicator
+    const confirmInput = document.getElementById('confirmPassword');
+    const matchIndicator = document.querySelector('.password-match');
+    
+    confirmInput.addEventListener('focus', function() {
+      matchIndicator.style.display = 'block';
+    });
+
+    confirmInput.addEventListener('input', function() {
+      if (this.value === '') {
+        matchIndicator.innerHTML = '';
+        return;
+      }
+      
+      if (this.value === passwordInput.value) {
+        matchIndicator.innerHTML = 'Passwords match';
+        matchIndicator.style.color = '#2ecc71';
+      } else {
+        matchIndicator.innerHTML = 'Passwords do not match';
+        matchIndicator.style.color = '#e74c3c';
+      }
+    });
+
+    // Loading state for submit button
+    const form = document.getElementById('signupForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    form.addEventListener('submit', function() {
+      submitBtn.classList.add('loading');
+      // The actual form submission is handled by handleSignup(event)
+      // This just adds the visual loading effect
+    });
+
+    // Enhance error and success message display
+    function showError(message) {
+      const errorElement = document.getElementById('errorMessage');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      errorElement.style.animation = 'none';
+      setTimeout(() => {
+        errorElement.style.animation = 'shake 0.5s ease';
+      }, 10);
+    }
+
+    function showSuccess(message) {
+      const successElement = document.getElementById('successMessage');
+      successElement.textContent = message;
+      successElement.style.display = 'block';
+      successElement.style.animation = 'none';
+      setTimeout(() => {
+        successElement.style.animation = 'popIn 0.5s ease';
+      }, 10);
+    }
+
+    // Form focus effects - optimized with requestAnimationFrame
+    const inputs = document.querySelectorAll('input, select');
+    
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        requestAnimationFrame(() => {
+          this.parentElement.style.transform = 'translateY(-3px)';
+        });
+      });
+      
+      input.addEventListener('blur', function() {
+        requestAnimationFrame(() => {
+          this.parentElement.style.transform = 'translateY(0)';
+        });
+      });
+    });
+  </script>
+
+  <!-- Home button -->
+  <a href="index.html" class="home-button">
+    <i class="fas fa-home"></i>
+    <span>Back to Homepage</span>
+  </a>
 </body>
 </html>
