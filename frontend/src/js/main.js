@@ -498,4 +498,50 @@ function showSuccess(message) {
 function needsAuthentication() {
     const protectedPages = ['/student-dashboard', '/teacher-dashboard', '/upload'];
     return protectedPages.some(page => window.location.pathname.includes(page));
+}
+
+async function handleForgotPassword(event) {
+    event.preventDefault();
+    const errorMessage = document.getElementById("errorMessage");
+    const successMessage = document.getElementById("successMessage");
+    errorMessage.style.display = "none";
+    successMessage.style.display = "none";
+    
+    const email = document.getElementById("email").value;
+
+    try {
+        const response = await fetch("/api/auth/forgot-password", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ email }),
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            errorMessage.textContent = data.message || "Failed to process password reset request.";
+            errorMessage.style.display = "block";
+            return;
+        }
+
+        // Show success message
+        successMessage.textContent = "Password reset instructions have been sent to your email. Please check your inbox.";
+        successMessage.style.display = "block";
+        
+        // Clear the form
+        document.getElementById("forgotPasswordForm").reset();
+        
+        // Redirect to login page after a delay
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 3000);
+    } catch (error) {
+        console.error("Password reset request error:", error);
+        errorMessage.textContent = "An error occurred. Please try again.";
+        errorMessage.style.display = "block";
+    }
 } 

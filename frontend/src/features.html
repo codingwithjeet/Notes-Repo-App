@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features - NotesRepo</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .page-header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .page-header p {
+      font-size: 1.3rem;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+    
+    .content-section {
+      padding-bottom: 5rem;
+    }
+    
+    .additional-features {
+      margin-top: 5rem;
+      background-color: #f8f9fa;
+      padding: 4rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .additional-features::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 200px;
+      height: 200px;
+      background: rgba(52, 152, 219, 0.1);
+      border-radius: 50%;
+    }
+    
+    .additional-features::after {
+      content: "";
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 50%;
+    }
+    
+    .compare-plans {
+      margin-top: 5rem;
+      text-align: center;
+    }
+    
+    .compare-plans h2 {
+      margin-bottom: 2rem;
+    }
+    
+    .plans-table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .plans-table th,
+    .plans-table td {
+      padding: 1.2rem;
+      text-align: center;
+      border-bottom: 1px solid #e1e1e1;
+    }
+    
+    .plans-table th {
+      background-color: #2c3e50;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .plans-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    
+    .plans-table tr:hover {
+      background-color: #e9f2f9;
+    }
+    
+    .check-icon {
+      color: #2ecc71;
+      font-size: 1.2rem;
+    }
+    
+    .x-icon {
+      color: #e74c3c;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <a href="/" class="logo">NotesRepo</a>
+      <div class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="signup.html" class="signup-btn">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <h1>NotesRepo Features</h1>
+    <p>Discover the powerful tools and capabilities that make NotesRepo the perfect platform for educational collaboration</p>
+  </header>
+
+  <!-- Features Section -->
+  <section class="section features-section content-section">
+    <div class="container">
+      <h2 class="section-title">Core Features</h2>
+      <p class="section-desc">Everything you need to share knowledge and empower learning</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <h3>Easy Note Sharing</h3>
+          <p>Upload and share your notes, assignments, and study materials with just a few clicks.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h3>Smart Search</h3>
+          <p>Find exactly what you need with our powerful search functionality that scans through content and tags.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Community Collaboration</h3>
+          <p>Connect with classmates and teachers to collaborate on projects and share knowledge.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3>Secure Access</h3>
+          <p>Control who sees your uploads with private, public, or group-specific sharing settings.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>Mobile Friendly</h3>
+          <p>Access your study materials anytime, anywhere with our responsive mobile interface.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <h3>Smart Notifications</h3>
+          <p>Stay updated with notifications about new uploads, comments, and interactions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Features Section -->
+  <section class="additional-features">
+    <div class="container">
+      <h2 class="section-title">Additional Features</h2>
+      <p class="section-desc">Beyond the basics, NotesRepo offers advanced capabilities for a superior learning experience</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3>Discussions & Comments</h3>
+          <p>Engage in conversations about study materials with inline comments and discussion threads.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-file-pdf"></i>
+          </div>
+          <h3>Multi-Format Support</h3>
+          <p>Upload and view documents in various formats including PDF, DOCX, PPT, images, and more.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h3>Rating System</h3>
+          <p>Rate and review study materials to help others find the highest quality resources.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bookmark"></i>
+          </div>
+          <h3>Bookmarking</h3>
+          <p>Save your favorite resources for quick access later when you need them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare Plans Section -->
+  <section class="compare-plans">
+    <div class="container">
+      <h2 class="section-title">Compare Plans</h2>
+      <p class="section-desc">Choose the plan that fits your needs</p>
+      
+      <table class="plans-table">
+        <thead>
+          <tr>
+            <th>Features</th>
+            <th>Student</th>
+            <th>Teacher</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Note Uploads</td>
+            <td>Up to 2 GB</td>
+            <td>Up to 10 GB</td>
+          </tr>
+          <tr>
+            <td>File Formats</td>
+            <td>All formats</td>
+            <td>All formats</td>
+          </tr>
+          <tr>
+            <td>Collaboration</td>
+            <td><i class="fas fa-check check-icon"></i></td>
+            <td><i class="fas fa-check check-icon"></i></td>
+          </tr>
+          <tr>
+            <td>Smart Search</td>
+            <td><i class="fas fa-check check-icon"></i></td>
+            <td><i class="fas fa-check check-icon"></i></td>
+          </tr>
+          <tr>
+            <td>Private Sharing</td>
+            <td><i class="fas fa-check check-icon"></i></td>
+            <td><i class="fas fa-check check-icon"></i></td>
+          </tr>
+          <tr>
+            <td>Analytics</td>
+            <td><i class="fas fa-times x-icon"></i></td>
+            <td><i class="fas fa-check check-icon"></i></td>
+          </tr>
+          <tr>
+            <td>Class Management</td>
+            <td><i class="fas fa-times x-icon"></i></td>
+            <td><i class="fas fa-check check-icon"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section-cta" style="margin: 5rem auto;">
+    <p>Ready to experience these features for yourself?</p>
+    <a href="signup.html" class="btn btn-primary">Join NotesRepo Today</a>
+  </section>
+
+  <script>
+    // Sticky Navbar Effect
+    window.addEventListener("scroll", function () {
+      const navbar = document.getElementById("navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    });
+  </script>
+</body>
+</html> 

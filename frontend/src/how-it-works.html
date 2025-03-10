@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How It Works - NotesRepo</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .page-header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .page-header p {
+      font-size: 1.3rem;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+    
+    .content-section {
+      padding-bottom: 5rem;
+    }
+    
+    .intro-section {
+      padding: 4rem 0;
+      text-align: center;
+    }
+    
+    .intro-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .intro-content p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+    
+    .video-container {
+      margin-top: 3rem;
+      position: relative;
+      overflow: hidden;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #34495e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .video-placeholder i {
+      font-size: 4rem;
+      margin-right: 1rem;
+    }
+    
+    .faq-section {
+      padding: 4rem 0;
+      background-color: #f8f9fa;
+      margin-top: 4rem;
+    }
+    
+    .faq-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .faq-item {
+      margin-bottom: 1.5rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #2c3e50;
+      transition: all 0.3s ease;
+    }
+    
+    .faq-question:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .faq-answer {
+      padding: 0 1.5rem;
+      height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .faq-answer p {
+      padding-bottom: 1.5rem;
+      line-height: 1.6;
+      color: #555;
+    }
+    
+    .faq-item.active .faq-answer {
+      height: auto;
+    }
+    
+    .faq-item.active .faq-question {
+      border-bottom: 1px solid #eee;
+    }
+    
+    .faq-item.active .faq-toggle i {
+      transform: rotate(180deg);
+    }
+    
+    .faq-toggle i {
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <a href="/" class="logo">NotesRepo</a>
+      <div class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="signup.html" class="signup-btn">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <h1>How NotesRepo Works</h1>
+    <p>Discover how to make the most of our platform with this step-by-step guide</p>
+  </header>
+
+  <!-- Intro Section -->
+  <section class="intro-section">
+    <div class="container">
+      <div class="intro-content">
+        <h2>Welcome to NotesRepo</h2>
+        <p>NotesRepo is designed to make educational resource sharing simple, efficient, and collaborative. Whether you're a student looking for study materials or a teacher sharing resources with your class, our platform provides the tools you need to succeed.</p>
+        <p>Follow the steps below to get started with NotesRepo and discover how our platform can enhance your educational journey.</p>
+        
+        <div class="video-container">
+          <div class="video-placeholder">
+            <i class="fas fa-play-circle"></i>
+            <span>Watch our quick introduction video</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="section how-works-section content-section">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    
+    <div class="container">
+      <h2 class="section-title">The Process</h2>
+      <p class="section-desc">Get started with NotesRepo in just a few simple steps</p>
+      
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <h3>Create Your Account</h3>
+            <p>Sign up as either a student or teacher with your email address and set up your profile.</p>
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1484807352052-23338990c6c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Create account">
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="fas fa-file-upload"></i>
+            </div>
+            <h3>Upload Your Materials</h3>
+            <p>Share your notes, assignments, presentations, or any educational content in various formats.</p>
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Upload materials">
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="fas fa-tags"></i>
+            </div>
+            <h3>Organize with Tags</h3>
+            <p>Add relevant tags and descriptions to make your content easily discoverable by others.</p>
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Organize with tags">
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <h3>Connect and Collaborate</h3>
+            <p>Follow other users, join subject groups, and collaborate on shared educational resources.</p>
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Connect and collaborate">
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <div class="step-icon">
+              <i class="fas fa-laptop-house"></i>
+            </div>
+            <h3>Access Anywhere</h3>
+            <p>Browse and download resources from any device, anytime you need them for your studies.</p>
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Access anywhere">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-desc">Get answers to common questions about using NotesRepo</p>
+      
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How do I create an account?</span>
+            <div class="faq-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <p>Creating an account is easy! Click the "Sign Up" button in the top navigation, choose whether you're a student or teacher, and fill in your details. Once you verify your email, you'll be ready to start using NotesRepo.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>What file formats can I upload?</span>
+            <div class="faq-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <p>NotesRepo supports a wide range of file formats including PDF, DOCX, PPT, TXT, images (JPG, PNG), and more. If you're on the free plan, you can upload PDF and TXT files. Student and Teacher plans support all available formats.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How do I share my notes with specific people?</span>
+            <div class="faq-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <p>When uploading or editing your notes, you can set privacy options. Choose "Public" to share with everyone, "Private" to keep them just for yourself, or "Specific Users/Groups" to share with selected classmates or classes. You can also generate shareable links with optional passwords.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Is there a mobile app available?</span>
+            <div class="faq-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <p>While we don't have a dedicated mobile app yet, our website is fully responsive and works great on mobile devices. You can access all features through your mobile browser. A dedicated app is in our development roadmap for the future.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How can teachers use NotesRepo in their classroom?</span>
+            <div class="faq-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <p>Teachers can create class groups where they can share materials with students, track who has accessed resources, create assignments, and facilitate discussions. The Teacher Plan includes analytics to see which materials are most used and helpful to students.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section-cta" style="margin: 5rem auto;">
+    <p>Ready to get started with NotesRepo?</p>
+    <a href="signup.html" class="btn btn-primary">Create Your Account Today</a>
+  </section>
+
+  <script>
+    // Sticky Navbar Effect
+    window.addEventListener("scroll", function () {
+      const navbar = document.getElementById("navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    });
+    
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+    
+    // Video placeholder click
+    document.querySelector('.video-placeholder').addEventListener('click', function() {
+      alert('Video would play here in production version');
+    });
+  </script>
+</body>
+</html> 

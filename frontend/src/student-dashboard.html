@@ -103,6 +103,7 @@
             margin-top: 20px;
             text-align: left;
             animation: fadeInUp 0.8s ease-out 0.4s both;
+            margin-bottom: 20px;
         }
 
         .student-info p {
@@ -120,6 +121,34 @@
             margin-right: 10px;
             color: #6e8efb;
             font-size: 1.1rem;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(255, 107, 107, 0.2);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
         }
 
         /* Notes Section */
@@ -560,28 +589,134 @@
     <!-- Add auth script -->
     <script src="/js/auth.js"></script>
     <script>
-        // Check authorization on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add a token from localStorage to the query string for server validation
-            const token = localStorage.getItem('jwt');
-            if (token) {
-                // Add Authorization header to subsequent requests
-                const headers = new Headers();
-                headers.append('Authorization', `Bearer ${token}`);
-                
-                // Make a fetch request to current page with Authorization header
-                fetch(window.location.pathname, {
-                    headers: headers,
-                    credentials: 'include'
-                }).catch(error => {
-                    console.error('Error validating token:', error);
-                });
-            }
+        let currentTab = 'notes';
+        let myNotes = [];
+        let csrfToken = '';
+        
+        // Get cookie helper function
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return '';
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get CSRF token from cookie
+            csrfToken = getCookie('csrf_token');
             
+            // Initialize the dashboard
+            initDashboard();
             checkAuth('student');
             fetchUserData();
             fetchNotes();
         });
+
+        // Initialize dashboard UI elements
+        function initDashboard() {
+            // Set up search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    // Implement search functionality here
+                    const searchTerm = e.target.value.toLowerCase();
+                    filterNotesBySearch(searchTerm);
+                });
+            }
+
+            // Set up filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const category = btn.getAttribute('data-category');
+                    filterNotes(category);
+                });
+            });
+        }
+
+        // Filter notes by search term
+        function filterNotesBySearch(searchTerm) {
+            const noteItems = document.querySelectorAll('.note-item');
+            noteItems.forEach(item => {
+                const title = item.querySelector('.note-title').textContent.toLowerCase();
+                const category = item.querySelector('.note-category').textContent.toLowerCase();
+                const teacher = item.querySelector('.note-details span:first-child').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || 
+                    category.includes(searchTerm) || 
+                    teacher.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter notes by category
+        function filterNotes(category) {
+            // Update active state of filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // If 'all' is selected, show all notes
+            if (category === 'all') {
+                const noteItems = document.querySelectorAll('.note-item');
+                noteItems.forEach(item => {
+                    item.style.display = 'flex';
+                });
+                return;
+            }
+
+            // Filter notes by selected category
+            const noteItems = document.querySelectorAll('.note-item');
+            noteItems.forEach(item => {
+                const noteCategory = item.querySelector('.note-category').textContent;
+                if (noteCategory === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle logout
+        async function handleLogout() {
+            try {
+                // Get fresh CSRF token
+                const csrfToken = getCookie('csrf_token');
+                
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    credentials: 'include'
+                });
+
+                // Clear storage regardless of response
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('csrfToken');
+                sessionStorage.removeItem('user');
+                
+                // Redirect to homepage
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Still clear storage and redirect on error
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('csrfToken');
+                sessionStorage.removeItem('user');
+                window.location.href = '/';
+            }
+        }
 
         // Fetch user data
         async function fetchUserData() {
@@ -598,13 +733,13 @@
                 }
                 
                 const userData = await response.json();
-                const userName = userData.username || 'Student';
+                const userName = userData.name || userData.fullName || userData.username || 'Student';
                 
                 // Update UI with user data
                 document.getElementById('username').textContent = userName;
                 document.getElementById('email').textContent = userData.email || 'student@example.com';
                 document.getElementById('profileLogo').textContent = 
-                    userData.username ? userData.username.substring(0, 2).toUpperCase() : 'S';
+                    userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'S';
                 
                 // Update student info with personalized message
                 document.querySelector('.student-info p:first-child i').nextSibling.textContent = ` Welcome, ${userName}!`;
@@ -684,20 +819,6 @@
                 
                 notesList.appendChild(noteElement);
             });
-        }
-
-        // Filter notes by category
-        function filterNotes(category) {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            
-            const clickedButton = document.querySelector(`.filter-btn[data-category="${category}"]`);
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
-            
-            // Implement the filtering logic
-            // This would involve fetching notes with the category filter or filtering the existing notes
         }
 
         // View note details
@@ -801,6 +922,9 @@
                 <p><i class="fas fa-book"></i> Access study materials</p>
                 <p><i class="fas fa-download"></i> Download notes</p>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
 
         <!-- Notes Section -->

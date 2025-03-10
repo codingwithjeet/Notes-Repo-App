@@ -333,12 +333,107 @@ router.post("/register", async (req, res) => {
 });
 
 // Get current user
-router.get("/me", authenticateToken, (req, res) => {
-  res.json({
-    userId: req.user.userId,
-    email: req.user.email,
-    userType: req.user.userType
-  });
+router.get("/me", authenticateToken, async (req, res) => {
+  try {
+    // Get full user data from database
+    const user = await User.findById(req.user.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send complete user data (excluding password)
+    res.json({
+      userId: user._id,
+      email: user.email,
+      userType: user.userType,
+      username: user.username,
+      name: user.name,
+      fullName: user.fullName
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Forgot Password - Request reset
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({ message: "A valid email address is required." });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "No account found with this email address." });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
+
+    // Save reset token and expiry to user
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = resetTokenExpiry;
+    await user.save();
+
+    // TODO: Send email with reset link
+    // For now, we'll just return the token in the response
+    // In production, you should send this via email
+    res.json({ 
+      message: "Password reset instructions have been sent to your email.",
+      resetToken // Remove this in production
+    });
+  } catch (error) {
+    console.error("Password reset request error:", error);
+    res.status(500).json({ message: "Error processing password reset request." });
+  }
+});
+
+// Reset Password - Using token
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Validate password
+    if (!newPassword) {
+      return res.status(400).json({ message: "New password is required." });
+    }
+
+    if (!isPasswordStrong(newPassword)) {
+      return res.status(400).json({ 
+        message: "Password must be at least 6 characters long, contain at least one number and one uppercase letter." 
+      });
+    }
+
+    // Find user with valid reset token
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired reset token." });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password and clear reset token
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.json({ message: "Password has been reset successfully." });
+  } catch (error) {
+    console.error("Password reset error:", error);
+    res.status(500).json({ message: "Error resetting password." });
+  }
 });
 
 module.exports = router;

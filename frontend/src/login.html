@@ -4,33 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - NotesRepo</title>
+  <!-- Google Fonts for a modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/styles.css" />
-
-
   <style>
+    /* Global Styles */
     body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
       background: linear-gradient(135deg, #3498db, #2c3e50);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
     }
 
-    .login-container {
-      background: white;
-      padding: 3rem;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
 
-    @keyframes fadeIn {
+    /* Login Container */
+    .login-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 3rem;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -38,14 +57,62 @@
       }
     }
 
+    /* Header Text */
+    .login-header h1 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .login-header p {
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+
+    /* Error Message */
+    .error-message {
+      color: #e74c3c;
+      margin-bottom: 1rem;
+      font-weight: 500;
+      display: none; /* Initially hidden */
+    }
+
+    /* Form Styles */
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+      outline: none;
+    }
+
+    /* Button */
     .btn-primary {
       width: 100%;
       padding: 0.8rem;
       font-size: 1rem;
-      color: white;
+      font-weight: 600;
+      color: #fff;
       background-color: #3498db;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
     }
@@ -54,15 +121,35 @@
       background-color: #2980b9;
       transform: scale(1.05);
     }
+
+    /* Footer Links */
+    .footer-links {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-links a {
+      color: #3498db;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #2980b9;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+      }
+    }
   </style>
   <script src="/js/auth.js"></script>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <a href="/" class="logo">NotesRepo</a>
-  </nav>
-
   <!-- Login Container -->
   <div class="login-container">
     <div class="login-header">
@@ -75,13 +162,25 @@
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="Enter your email" autocomplete="email" />
-
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required 
+          placeholder="Enter your email" 
+          autocomplete="email" 
+        />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password" />
-
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required 
+          placeholder="Enter your password" 
+          autocomplete="current-password" 
+        />
       </div>
       <button type="submit" class="btn-primary">Sign In</button>
     </form>
