@@ -475,6 +475,11 @@ document.addEventListener("DOMContentLoaded", function() {
     initAuth();
     initUpload();
     initDashboard();
+    
+    // Initialize particle animation
+    particlesJS.load('particles-js', 'particles.json', function() {
+        console.log('particles.js loaded - callback');
+    });
 });
 
 // Helper functions
@@ -544,4 +549,4 @@ async function handleForgotPassword(event) {
         errorMessage.textContent = "An error occurred. Please try again.";
         errorMessage.style.display = "block";
     }
-} 
+}
