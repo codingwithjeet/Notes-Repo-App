@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 // Middleware to verify access token
 const authenticateToken = (req, res, next) => {
+  console.log("Authenticating token...");
+
   // First check for access token in Authorization header
   const authHeader = req.header("Authorization");
   let token = null;
@@ -12,16 +14,23 @@ const authenticateToken = (req, res, next) => {
 
   // If no token in header, don't try to authenticate - let the route handler decide
   if (!token) {
+    console.log("No token provided.");
     return res.status(401).json({ message: "Access denied. No token provided." });
+
   }
 
   try {
+    console.log("Token Authenticated ✅");
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     req.user = decoded;
     req.userId = decoded.userId; // Add userId for consistent access
     next();
   } catch (ex) {
+    console.log("Token is valid. User ID:", decoded.userId);
     return res.status(401).json({ message: "Invalid token." });
+
   }
 };
 
