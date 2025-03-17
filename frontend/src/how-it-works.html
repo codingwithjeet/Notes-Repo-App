@@ -701,8 +701,10 @@
       
       <div class="video-container" data-aos="fade-up" data-aos-delay="200">
         <div class="video-placeholder">
-          <i class="fas fa-play-circle"></i>
-          <span>Watch our introduction video</span>
+          <video id="intro-video" width="600" controls>
+            <source src="Intoduction to Notes-Repo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </div>
@@ -1000,6 +1002,16 @@
     // Video placeholder click functionality
     document.querySelector('.video-placeholder').addEventListener('click', function() {
       alert('Video playback would start here in the full implementation.');
+    });
+
+    // Video play event listener
+    document.addEventListener('DOMContentLoaded', function() {
+      var video = document.getElementById('intro-video');
+      if (video) {
+        video.addEventListener('play', function() {
+          console.log('Video is playing');
+        });
+      }
     });
   </script>
 </body>

@@ -115,15 +115,15 @@ app.use((req, res, next) => {
   // Authentication routes to exempt from CSRF
   const isExemptAuthRoute = isRegisterRoute || isLoginRoute || isRefreshRoute || isGoogleRoute || isCsrfRoute;
   
-  console.log(`Auth route details:`, {
-    isAuthRoute,
-    isRegisterRoute,
-    isLoginRoute,
-    isRefreshRoute,
-    isGoogleRoute,
-    isCsrfRoute,
-    isExemptAuthRoute
-  });
+ // console.log(`Auth route details:`, {
+   // isAuthRoute,
+    //isRegisterRoute,
+    //isLoginRoute,
+    //isRefreshRoute,
+    //isGoogleRoute,
+    //isCsrfRoute,
+    //isExemptAuthRoute
+  //});
   
   if (isExemptMethod || isExemptAuthRoute) {
     console.log(`CSRF check skipped for: ${originalUrl}`);
