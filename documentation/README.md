@@ -1,5 +1,33 @@
 # Project Overview
-NotesRepo is a platform designed to facilitate knowledge sharing and collaboration among students and teachers. Users can upload, share, and access educational resources, enhancing the learning experience. The application aims to create a community where users can contribute and benefit from shared knowledge.
+NotesRepo is a platform designed to facilitate knowledge sharing and collaboration among students and teachers. Users can upload, share, and access educational resources, enhancing the learning experience. The application aims to create a community where users can contribute and benefit from shared knowledge. 
+
+## Goals and Objectives
+- To provide a user-friendly platform for students and teachers to share educational resources.
+- To foster collaboration and communication among users.
+- To enhance the learning experience through shared knowledge and resources.
+
+## Target Audience
+- **Students**: Can upload and share notes, collaborate on projects, and access a variety of educational materials.
+- **Teachers**: Can share resources, provide feedback, and engage with students in a collaborative environment.
+
+## Unique Features
+- **Easy Note Sharing**: Users can upload and share notes, assignments, and study materials with just a few clicks.
+- **Community Collaboration**: Connect with classmates and teachers to collaborate on projects and share knowledge.
+- **Access Anywhere**: The platform is responsive, allowing users to access their materials from any device.
+
+## Tech Stack
+- **Frontend**: 
+  - HTML, CSS, JavaScript
+  - Frameworks: React.js (if applicable)
+  - Libraries: Axios for API calls, Bootstrap for styling (if applicable)
+- **Backend**: 
+  - Node.js
+  - Express.js for server-side logic
+  - MongoDB for database management
+- **Authentication**: 
+  - JSON Web Tokens (JWT) for user authentication
+- **File Uploads**: 
+  - Multer for handling file uploads
 
 ## Frontend Documentation
 ### index.html
@@ -61,3 +89,4 @@ NotesRepo is a platform designed to facilitate knowledge sharing and collaborati
 ## Follow-up Steps
 - Review the documentation for accuracy and completeness.
 - Make any necessary adjustments based on feedback.
+- Encourage users to contribute to the documentation and provide feedback on their experiences.
