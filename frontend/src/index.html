@@ -22,18 +22,37 @@
     }
 
     :root {
-      --primary: #4361ee;
-      --primary-dark: #3a56d4;
-      --secondary: #f72585;
-      --dark: #222831;
-      --light: #f8f9fa;
-      --accent: #4cc9f0;
-      --text: #2d3748;
-      --text-light: #718096;
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --accent: #06b6d4;
+      --text: #e2e8f0;
+      --text-light: #94a3b8;
+      --gradient-1: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      --gradient-2: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      --gradient-3: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      --bg-light: #0f172a;
+      --bg-dark: #020617;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
     }
 
+    /* Add particles container styles */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Update body to accommodate particles */
     body {
-      background-color: var(--light);
+      background-color: var(--bg-light);
       color: var(--text);
       overflow-x: hidden;
       position: relative;
@@ -44,7 +63,7 @@
 
     /* Navbar */
     .navbar {
-      background-color: rgba(44, 62, 80, 0.95);
+      background-color: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
       padding: 1.5rem 3rem;
       width: 100%;
@@ -53,8 +72,8 @@
       position: fixed;
       top: 0;
       z-index: 1000;
-      /* Desktop optimized navbar height */
       height: 80px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .nav-content {
@@ -125,15 +144,15 @@
     }
 
     .nav-links .login-btn {
-      background-color: var(--primary);
+      background: var(--gradient-1);
       color: white;
-      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
 
     .nav-links .signup-btn {
-      background-color: var(--secondary);
+      background: var(--gradient-2);
       color: white;
-      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
     }
 
     .nav-links a:hover {
@@ -142,51 +161,126 @@
 
     /* Sticky Navbar Effect */
     .navbar.scrolled {
-      background-color: rgba(26, 37, 47, 0.95);
+      background-color: rgba(2, 6, 23, 0.95);
       padding: 1rem 3rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    /* Hero Section */
+    /* Update hero section to work with particles */
     .hero {
-      background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(76, 201, 240, 0.8)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('/index_img.jpg');
       background-size: cover;
       background-position: center;
-      padding: 12rem 2rem 8rem;
+      background-attachment: fixed;
+      padding: 6rem 2rem;
       min-height: 100vh;
       display: flex;
       align-items: center;
-      /* Desktop optimized hero section */
-      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      z-index: 1;
     }
 
     .hero-content {
-      max-width: 1200px;
+      position: relative;
+      z-index: 3;
+      max-width: 1400px;
       margin: 0 auto;
       width: 100%;
-      z-index: 10;
-      /* Desktop optimized content */
-      padding-left: 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
     }
 
-    .hero h1 {
-      font-size: 4.2rem;
+    .hero-text {
+      padding-right: 2rem;
+    }
+
+    .rotating-headlines {
+      overflow: hidden;
+      height: 5.4em;
+      padding-top: 0.2em;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .rotating-headlines .hero-title {
+      display: block;
+      animation: rotate 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      opacity: 0;
+      position: absolute;
+      transform: translateY(100%);
+      width: 100%;
+    }
+
+    .rotating-headlines .hero-title:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .rotating-headlines .hero-title:nth-child(2) {
+      animation-delay: 2s;
+    }
+
+    .rotating-headlines .hero-title:nth-child(3) {
+      animation-delay: 4s;
+    }
+
+    .rotating-headlines .hero-title:nth-child(4) {
+      animation-delay: 6s;
+    }
+
+    @keyframes rotate {
+      0%, 20% {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+      25%, 45% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50%, 100% {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
       color: white;
       font-weight: 700;
       line-height: 1.2;
       margin-bottom: 1.5rem;
-      /* Desktop enhanced animation */
       animation: fadeInUp 1s ease-out;
-      max-width: 800px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .hero p {
-      font-size: 1.5rem;
+    .hero-subtitle {
+      font-size: 1.8rem;
       color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 2.5rem;
-      max-width: 600px;
-      /* Desktop enhanced animation */
+      margin-top: 2rem;
+      margin-bottom: 8rem;
+      line-height: 1.6;
       animation: fadeInUp 1.2s ease-out;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      animation: fadeInUp 1.4s ease-out;
     }
 
     .cta-btn {
@@ -201,40 +295,211 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .btn-primary {
-      background: linear-gradient(45deg, var(--primary) 0%, var(--primary-dark) 100%);
-      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+      background: var(--gradient-1);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+      border: 2px solid transparent;
     }
 
     .btn-primary:hover {
       transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
+      box-shadow: 0 15px 25px rgba(99, 102, 241, 0.4);
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
-    .cta-btn::before {
+    .btn-primary::before {
+      background: var(--gradient-3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(45deg, var(--primary-dark) 0%, var(--primary) 100%);
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.2) 100%);
       z-index: -1;
       transition: opacity 0.5s ease;
       opacity: 0;
     }
 
-    .cta-btn:hover::before {
+    .btn-secondary:hover::before {
       opacity: 1;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      animation: fadeInUp 1.6s ease-out;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-image {
+      position: relative;
+      height: 100%;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-illustration {
+      font-size: 15rem;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: float 6s ease-in-out infinite;
+      position: relative;
+      z-index: 3;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(5deg);
+      }
+    }
+
+    .floating-elements {
+      position: relative;
+      height: 100%;
+    }
+
+    .float-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .float-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .float-card i {
+      font-size: 1.5rem;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-1 {
+      top: 20%;
+      left: 0;
+    }
+
+    .card-2 {
+      top: 50%;
+      right: 0;
+    }
+
+    .card-3 {
+      bottom: 20%;
+      left: 20%;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+      }
+
+      .hero-text {
+        padding-right: 0;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-image {
+        min-height: 400px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 3.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .stat-item {
+        align-items: center;
+      }
     }
 
     /* Features Section */
     .features {
       padding: 8rem 2rem;
-      background-color: var(--light);
-      /* Desktop enhanced spacing */
+      background-color: var(--bg-gradient);
       margin: 3rem 0;
     }
 
@@ -309,14 +574,15 @@
     }
 
     .preview-card {
-      background: white;
+      background: var(--card-bg);
       padding: 2.5rem;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       z-index: 1;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
       overflow: hidden;
     }
 
@@ -327,7 +593,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
       z-index: -1;
       opacity: 0;
       transition: opacity 0.4s ease;
@@ -345,8 +611,7 @@
     .preview-icon {
       font-size: 2.5rem;
       margin-bottom: 1.5rem;
-      color: var(--primary);
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: var(--gradient-1);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -361,7 +626,7 @@
     .preview-card h3 {
       font-size: 1.5rem;
       margin-bottom: 1rem;
-      color: var(--dark);
+      color: var(--text);
       font-weight: 600;
     }
 
@@ -421,7 +686,7 @@
     .step-circle {
       width: 70px;
       height: 70px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      background: var(--gradient-1);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -431,7 +696,7 @@
       color: white;
       margin-bottom: 1rem;
       position: relative;
-      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
       transition: all 0.3s ease;
     }
 
@@ -466,7 +731,7 @@
     .process-connector {
       flex: 1;
       height: 3px;
-      background: linear-gradient(to right, var(--primary), var(--accent));
+      background: var(--gradient-1);
       position: relative;
       max-width: 100px;
     }
@@ -499,53 +764,6 @@
       }
     }
 
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .nav-links {
-        gap: 1rem;
-      }
-
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-
-      .hero p {
-        font-size: 1.2rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .nav-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .hero-content {
-        padding: 2rem;
-      }
-
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .nav-links {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .process-steps {
-        flex-direction: column;
-        gap: 2rem;
-      }
-
-      .process-connector {
-        width: 3px;
-        height: 40px;
-        max-width: none;
-      }
-    }
-
     /* Animated background shapes */
     .shape {
       position: absolute;
@@ -555,7 +773,7 @@
     }
 
     .shape-1 {
-      background-color: var(--primary);
+      background: var(--gradient-1);
       width: 300px;
       height: 300px;
       top: 20%;
@@ -564,7 +782,7 @@
     }
 
     .shape-2 {
-      background-color: var(--secondary);
+      background: var(--gradient-2);
       width: 350px;
       height: 350px;
       bottom: -100px;
@@ -598,18 +816,18 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: #1e293b;
       border-radius: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--primary);
+      background: var(--gradient-1);
       border-radius: 6px;
-      border: 3px solid #f1f1f1;
+      border: 3px solid #1e293b;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-dark);
+      background: var(--gradient-3);
     }
 
     /* Desktop optimized testimonials section */
@@ -621,14 +839,16 @@
     }
 
     .testimonial-card {
-      background: white;
+      background: var(--card-bg);
       border-radius: 15px;
       padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
       height: 100%;
       display: flex;
       flex-direction: column;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .testimonial-card:hover {
@@ -638,33 +858,512 @@
 
     /* Desktop-optimized footer */
     .footer {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      padding: 4rem 2rem 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 50px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-section h3 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-section h3::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .footer-section p {
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-links a {
+      color: var(--text-light);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .social-links a:hover {
+      color: var(--accent);
+      background: var(--gradient-1);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+    }
+
+    .footer-bottom p {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* How It Works Section Preview */
+    .section {
+      background-color: var(--bg-light);
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #how-it-works-preview {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    /* Float Card Navigation */
+    .float-nav {
+      position: absolute;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+      animation: float 6s ease-in-out infinite;
+      max-width: 280px;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(-50%) translateX(0);
+      }
+      50% {
+        transform: translateY(-50%) translateX(-10px);
+      }
+      100% {
+        transform: translateY(-50%) translateX(0);
+      }
+    }
+
+    .float-nav-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .float-nav .logo {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .float-nav .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .float-nav .nav-links a {
+      padding: 1rem 1.5rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      color: white;
+      font-weight: 500;
+    }
+
+    .float-nav .nav-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 0.5s ease;
+      z-index: -1;
+      border-radius: 50px;
+    }
+
+    .float-nav .nav-links a:hover::before {
+      transform: translateX(100%);
+    }
+
+    .float-nav .nav-links a:hover {
+      transform: translateY(-3px);
+    }
+
+    .float-nav .nav-links a:not(.login-btn):not(.signup-btn) {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .float-nav .login-btn {
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      color: #111827;
+      box-shadow: 0 4px 15px rgba(0, 255, 135, 0.3);
+      border: none;
+      font-weight: 600;
+    }
+
+    .float-nav .signup-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      border: none;
+      font-weight: 600;
+    }
+
+    .float-nav .login-btn:hover {
+      background: linear-gradient(135deg, #60efff 0%, #00ff87 100%);
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .float-nav .signup-btn:hover {
+      background: linear-gradient(135deg, #ff8e8e 0%, #ff6b6b 100%);
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    @media (max-width: 1024px) {
+      .float-nav {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin: 2rem auto;
+        max-width: 100%;
+        animation: none;
+      }
+    }
+
+    /* Dynamic Header Styles */
+    .dynamic-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header-left {
+      position: relative;
+    }
+
+    .logo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(0, 255, 135, 0.2) 0%, transparent 70%);
+      filter: blur(10px);
+      animation: pulse 2s infinite;
+    }
+
+    .floating-nav {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: 0.5s;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .nav-link .link-icon {
+      font-size: 1.1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link:hover .link-icon {
+      transform: translateY(-2px);
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .signup-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+      color: white;
+      font-weight: 600;
+    }
+
+    .header-decoration {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .decoration-circle {
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle at center, rgba(0, 255, 135, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .decoration-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    .decoration-dots {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(255, 255, 255, 0.1) 5px, rgba(255, 255, 255, 0.1) 10px);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(5deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    /* Update hero section to accommodate new header */
+    .hero {
+      padding-top: 120px;
+    }
+
+    @media (max-width: 1024px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .header-content {
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-content">
-      <a href="/" class="logo">NotesRepo</a>
-      <div class="nav-links">
-        <a href="features.html">Features</a>
-        <a href="how-it-works.html">How It Works</a>
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="signup.html" class="signup-btn">Sign Up</a>
+  <!-- Dynamic Animated Header -->
+  <header class="dynamic-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo-container">
+          <a href="/" class="logo">NotesRepo</a>
+          <div class="logo-glow"></div>
+        </div>
+      </div>
+      <div class="header-right">
+        <nav class="floating-nav">
+          <div class="nav-links">
+            <a href="/features.html" class="nav-link">
+              <span class="link-text">Features</span>
+              <span class="link-icon"><i class="fas fa-star"></i></span>
+            </a>
+            <a href="/how-it-works.html" class="nav-link">
+              <span class="link-text">How It Works</span>
+              <span class="link-icon"><i class="fas fa-cogs"></i></span>
+            </a>
+            <a href="/login.html" class="nav-link login-btn">
+              <span class="link-text">Login</span>
+              <span class="link-icon"><i class="fas fa-sign-in-alt"></i></span>
+            </a>
+            <a href="/signup.html" class="nav-link signup-btn">
+              <span class="link-text">Sign Up</span>
+              <span class="link-icon"><i class="fas fa-user-plus"></i></span>
+            </a>
+          </div>
+        </nav>
       </div>
     </div>
-  </nav>
+    <div class="header-decoration">
+      <div class="decoration-circle"></div>
+      <div class="decoration-line"></div>
+      <div class="decoration-dots"></div>
+    </div>
+  </header>
 
-  <!-- Hero Section with Particles -->
+  <!-- Hero Section -->
   <section class="hero">
     <div id="particles-js"></div>
     <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
-      <h1>Share Knowledge, Empower Learning</h1>
-      <p>Join our community of students and teachers to share and access quality educational resources.</p>
-      <a href="signup.html" class="cta-btn btn-primary">Get Started</a>
+      <div class="hero-text">
+        <div class="rotating-headlines">
+          <h1 class="hero-title">Share Knowledge</h1>
+          <h1 class="hero-title">Empower Learning</h1>
+          <h1 class="hero-title">Organized Better</h1>
+          <h1 class="hero-title">Remember Everything</h1>
+        </div>
+        <p class="hero-subtitle">Join our community of students and teachers to share and access quality educational resources.</p>
+        <div class="hero-buttons">
+          <a href="signup.html" class="cta-btn btn-primary">Get Started</a>
+          <a href="how-it-works.html" class="cta-btn btn-secondary">How It Works</a>
+        </div>
+      </div>
+      <div class="hero-image" data-aos="fade-left" data-aos-delay="300">
+        <div class="hero-illustration">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -708,27 +1407,27 @@
   </section>
 
   <!-- How It Works Section Preview with Animations -->
-  <section id="how-it-works-preview" class="section" style="background-color: #f8f9fa;">
+  <section id="how-it-works-preview" class="section" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
     <div class="shape shape-2"></div>
     <div class="container">
-      <h2 class="section-title" data-aos="fade-up">How It Works</h2>
-      <p class="section-desc" data-aos="fade-up" data-aos-delay="100">Get started with NotesRepo in just a few simple steps</p>
+      <h2 class="section-title" data-aos="fade-up" style="color: #ffffff;">How It Works</h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="100" style="color: #ffffff;">Get started with NotesRepo in just a few simple steps</p>
       
       <div class="process-preview">
         <div class="process-steps" data-aos="fade-up" data-aos-delay="200">
           <div class="process-step">
             <div class="step-circle">1</div>
-            <div class="step-text">Create Account</div>
+            <div class="step-text" style="color: #ffffff;">Create Account</div>
           </div>
           <div class="process-connector"></div>
           <div class="process-step">
             <div class="step-circle">2</div>
-            <div class="step-text">Upload Materials</div>
+            <div class="step-text" style="color: #ffffff;">Upload Materials</div>
           </div>
           <div class="process-connector"></div>
           <div class="process-step">
             <div class="step-circle">3</div>
-            <div class="step-text">Organize & Share</div>
+            <div class="step-text" style="color: #ffffff;">Organize & Share</div>
           </div>
         </div>
         
@@ -755,10 +1454,12 @@
     // Sticky Navbar Effect
     window.addEventListener("scroll", function () {
       const navbar = document.getElementById("navbar");
-      if (window.scrollY > 50) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
+      if (navbar) {
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
       }
     });
 
@@ -866,5 +1567,45 @@
       "retina_detect": true
     });
   </script>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About NotesRepo</h3>
+        <p>NotesRepo is your premier platform for sharing and accessing educational resources. We connect students and teachers to create a collaborative learning environment.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+          <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+          <li><a href="login.html"><i class="fas fa-chevron-right"></i> Login</a></li>
+          <li><a href="signup.html"><i class="fas fa-chevron-right"></i> Sign Up</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-envelope"></i> support@notesrepo.com</a></li>
+          <li><a href="#"><i class="fas fa-phone"></i> +91 9800537200</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i>Bangalore, India</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Connect With Us</h3>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 NotesRepo. All rights reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>

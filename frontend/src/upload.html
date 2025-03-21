@@ -236,6 +236,55 @@
   </div>
 
   <script>
+    // Check user authorization on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+          window.location.href = '/login.html';
+          return;
+        }
+
+        // Fetch user data
+        const response = await fetch('/api/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        
+        // If user is not a teacher, show redirect message and redirect after delay
+        if (userData.userType !== 'teacher') {
+          document.getElementById('uploadContainer').style.display = 'none';
+          document.getElementById('redirectMessage').classList.remove('hidden');
+          setTimeout(() => {
+            window.location.href = '/student-dashboard.html';
+          }, 3000);
+          return;
+        }
+
+        // Get CSRF token
+        const csrfResponse = await fetch('/api/auth/csrf-token', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (csrfResponse.ok) {
+          const { token: csrfToken } = await csrfResponse.json();
+          window.csrfToken = csrfToken;
+        }
+      } catch (error) {
+        console.error('Authorization error:', error);
+        window.location.href = '/login.html';
+      }
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       const uploadForm = document.getElementById("uploadForm");
       const errorMessage = document.getElementById("errorMessage");

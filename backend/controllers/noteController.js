@@ -21,16 +21,16 @@ exports.uploadNote = async (req, res) => {
       mimetype: req.file.mimetype
     });
 
-    const { title, description, category } = req.body;
-    console.log('Note details:', { title, description, category });
+    const { title, description, category, tags, topic, unit, academicYear, semester, isClassSpecific, allowedClasses } = req.body;
+    console.log('Note details:', { title, description, category, tags, topic, unit, academicYear, semester, isClassSpecific, allowedClasses });
     
-    if (!title || !description || !category) {
+    if (!title || !description || !category || !academicYear || !semester) {
       // Delete the uploaded file if request is invalid
       console.error('Missing required fields');
       if (req.file && req.file.path) {
         fs.unlinkSync(req.file.path);
       }
-      return res.status(400).json({ message: 'Please provide title, description, and category' });
+      return res.status(400).json({ message: 'Please provide title, description, category, academic year, and semester' });
     }
 
     console.log('Request user:', req.user);
@@ -44,11 +44,24 @@ exports.uploadNote = async (req, res) => {
       return res.status(401).json({ message: 'User authentication data missing' });
     }
 
+    // Parse tags if provided
+    const parsedTags = tags ? JSON.parse(tags) : [];
+    
+    // Parse allowed classes if provided
+    const parsedAllowedClasses = allowedClasses ? JSON.parse(allowedClasses) : [];
+
     // Create new note
     const newNote = new Note({
       title,
       description,
       category,
+      tags: parsedTags,
+      topic,
+      unit,
+      academicYear,
+      semester: parseInt(semester),
+      isClassSpecific: isClassSpecific === 'true',
+      allowedClasses: parsedAllowedClasses,
       teacherId: req.userId,
       teacher: req.user.email || 'Teacher',
       filePath: req.file.path,
@@ -135,10 +148,48 @@ exports.getTeacherNotes = async (req, res) => {
 exports.getUserNotes = async (req, res) => {
   try {
     const notes = await Note.find({})
-      .select('title description category uploadDate teacher downloadUrl')
+      .select('_id title description category uploadDate topic academicYear semester fileSize fileOriginalName tags subject unit teacherId')
+      .populate({
+        path: 'teacherId',
+        select: 'firstName lastName username email'
+      })
       .sort({ uploadDate: -1 });
     
-    res.status(200).json(notes);
+    // Transform the response to ensure all fields are properly formatted
+    const formattedNotes = notes.map(note => {
+      // Get teacher name from populated teacherId or fallback to stored teacher field
+      let teacherName = 'Unknown Teacher';
+      if (note.teacherId) {
+        if (note.teacherId.firstName && note.teacherId.lastName) {
+          teacherName = `${note.teacherId.firstName} ${note.teacherId.lastName}`;
+        } else if (note.teacherId.username) {
+          teacherName = note.teacherId.username;
+        } else if (note.teacherId.email) {
+          teacherName = note.teacherId.email;
+        }
+      } else if (note.teacher) {
+        teacherName = note.teacher;
+      }
+
+      return {
+        _id: note._id,
+        title: note.title || 'Untitled Note',
+        description: note.description || 'No description provided',
+        category: note.category || 'Uncategorized',
+        uploadDate: note.uploadDate,
+        teacher: teacherName,
+        topic: note.topic || 'Not specified',
+        academicYear: note.academicYear || 'Not specified',
+        semester: note.semester ? `Semester ${note.semester}` : 'Not specified',
+        fileSize: note.fileSize,
+        fileOriginalName: note.fileOriginalName || 'Unknown',
+        tags: Array.isArray(note.tags) ? note.tags : [],
+        subject: note.subject || note.category || 'Not specified',
+        unit: note.unit || 'Not specified'
+      };
+    });
+    
+    res.status(200).json(formattedNotes);
   } catch (error) {
     console.error('Error fetching notes:', error);
     res.status(500).json({ message: 'Failed to fetch notes', error: error.message });

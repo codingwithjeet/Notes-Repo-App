@@ -1,849 +1,1719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notes-Repo App - Student Dashboard</title>
-  <!-- Google Fonts for improved typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* CSS Variables for easy theming */
-    :root {
-      --primary-color: #6e8efb;
-      --secondary-color: #a777e3;
-      --accent-color: #ff6b6b;
-      --light-bg: rgba(255, 255, 255, 0.9);
-      --card-border: rgba(255, 255, 255, 0.2);
-      --text-color: #333;
-      --subtext-color: #666;
-    }
-    
-    /* Global resets and typography */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    /* Animated gradient background */
-    body {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    /* Focus styles for accessibility */
-    :focus {
-      outline: 3px solid #fff;
-      outline-offset: 2px;
-    }
-    
-    .dashboard {
-      width: 100%;
-      max-width: 1400px;
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      gap: 25px;
-      animation: fadeIn 1s ease-out;
-      min-height: calc(100vh - 40px);
-      align-items: start;
-    }
-    
-    /* Profile Card */
-    .profile-card {
-      background: var(--light-bg);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      animation: slideInLeft 0.8s ease-out;
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--card-border);
-      height: fit-content;
-      position: sticky;
-      top: 20px;
-    }
-    .profile-logo {
-      width: 120px;
-      height: 120px;
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto 20px;
-      font-size: 40px;
-      font-weight: bold;
-      color: #fff;
-      border: 5px solid #fff;
-      animation: bounceIn 1s ease-out;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .profile-logo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-    .profile-card h2 {
-      font-size: 1.8rem;
-      color: var(--text-color);
-      margin-bottom: 10px;
-      animation: fadeInUp 0.8s ease-out both;
-    }
-    .profile-card p {
-      font-size: 1.1rem;
-      color: var(--subtext-color);
-      margin-bottom: 25px;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-    .student-info {
-      background: rgba(110, 142, 251, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-      text-align: left;
-      animation: fadeInUp 0.8s ease-out 0.4s both;
-    }
-    .student-info p {
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-    .student-info i {
-      margin-right: 10px;
-      color: var(--primary-color);
-      font-size: 1.1rem;
-    }
-    .logout-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(45deg, var(--accent-color), #ff8e8e);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(255, 107, 107, 0.2);
-    }
-    .logout-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(255, 107, 107, 0.3);
-    }
-    .logout-btn:active {
-      transform: translateY(0);
-    }
-    
-    /* Notes Section */
-    .notes-section {
-      background: var(--light-bg);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      animation: slideInRight 0.8s ease-out;
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--card-border);
-      min-height: calc(100vh - 40px);
-      display: flex;
-      flex-direction: column;
-    }
-    .notes-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      animation: fadeInDown 0.8s ease-out;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .notes-section h2 {
-      font-size: 2rem;
-      color: var(--text-color);
-      animation: fadeInDown 0.8s ease-out;
-    }
-    .search-container {
-      position: relative;
-      flex-grow: 1;
-      max-width: 400px;
-    }
-    .search-input {
-      width: 100%;
-      padding: 12px 20px;
-      padding-left: 45px;
-      border-radius: 30px;
-      border: 1px solid #ddd;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background-color: #fff;
-    }
-    .search-input:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
-    }
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--primary-color);
-      font-size: 1.2rem;
-    }
-    .notes-filters {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      animation: fadeInDown 0.8s ease-out 0.2s both;
-      flex-wrap: wrap;
-    }
-    .filter-btn {
-      padding: 8px 15px;
-      background: rgba(110, 142, 251, 0.2);
-      border: none;
-      border-radius: 30px;
-      color: #555;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(110, 142, 251, 0.3);
-    }
-    .notes-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      overflow-y: auto;
-      padding-right: 10px;
-      flex-grow: 1;
-      max-height: calc(100vh - 200px);
-    }
-    .notes-list::-webkit-scrollbar {
-      width: 8px;
-      background: transparent;
-    }
-    .notes-list::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 10px;
-    }
-    .notes-list::-webkit-scrollbar-thumb {
-      background: rgba(110, 142, 251, 0.5);
-      border-radius: 10px;
-    }
-    .notes-list::-webkit-scrollbar-thumb:hover {
-      background: rgba(110, 142, 251, 0.8);
-    }
-    .note-item {
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: slideInUp 0.6s ease-out var(--delay);
-      border-left: 5px solid var(--primary-color);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-    }
-    .note-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .note-info {
-      flex: 1;
-    }
-    .note-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text-color);
-      margin-bottom: 5px;
-      animation: fadeIn 0.5s ease-out;
-    }
-    .note-details {
-      font-size: 0.9rem;
-      color: var(--subtext-color);
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .note-category {
-      background: rgba(110, 142, 251, 0.2);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      color: var(--primary-color);
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes fadeInUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes fadeInDown {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes slideInLeft {
-      from { transform: translateX(-50px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(50px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideInUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes bounceIn {
-      0% { transform: scale(0); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 1200px) {
-      .dashboard { grid-template-columns: 1fr 2fr; }
-    }
-    @media (max-width: 992px) {
-      .dashboard { grid-template-columns: 1fr; }
-      .profile-card { position: static; }
-      .notes-section { min-height: auto; }
-      .notes-list { max-height: 600px; }
-    }
-    @media (max-width: 768px) {
-      body { padding: 10px; }
-      .notes-header { flex-direction: column; align-items: flex-start; }
-      .search-container { max-width: 100%; width: 100%; }
-      .notes-filters { width: 100%; overflow-x: auto; padding-bottom: 10px; flex-wrap: nowrap; }
-      .note-item { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
-  <script src="/js/auth.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script>
-    let currentTab = 'notes';
-    let myNotes = [];
-    let csrfToken = '';
-    let currentCategory = 'all'; // Track the currently selected category
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes-Repo App - Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      csrfToken = getCookie('csrf_token');
-      initDashboard();
-      checkAuth('student');
-      fetchUserData();
-      fetchNotes();
-      
-      // Add event listener for logout button
-      document.querySelector('.logout-btn').addEventListener('click', logout);
-    });
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            animation: bgPulse 15s infinite alternate;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            min-width: 1024px;
+        }
 
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return '';
-    }
+        .dashboard {
+            width: 100%;
+            max-width: 1600px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            animation: fadeIn 1s ease-out;
+            min-height: calc(100vh - 300px);
+            align-items: start;
+            margin: 0 auto;
+            flex: 1;
+        }
 
-    function initDashboard() {
-      const searchInput = document.querySelector('.search-input');
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          const searchTerm = e.target.value.toLowerCase();
-          filterNotesBySearch(searchTerm);
+        /* Profile Card */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: slideInLeft 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .profile-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;
+            border: 5px solid #fff;
+            animation: bounceIn 1s ease-out;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-card h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .profile-card p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .welcome-message {
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.1), rgba(0, 210, 255, 0.1));
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .welcome-message h3 {
+            color: #3a7bd5;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .welcome-message p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .student-info {
+            background: rgba(58, 123, 213, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            margin-bottom: 20px;
+        }
+
+        .student-info p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .student-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .student-info i {
+            margin-right: 10px;
+            color: #3a7bd5;
+            font-size: 1.1rem;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(255, 107, 107, 0.2);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Notes Section */
+        .notes-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            animation: fadeInDown 0.8s ease-out;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .notes-section h2 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        .search-input:focus {
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3a7bd5;
+            font-size: 1.2rem;
+        }
+
+        .search-container .clear-search {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+            display: none;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .search-container .clear-search:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container.has-text .clear-search {
+            display: block;
+        }
+
+        .notes-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out 0.2s both;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            background: rgba(58, 123, 213, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 123, 213, 0.3);
+        }
+
+        .notes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .note-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-header {
+            padding: 20px;
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.1), rgba(0, 210, 255, 0.1));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .note-category {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(58, 123, 213, 0.2);
+            color: #3a7bd5;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .note-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .note-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(58, 123, 213, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .meta-item i {
+            color: #3a7bd5;
+            font-size: 1rem;
+        }
+
+        .note-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: rgba(58, 123, 213, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .detail-item i {
+            color: #3a7bd5;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .note-footer {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.02);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .note-action {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .preview-btn {
+            background: rgba(58, 123, 213, 0.1);
+            color: #3a7bd5;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: white;
+        }
+
+        .note-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-action i {
+            font-size: 1.1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #888;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+        
+        .toast.success {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .toast.error {
+            border-left: 4px solid #f44336;
+        }
+        
+        .toast.warning {
+            border-left: 4px solid #ff9800;
+        }
+        
+        .toast.success i {
+            color: #4CAF50;
+        }
+        
+        .toast.error i {
+            color: #f44336;
+        }
+        
+        .toast.warning i {
+            color: #ff9800;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
+        @keyframes bgPulse {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .profile-card {
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .notes-list {
+                max-height: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .notes-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .notes-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 10px;
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a i {
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(3px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 3rem 1rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .footer-section h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .footer-links a {
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        /* Student Preview Section Styles */
+        .preview-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 25px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .preview-card {
+            background: linear-gradient(145deg, #ffffff, #f5f7fa);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .preview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50);
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .preview-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .preview-card-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .preview-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .preview-card:hover .preview-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .preview-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .preview-content {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .preview-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 3px;
+        }
+
+        .preview-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .preview-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .preview-meta-item:hover {
+            background: rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .preview-meta-item i {
+            color: #4CAF50;
+            font-size: 1.1rem;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .preview-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .preview-btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .preview-btn-secondary {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .preview-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-btn i {
+            font-size: 1.1rem;
+        }
+
+        .preview-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview-loading.active {
+            opacity: 1;
+        }
+
+        .preview-loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Additional hover effects */
+        .preview-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .preview-section {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 20px;
+            }
+
+            .preview-card {
+                padding: 20px;
+            }
+
+            .preview-meta {
+                flex-wrap: wrap;
+            }
+
+            .preview-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .content-tabs {
+            display: flex;
+            padding: 20px 20px 0;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            padding: 20px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="/js/auth.js"></script>
+    <script>
+        // Global variables for state management
+        let currentCategory = 'all';
+        let myNotes = [];
+        let csrfToken = '';
+        let currentUser = null;
+
+        // Check authorization on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Get CSRF token from cookie first
+                csrfToken = getCookie('csrf_token');
+                
+                // Check authentication
+                const authResponse = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
+
+                if (!authResponse.ok) {
+                    throw new Error('Invalid token');
+                }
+
+                // Load user data first
+                await loadUserData();
+                
+                // Initialize dashboard components
+                initDashboard();
+                
+                // Load notes after everything is initialized
+                await loadNotes();
+                
+                // Set up tab switching
+                setupTabs();
+                
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                if (error.message === 'Invalid token') {
+                    localStorage.removeItem('jwt');
+                    window.location.href = '/login.html';
+                    return;
+                }
+                showToast('Failed to initialize dashboard', 'error');
+            }
         });
-      }
-      const filterButtons = document.querySelectorAll('.filter-btn');
-      filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const category = btn.getAttribute('data-category');
-          currentCategory = category; // Update current category
-          filterNotes(category);
-        });
-      });
-    }
 
-    function filterNotesBySearch(searchTerm) {
-      const noteItems = document.querySelectorAll('.note-item');
-      noteItems.forEach(item => {
-        const title = item.querySelector('.note-title').textContent.toLowerCase();
-        const category = item.querySelector('.note-category').textContent.toLowerCase();
-        const teacher = item.querySelector('.note-details span:first-child')
-          ? item.querySelector('.note-details span:first-child').textContent.toLowerCase()
-          : '';
-        item.style.display = (title.includes(searchTerm) || category.includes(searchTerm) || teacher.includes(searchTerm)) ? 'flex' : 'none';
-      });
-    }
+        // Get cookie helper function
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return '';
+        }
 
-    function filterNotes(category) {
-      // Update UI to show which button is active
-      const filterButtons = document.querySelectorAll('.filter-btn');
-      filterButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-category') === category);
-      });
-      
-      // Update current category and re-render notes
-      currentCategory = category;
-      renderNotes();
-    }
+        // Initialize dashboard UI elements
+        async function initDashboard() {
+            try {
+                // Set up tab switching
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        switchTab(tab.getAttribute('data-tab'));
+                    });
+                });
 
-    async function fetchUserData() {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await fetch('/api/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (!response.ok) throw new Error('Failed to fetch user data');
-        const userData = await response.json();
-        const userName = userData.name || userData.fullName || userData.username || 'Student';
-        const initials = userName.split(' ').map(name => name[0]).join('').toUpperCase();
-        document.getElementById('username').textContent = userName;
-        document.getElementById('welcomeMessage').textContent = `Welcome, ${userName}`;
-        document.querySelector('.profile-logo').textContent = initials;
-        document.getElementById('email').textContent = userData.email || 'student@example.com';
-      } catch (error) {
-        console.error(error);
-      }
-    }
+                // Set up search functionality
+                const searchInput = document.getElementById('searchNotes');
+                if (searchInput) {
+                    searchInput.addEventListener('input', handleSearch);
+                    searchInput.addEventListener('input', function() {
+                        const searchContainer = this.closest('.search-container');
+                        searchContainer.classList.toggle('has-text', this.value.length > 0);
+                    });
+                }
 
-    async function fetchNotes() {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await fetch('/api/notes/user-notes', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (!response.ok) throw new Error('Failed to fetch notes');
-        const notes = await response.json();
-        myNotes = notes;
-        renderNotes();
-      } catch (error) {
-        console.error(error);
-      }
-    }
+                // Set up filter buttons
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const category = btn.getAttribute('data-category');
+                        filterNotes(category);
+                    });
+                });
 
-    function renderNotes() {
-      const notesList = document.querySelector('.notes-list');
-      notesList.innerHTML = '';
-      
-      // Filter notes based on current category
-      const filteredNotes = currentCategory === 'all' 
-        ? myNotes 
-        : myNotes.filter(note => 
-            note.category && note.category.toLowerCase() === currentCategory.toLowerCase()
-          );
-      
-      if (!filteredNotes.length) {
-        notesList.innerHTML = `<div class="empty-state"><i class="fas fa-info-circle"></i><p>No notes available${currentCategory !== 'all' ? ' for ' + currentCategory : ''}</p></div>`;
-        return;
-      }
-      
-      filteredNotes.forEach(note => {
-        const noteItem = document.createElement('div');
-        noteItem.className = 'note-item';
-        noteItem.style.setProperty('--delay', '0.1s');
-        noteItem.innerHTML = `
-          <div class="note-info">
-            <div class="note-title">${note.title}</div>
-            <div class="note-details">
-              <span>${note.teacher || 'Teacher Name'}</span>
-              <span class="note-category">${note.category}</span>
-            </div>
-          </div>
-          <div class="note-actions">
-            <button class="note-btn" onclick="viewNote('${note._id}')"><i class="fas fa-eye"></i> View</button>
-          </div>
+                // Fetch initial notes
+                await loadNotes();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
+        }
+
+        // Handle search functionality
+        function handleSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredNotes = searchTerm
+                ? myNotes.filter(note => {
+                    return (
+                        (note.title || '').toLowerCase().includes(searchTerm) ||
+                        (note.description || '').toLowerCase().includes(searchTerm) ||
+                        (note.category || '').toLowerCase().includes(searchTerm) ||
+                        (note.topic || '').toLowerCase().includes(searchTerm) ||
+                        (note.tags || []).some(tag => tag.toLowerCase().includes(searchTerm))
+                    );
+                })
+                : myNotes;
+            
+            displayNotes(filteredNotes);
+
+            // Show no results message if needed
+            const notesList = document.querySelector('.notes-list');
+            if (searchTerm && filteredNotes.length === 0) {
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No notes found matching "${searchTerm}"</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            const searchInput = document.getElementById('searchNotes');
+            searchInput.value = '';
+            searchInput.closest('.search-container').classList.remove('has-text');
+            displayNotes(myNotes);
+        }
+
+        // Filter notes by category
+        function filterNotes(category) {
+            currentCategory = category;
+            
+            // Update UI to show which button is active
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-category') === category);
+            });
+            
+            // Filter notes based on category
+            const filteredNotes = category === 'all' 
+                ? myNotes 
+                : myNotes.filter(note => 
+                    (note.category || '').toLowerCase() === category.toLowerCase()
+                );
+            
+            // Display filtered notes
+            displayNotes(filteredNotes);
+
+            // Show no results message if needed
+            if (category !== 'all' && filteredNotes.length === 0) {
+                const notesList = document.querySelector('.notes-list');
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-filter"></i>
+                        <p>No notes found in the "${category}" category</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to fetch and display notes
+        async function loadNotes() {
+            try {
+                showToast('Loading notes...', 'info');
+                
+                const response = await fetch('/api/notes/user-notes', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch notes');
+                }
+
+                const notes = await response.json();
+                
+                if (!Array.isArray(notes)) {
+                    throw new Error('Invalid notes data received');
+                }
+
+                // Process and store notes with all details
+                myNotes = notes.map(note => {
+                    // Ensure we're using the teacher name from the backend response
+                    const teacherName = note.teacher || 'Unknown Teacher';
+                    
+                    return {
+                        _id: note._id,
+                        title: note.title || 'Untitled Note',
+                        description: note.description || 'No description provided',
+                        category: note.category || 'Uncategorized',
+                        topic: note.topic || 'Not specified',
+                        teacher: teacherName,
+                        uploadDate: note.uploadDate,
+                        academicYear: note.academicYear || 'Not specified',
+                        semester: note.semester || 'Not specified',
+                        fileSize: note.fileSize,
+                        fileOriginalName: note.fileOriginalName || 'Unknown',
+                        tags: Array.isArray(note.tags) ? note.tags : [],
+                        subject: note.subject || note.category || 'Not specified',
+                        unit: note.unit || 'Not specified'
+                    };
+                });
+
+                displayNotes(myNotes);
+                showToast('Notes loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                showError('Failed to load notes. Please try again later.');
+                showToast('Failed to load notes', 'error');
+            }
+        }
+
+        // Function to display notes
+        function displayNotes(notes) {
+            const notesList = document.querySelector('.notes-list');
+            notesList.innerHTML = '';
+
+            if (!notes || notes.length === 0) {
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>No notes available for your class yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            notes.forEach(note => {
+                try {
+                    // Format the date properly
+                    const uploadDate = new Date(note.uploadDate || new Date());
+                    const formattedDate = uploadDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    // Format file size
+                    const fileSize = note.fileSize ? formatFileSize(note.fileSize) : 'N/A';
+
+                    const noteCard = document.createElement('div');
+                    noteCard.className = 'note-card';
+                    
+                    noteCard.innerHTML = `
+                        <div class="note-header">
+                            <div class="note-title">${note.title}</div>
+                            <span class="note-category">${note.category}</span>
+                        </div>
+                        <div class="note-body">
+                            <p class="note-description">${note.description}</p>
+                            <div class="note-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span>By: ${note.teacher}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Uploaded: ${formattedDate}</span>
+                                </div>
+                            </div>
+                            <div class="note-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-book"></i>
+                                    <span>Subject: ${note.subject}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span>Topic: ${note.topic}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Year: ${note.academicYear}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Semester: ${note.semester}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>Size: ${fileSize}</span>
+                                </div>
+                                ${note.tags.length > 0 ? `
+                                    <div class="detail-item">
+                                        <i class="fas fa-tags"></i>
+                                        <span>Tags: ${note.tags.join(', ')}</span>
+                                    </div>
+                                ` : ''}
+                                <div class="detail-item">
+                                    <i class="fas fa-file"></i>
+                                    <span>File: ${note.fileOriginalName}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="note-footer">
+                            <button class="note-action preview-btn" onclick="previewNote('${note._id}')">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="note-action download-btn" onclick="downloadNote('${note._id}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    `;
+                    notesList.appendChild(noteCard);
+                } catch (error) {
+                    console.error('Error displaying note:', error);
+                    showToast('Error displaying a note', 'warning');
+                }
+            });
+        }
+
+        // Helper function to format file size
+        function formatFileSize(bytes) {
+            if (!bytes) return 'N/A';
+            
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) return '0 Byte';
+            const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        }
+
+        // Function to show error messages
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.querySelector('.notes-section').prepend(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Function to load user data
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userData = await response.json();
+                currentUser = userData;
+                
+                // Update UI with user data
+                const userName = userData.username || userData.name || 'Student';
+                document.getElementById('username').textContent = userName;
+                
+                // Update profile logo with initials
+                const initials = userName
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+                document.getElementById('profileLogo').textContent = initials;
+
+                // Update welcome message with personalized greeting
+                const hour = new Date().getHours();
+                let greeting = 'Good morning';
+                if (hour >= 12 && hour < 17) {
+                    greeting = 'Good afternoon';
+                } else if (hour >= 17) {
+                    greeting = 'Good evening';
+                }
+                
+                const welcomeMessage = document.querySelector('.welcome-message');
+                welcomeMessage.innerHTML = `
+                    <h3>${greeting}, ${userName}!</h3>
+                    <p>Access your study materials and start learning today.</p>
+                `;
+                
+                // Update student info
+                document.querySelector('.student-info').innerHTML = `
+                    <p><i class="fas fa-user-graduate"></i> Student Dashboard</p>
+                    <p><i class="fas fa-envelope"></i> ${userData.email}</p>
+                    <p><i class="fas fa-book"></i> Access study materials</p>
+                    <p><i class="fas fa-download"></i> Download notes</p>
+                `;
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Failed to load user data. Please try again later.');
+            }
+        }
+
+        // Preview a note
+        async function previewNote(noteId) {
+            try {
+                const response = await fetch(`/api/notes/download/${noteId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Preview failed');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                
+                // Open the preview in a new tab
+                window.open(url, '_blank');
+            } catch (error) {
+                showToast('Error previewing note: ' + error.message, 'error');
+            }
+        }
+
+        // Download a note
+        async function downloadNote(noteId) {
+            try {
+                // Create a loading indicator
+                const loadingToast = document.createElement('div');
+                loadingToast.className = 'toast loading';
+                loadingToast.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                document.body.appendChild(loadingToast);
+                
+                const response = await fetch(`/api/notes/download/${noteId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Download failed');
+                }
+
+                const blob = await response.blob();
+                const note = myNotes.find(n => n._id === noteId);
+                const filename = note?.fileOriginalName || 'note-download';
+                
+                // Create a download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                document.body.removeChild(loadingToast);
+                
+                // Show success message
+                const successToast = document.createElement('div');
+                successToast.className = 'toast success';
+                successToast.innerHTML = '<i class="fas fa-check"></i> Download successful!';
+                document.body.appendChild(successToast);
+                
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    document.body.removeChild(successToast);
+                }, 3000);
+            } catch (error) {
+                console.error('Download error:', error);
+                // Show error message
+                const errorToast = document.createElement('div');
+                errorToast.className = 'toast error';
+                errorToast.innerHTML = '<i class="fas fa-exclamation-circle"></i> Download failed. Please try again.';
+                document.body.appendChild(errorToast);
+                
+                // Remove error message after 3 seconds
+                setTimeout(() => {
+                    document.body.removeChild(errorToast);
+                }, 3000);
+            }
+        }
+
+        // Handle logout
+        async function handleLogout() {
+            try {
+                // Get fresh CSRF token
+                const csrfToken = getCookie('csrf_token');
+                
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    credentials: 'include'
+                });
+
+                // Clear storage regardless of response
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('csrfToken');
+                sessionStorage.removeItem('user');
+                
+                // Redirect to homepage
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Still clear storage and redirect on error
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('csrfToken');
+                sessionStorage.removeItem('user');
+                window.location.href = '/';
+            }
+        }
+
+        // Setup tab switching functionality
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const sections = document.querySelectorAll('.content-section');
+            
+            if (!tabs.length || !sections.length) {
+                console.error('Tabs or sections not found');
+                return;
+            }
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+                    if (!target) return;
+                    
+                    // Update active states
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const targetSection = document.getElementById(`${target}-section`);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Function to show toast notifications
+        function showToast(message, type = 'info') {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
+
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            // Set icon based on type
+            let icon = 'info-circle';
+            switch (type) {
+                case 'success':
+                    icon = 'check-circle';
+                    break;
+                case 'error':
+                    icon = 'exclamation-circle';
+                    break;
+                case 'warning':
+                    icon = 'exclamation-triangle';
+                    break;
+            }
+            
+            toast.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add slideOut animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
         `;
-        notesList.appendChild(noteItem);
-      });
-    }
-
-    function viewNote(noteId) {
-      // Get JWT token for authentication
-      const token = localStorage.getItem('jwt');
-      
-      // Create a notification that the download is starting
-      const notification = document.createElement('div');
-      notification.style.position = 'fixed';
-      notification.style.bottom = '20px';
-      notification.style.right = '20px';
-      notification.style.backgroundColor = 'rgba(110, 142, 251, 0.9)';
-      notification.style.color = 'white';
-      notification.style.padding = '15px 20px';
-      notification.style.borderRadius = '10px';
-      notification.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
-      notification.style.zIndex = '1000';
-      notification.textContent = 'Opening note...';
-      document.body.appendChild(notification);
-      
-      // Variable to store response for later use
-      let responseData;
-      
-      // Create a direct download link using a fetch request
-      fetch(`/api/notes/download/${noteId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to download note');
-        }
-        responseData = response;
-        return response.blob();
-      })
-      .then(blob => {
-        // Create a URL for the blob
-        const url = window.URL.createObjectURL(blob);
-        
-        // Create an anchor element and trigger a download
-        const a = document.createElement('a');
-        a.href = url;
-        
-        // Try to get filename from Content-Disposition header, or use a default
-        let filename = `note-${noteId}.pdf`;
-        const contentDisposition = responseData.headers.get('Content-Disposition');
-        if (contentDisposition) {
-          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-          if (filenameMatch && filenameMatch[1]) {
-            filename = filenameMatch[1].replace(/['"]/g, '');
-          }
-        }
-        
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        a.remove();
-        
-        notification.textContent = 'Note downloaded successfully!';
-        notification.style.backgroundColor = 'rgba(75, 181, 67, 0.9)';
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
-      })
-      .catch(error => {
-        console.error('Error downloading note:', error);
-        notification.textContent = 'Error downloading note. Please try again.';
-        notification.style.backgroundColor = 'rgba(255, 76, 76, 0.9)';
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
-      });
-    }
-
-    // Add logout function
-    function logout() {
-      // Clear JWT from localStorage
-      localStorage.removeItem('jwt');
-      
-      // Clear any cookies (including refresh tokens if present)
-      document.cookie.split(";").forEach(function(c) {
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-      });
-      
-      // Redirect to homepage instead of login page
-      window.location.href = '/';
-    }
-
-    // Initialize particles.js with optimized settings for better performance
-    function initParticles() {
-      // Reduce particle count on mobile for better performance
-      const isMobile = window.innerWidth < 768;
-      const particleCount = isMobile ? 30 : 80;
-      const particleSpeed = isMobile ? 1 : 2;
-
-      particlesJS('particles-js', {
-        "particles": {
-          "number": {
-            "value": particleCount, // Dynamically set based on device
-            "density": {
-              "enable": true,
-              "value_area": 800
-            }
-          },
-          "color": {
-            "value": "#ffffff"
-          },
-          "shape": {
-            "type": "circle",
-            "stroke": {
-              "width": 1,
-              "color": "rgba(255, 255, 255, 0.3)"
-            }
-          },
-          "opacity": {
-            "value": 0.8,
-            "random": true,
-            "anim": {
-              "enable": true,
-              "speed": 1,
-              "opacity_min": 0.4,
-              "sync": false
-            }
-          },
-          "size": {
-            "value": 5,
-            "random": true,
-            "anim": {
-              "enable": true,
-              "speed": 4,
-              "size_min": 2,
-              "sync": false
-            }
-          },
-          "line_linked": {
-            "enable": true,
-            "distance": 150,
-            "color": "#ffffff",
-            "opacity": 0.6,
-            "width": 1.5
-          },
-          "move": {
-            "enable": true,
-            "speed": particleSpeed, // Dynamically set based on device
-            "direction": "none",
-            "random": false,
-            "straight": false,
-            "out_mode": "out",
-            "bounce": false,
-            "attract": {
-              "enable": false,
-              "rotateX": 600,
-              "rotateY": 1200
-            }
-          }
-        },
-        "interactivity": {
-          "detect_on": "canvas",
-          "events": {
-            "onhover": {
-              "enable": !isMobile, // Disable hover effects on mobile
-              "mode": "grab"
-            },
-            "onclick": {
-              "enable": true,
-              "mode": "push"
-            },
-            "resize": true
-          },
-          "modes": {
-            "grab": {
-              "distance": 140,
-              "line_linked": {
-                "opacity": 0.8
-              }
-            },
-            "bubble": {
-              "distance": 400,
-              "size": 40,
-              "duration": 2,
-              "opacity": 8,
-              "speed": 3
-            },
-            "repulse": {
-              "distance": 200,
-              "duration": 0.4
-            },
-            "push": {
-              "particles_nb": isMobile ? 2 : 3
-            },
-            "remove": {
-              "particles_nb": 2
-            }
-          }
-        },
-        "retina_detect": false // Disable retina detection for better performance
-      });
-    }
-
-    // Initialize particles
-    initParticles();
-
-    // Reinitialize on resize with debounce for better performance
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(initParticles, 250);
-    });
-  </script>
-  <script>
-  particlesJS('particles-js', {
-    "particles": {
-      "number": {
-        "value": 80,
-        "density": {
-          "enable": true,
-          "value_area": 800
-        }
-      },
-      "color": {
-        "value": "#ffffff"
-      },
-      "shape": {
-        "type": "circle",
-        "stroke": {
-          "width": 0,
-          "color": "#000000"
-        },
-        "polygon": {
-          "nb_sides": 5
-        },
-        "image": {
-          "src": "img/github.svg",
-          "width": 100,
-          "height": 100
-        }
-      },
-      "opacity": {
-        "value": 0.5,
-        "random": false,
-        "anim": {
-          "enable": false,
-          "speed": 1,
-          "opacity_min": 0.1,
-          "sync": false
-        }
-      },
-      "size": {
-        "value": 3,
-        "random": true,
-        "anim": {
-          "enable": false,
-          "speed": 40,
-          "size_min": 0.1,
-          "sync": false
-        }
-      },
-      "line_linked": {
-        "enable": true,
-        "distance": 150,
-        "color": "#ffffff",
-        "opacity": 0.4,
-        "width": 1
-      },
-      "move": {
-        "enable": true,
-        "speed": 6,
-        "direction": "none",
-        "random": false,
-        "straight": false,
-        "out_mode": "out",
-        "bounce": false,
-        "attract": {
-          "enable": false,
-          "rotateX": 600,
-          "rotateY": 1200
-        }
-      }
-    },
-    "interactivity": {
-      "detect_on": "canvas",
-      "events": {
-        "onhover": {
-          "enable": true,
-          "mode": "repulse"
-        },
-        "onclick": {
-          "enable": true,
-          "mode": "push"
-        },
-        "resize": true
-      },
-      "modes": {
-        "grab": {
-          "distance": 400,
-          "line_linked": {
-            "opacity": 1
-          }
-        },
-        "bubble": {
-          "distance": 400,
-          "size": 40,
-          "duration": 2,
-          "opacity": 8,
-          "speed": 3
-        },
-        "repulse": {
-          "distance": 200,
-          "duration": 0.4
-        },
-        "push": {
-          "particles_nb": 4
-        },
-        "remove": {
-          "particles_nb": 2
-        }
-      }
-    },
-    "retina_detect": true
-  });
-</script>
+        document.head.appendChild(style);
+    </script>
 </head>
 <body>
-  <div id="particles-js"></div>
-  <div class="main-content">
     <div class="dashboard">
-      <div class="profile-card">
-        <div class="profile-logo">S</div>
-        <h2 id="welcomeMessage">Welcome, <span id="username">Student Name</span></h2>
-        <p id="email">student@example.com</p>
-        <div class="student-info">
-          <p><i class="fas fa-book"></i> Course: Computer Science</p>
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-logo" id="profileLogo">S</div>
+            <h2 id="username">Student Name</h2>
+            
+            <div class="welcome-message">
+                <h3>Welcome Back!</h3>
+                <p>Access your study materials and start learning today.</p>
+            </div>
+            
+            <div class="student-info">
+                <p><i class="fas fa-user-graduate"></i> Student Dashboard</p>
+                <p><i class="fas fa-envelope"></i> student@example.com</p>
+                <p><i class="fas fa-book"></i> Access study materials</p>
+                <p><i class="fas fa-download"></i> Download notes</p>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
-        <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-      </div>
-      <div class="notes-section">
-        <div class="notes-header">
-          <h2>Your Notes</h2>
-          <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search notes..." />
-          </div>
+
+        <div class="main-content">
+            <!-- Tabs for switching between Notes and Notepad -->
+            <div class="content-tabs">
+                <button class="tab-btn active" data-tab="notes">
+                    <i class="fas fa-book"></i> Study Materials
+                </button>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="content-section active" id="notes-section">
+                <div class="notes-header">
+                    <h2>Available Notes</h2>
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchNotes" class="search-input" placeholder="Search by title, description, subject, or topic..." />
+                        <i class="fas fa-times clear-search" onclick="clearSearch()"></i>
+                    </div>
+                </div>
+                
+                <div class="notes-filters">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="statistics">Statistics</button>
+                    <button class="filter-btn" data-category="computer science">Computer Science</button>
+                    <button class="filter-btn" data-category="history">History</button>
+                    <button class="filter-btn" data-category="literature">Literature</button>
+                    <button class="filter-btn" data-category="other">Other</button>
+                </div>
+                
+                <div class="notes-list">
+                    <!-- Notes will be loaded here dynamically -->
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading notes...</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="notes-filters">
-          <button class="filter-btn active" data-category="all">All</button>
-          <button class="filter-btn" data-category="statistics">Statistics</button>
-          <button class="filter-btn" data-category="Computer-Science">Computer Science</button>
-          <button class="filter-btn" data-category="History">History</button>
-          <button class="filter-btn" data-category="Literature">Literature</button>
-          <button class="filter-btn" data-category="Other">Other</button>
-        </div>
-        <div class="notes-list">
-          <!-- Dynamically rendered note items will appear here -->
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About NotesRepo</h3>
+                <p>NotesRepo is your premier platform for sharing and accessing educational resources. We connect students and teachers to create a collaborative learning environment.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+                    <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+                    <li><a href="login.html"><i class="fas fa-chevron-right"></i> Login</a></li>
+                    <li><a href="signup.html"><i class="fas fa-chevron-right"></i> Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-envelope"></i> support@notesrepo.com</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> +91 9800537200</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i>Bangalore, India</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 NotesRepo. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-</html>
+</html> 

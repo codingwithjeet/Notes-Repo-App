@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started - NotesRepo</title>
+  
+  <!-- Google Fonts, Font Awesome, and Animation Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #1abc9c;
+      --primary-dark: #16a085;
+      --secondary: #f72585;
+      --dark: #1a1a1a;
+      --light: #f8f9fa;
+      --accent: #1abc9c;
+      --text: #e0e0e0;
+      --text-light: #a0a0a0;
+      --card-bg: rgba(30, 30, 30, 0.9);
+      --card-border: rgba(255,255,255,0.1);
+      --gradient-bg: linear-gradient(135deg, var(--primary) 0%, #16a085 100%);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 37, 47, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-content {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    /* Step Header */
+    .step-header {
+      background: var(--gradient-bg);
+      padding: 8rem 2rem 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .step-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.05)"/></svg>');
+      opacity: 0.1;
+    }
+    
+    .step-number {
+      font-size: 5rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.1);
+      position: absolute;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .step-title {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .step-description {
+      font-size: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.9);
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Step Content */
+    .step-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    
+    .getting-started-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--card-border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    
+    .feature-card p {
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+    
+    /* Call to Action */
+    .cta-section {
+      margin-top: 5rem;
+      text-align: center;
+    }
+    
+    .cta-title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+    
+    .cta-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 3rem;
+      border: 1px solid var(--card-border);
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta-description {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .cta-button.primary {
+      background: var(--gradient-bg);
+      color: white;
+    }
+    
+    .cta-button.secondary {
+      background: rgba(67, 97, 238, 0.1);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Navigation Buttons */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4rem;
+      padding: 0 2rem;
+    }
+    
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 50px;
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-button:hover {
+      background: rgba(26, 188, 156, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+    
+    .nav-button i {
+      font-size: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .step-header {
+        padding: 6rem 1rem 4rem;
+      }
+      
+      .step-title {
+        font-size: 2.5rem;
+      }
+      
+      .step-description {
+        font-size: 1.2rem;
+      }
+      
+      .getting-started-features {
+        grid-template-columns: 1fr;
+      }
+      
+      .cta-container {
+        padding: 2rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+      }
+      
+      .step-nav {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-button {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="index.html" class="logo">NotesRepo</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Step Header -->
+  <header class="step-header">
+    <div class="step-number">05</div>
+    <h1 class="step-title">Get Started Today</h1>
+    <p class="step-description">Begin your learning journey with Notes-Repo and join thousands of students and teachers in creating a better educational experience.</p>
+  </header>
+
+  <!-- Step Content -->
+  <main class="step-content">
+    <div class="step-grid">
+      <div class="step-card" data-aos="fade-up">
+        <div class="step-card-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <h3>Quick Start</h3>
+        <p>Create your account, set up your profile, and start exploring educational materials in minutes.</p>
+      </div>
+
+      <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-card-icon">
+          <i class="fas fa-book-reader"></i>
+        </div>
+        <h3>Start Learning</h3>
+        <p>Browse through a vast collection of study materials, join study groups, and begin your learning journey.</p>
+      </div>
+
+      <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-card-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3>Grow Together</h3>
+        <p>Connect with peers, share knowledge, and contribute to the educational community.</p>
+      </div>
+    </div>
+
+    <div class="step-features">
+      <h2 class="features-title">Getting Started Guide</h2>
+      <div class="features-grid">
+        <div class="feature-item" data-aos="fade-right">
+          <div class="feature-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Explore Materials</h4>
+            <p>Search for study materials by subject, course, or topic to find what you need.</p>
+          </div>
+        </div>
+
+        <div class="feature-item" data-aos="fade-right" data-aos-delay="100">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Join Groups</h4>
+            <p>Find study groups related to your courses and start collaborating with peers.</p>
+          </div>
+        </div>
+
+        <div class="feature-item" data-aos="fade-right" data-aos-delay="200">
+          <div class="feature-icon">
+            <i class="fas fa-share-alt"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Share Resources</h4>
+            <p>Upload your study materials and help others in their learning journey.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+      <h2 class="cta-title">Join NotesRepo Today</h2>
+      <div class="cta-container" data-aos="fade-up">
+        <p class="cta-description">Create your account now and start sharing your educational resources with the community. It's free to get started!</p>
+        <div class="cta-buttons">
+          <a href="signup.html" class="cta-button primary">
+            <i class="fas fa-user-plus"></i>
+            Create Account
+          </a>
+          <a href="features.html" class="cta-button secondary">
+            <i class="fas fa-info-circle"></i>
+            Learn More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <div class="step-nav">
+      <a href="step4-share-collaborate.html" class="nav-button prev">
+        <i class="fas fa-arrow-left"></i>
+        Previous Step
+      </a>
+      <a href="index.html" class="nav-button next">
+        Back to Home
+        <i class="fas fa-home"></i>
+      </a>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false
+    });
+  </script>
+</body>
+</html> 

@@ -577,6 +577,20 @@
           <i class="input-icon fas fa-user-graduate"></i>
         </div>
       </div>
+
+      <div class="form-group" id="classGroup" style="display: none;">
+        <label for="class">Class</label>
+        <div class="input-container">
+          <select id="class" required>
+            <option value="">Select your class</option>
+            <option value="B.Sc St-Cs">B.Sc St-Cs</option>
+            <option value="BCA">BCA</option>
+            <option value="B.Sc Mt-Cs">B.Sc Mt-Cs</option>
+            <option value="B.Sc Eco-St">B.Sc Eco-St</option>
+          </select>
+          <i class="input-icon fas fa-graduation-cap"></i>
+        </div>
+      </div>
       
       <button type="submit" class="btn-primary" id="submitBtn">Create Account</button>
     </form>
@@ -845,6 +859,116 @@
         });
       });
     });
+
+    // Show/hide class selection based on user type
+    document.getElementById('userType').addEventListener('change', function() {
+        const classGroup = document.getElementById('classGroup');
+        const classSelect = document.getElementById('class');
+        
+        if (this.value === 'student') {
+            classGroup.style.display = 'block';
+            classSelect.required = true;
+        } else {
+            classGroup.style.display = 'none';
+            classSelect.required = false;
+        }
+    });
+
+    // Update handleSignup function
+    async function handleSignup(event) {
+        event.preventDefault();
+        console.log("Signup form submitted");
+        
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.style.display = "none";
+        
+        const username = document.getElementById("fullName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const userType = document.getElementById("userType").value;
+        const classValue = document.getElementById("class").value;
+        
+        console.log("Form data:", { username, email, userType, class: classValue });
+        
+        // Validate passwords match
+        if (password !== confirmPassword) {
+            showError("Passwords do not match");
+            return;
+        }
+        
+        // Validate user type is selected
+        if (!userType) {
+            showError("Please select whether you are a student or teacher");
+            return;
+        }
+
+        // Validate class is selected for students
+        if (userType === 'student' && !classValue) {
+            showError("Please select your class");
+            return;
+        }
+
+        try {
+            console.log("Sending registration request to server...");
+            
+            const requestBody = { 
+                username, 
+                email, 
+                password, 
+                userType,
+                ...(userType === 'student' && { class: classValue })
+            };
+            console.log("Request payload:", requestBody);
+            
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(requestBody),
+                credentials: 'include' // Include cookies
+            });
+
+            console.log("Server response status:", response.status);
+            const data = await response.json();
+            console.log("Server response data:", data);
+
+            if (!response.ok) {
+                showError(data.message || "Registration failed. Please try again.");
+                return;
+            }
+
+            // Store the token
+            localStorage.setItem("jwt", data.token);
+            console.log("Token stored in localStorage");
+            
+            // Store CSRF token if available
+            if (data.csrfToken) {
+                localStorage.setItem("csrfToken", data.csrfToken);
+                console.log("CSRF token stored in localStorage");
+            }
+            
+            // Store user information if available
+            if (data.user) {
+                sessionStorage.setItem("user", JSON.stringify(data.user));
+                console.log("User data stored in sessionStorage");
+            }
+            
+            // Show success message before redirect
+            showSuccess("Registration successful! Redirecting to login...");
+            
+            // Redirect to login page after successful registration (with a slight delay for the success message)
+            console.log("Will redirect to login page in 1.5 seconds");
+            setTimeout(() => {
+                window.location.href = "/login.html";
+            }, 1500);
+        } catch (error) {
+            console.error("Registration error:", error);
+            showError("An error occurred during registration. Please try again.");
+        }
+    }
   </script>
 
   <!-- Home button -->

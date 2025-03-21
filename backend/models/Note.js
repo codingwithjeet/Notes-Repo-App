@@ -16,6 +16,36 @@ const noteSchema = new mongoose.Schema({
     required: [true, 'Category is required'],
     trim: true
   },
+  tags: [{
+    type: String,
+    trim: true
+  }],
+  topic: {
+    type: String,
+    trim: true
+  },
+  unit: {
+    type: String,
+    trim: true
+  },
+  academicYear: {
+    type: String,
+    enum: ['1st year', '2nd year', '3rd year'],
+    required: [true, 'Academic year is required']
+  },
+  semester: {
+    type: Number,
+    enum: [1, 2, 3, 4, 5, 6],
+    required: [true, 'Semester is required']
+  },
+  isClassSpecific: {
+    type: Boolean,
+    default: false
+  },
+  allowedClasses: [{
+    type: String,
+    trim: true
+  }],
   teacherId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -23,7 +53,7 @@ const noteSchema = new mongoose.Schema({
   },
   teacher: {
     type: String,
-    required: [true, 'Teacher name is required']
+    required: false
   },
   uploadDate: {
     type: Date,
