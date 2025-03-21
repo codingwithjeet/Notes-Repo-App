@@ -417,69 +417,15 @@
       }
     }
 
-    /* Home button */
-    .home-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
-      color: var(--primary);
-      padding: 12px 20px;
-      border-radius: 50px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      font-weight: 500;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-family: 'Montserrat', sans-serif;
-      z-index: 100;
-      transform: translateY(0);
-      animation: bounceIn 0.6s ease 1s backwards;
-    }
-
-    .home-button i {
-      margin-right: 8px;
-      font-size: 1.2rem;
-    }
-
-    .home-button:hover {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
-      transform: translateY(-5px);
-    }
-
-    .home-button:active {
-      transform: translateY(0);
-    }
-
-    @keyframes bounceIn {
-      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-      70% { transform: scale(1.05) translateY(-5px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-      .home-button {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 15px;
-        font-size: 0.9rem;
-      }
-    }
-
     /* Use hardware acceleration for smoother animations */
-    body, .login-container, .btn-primary, .home-button {
+    body, .login-container, .btn-primary {
       will-change: transform;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
     }
 
     /* Optimize transitions - specific properties instead of "all" for better performance */
-    .btn-primary, .home-button {
+    .btn-primary {
       transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     }
 
@@ -715,12 +661,6 @@
       <p>&copy; 2024 NotesRepo. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Home button -->
-  <a href="index.html" class="home-button">
-    <i class="fas fa-home"></i>
-    <span>Back to Homepage</span>
-  </a>
 
   <script src="/js/main.js"></script>
   <script>

@@ -25,6 +25,9 @@
       --card-bg: rgba(30, 30, 30, 0.95);
       --card-border: rgba(255,255,255,0.15);
       --gradient-bg: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
+      --gradient-1: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      --gradient-2: linear-gradient(135deg, var(--secondary) 0%, #f43f5e 100%);
+      --gradient-3: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
     }
     
     * {
@@ -54,11 +57,11 @@
       overflow-x: hidden;
     }
     
-    /* Navbar */
-    .navbar {
+    /* Modern Navbar Styles - Replacing Dynamic Header */
+    .modern-navbar {
       background-color: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
-      padding: 1.5rem 3rem;
+      padding: 0 2rem;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -67,111 +70,253 @@
       z-index: 1000;
       height: 80px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
     }
 
-    .nav-content {
+    .modern-navbar.scrolled {
+      background-color: rgba(2, 6, 23, 0.98);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      height: 70px;
+    }
+
+    .navbar-container {
       max-width: 1400px;
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 100%;
     }
 
-    .logo {
-      color: white;
+    .navbar-logo {
+      position: relative;
+    }
+
+    .navbar-logo .logo {
       font-size: 2rem;
       font-weight: 700;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-    }
-
-    .logo::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    .logo:hover::after {
-      width: 100%;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 1rem;
-      position: relative;
-      padding: 0.5rem 0;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
-    .nav-links .active {
-      color: var(--accent);
-    }
-
-    .nav-links .active::after {
-      width: 100%;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .btn-login {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 1.5rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .btn-login:hover {
-      color: var(--accent);
-    }
-
-    .btn-signup {
-      background: var(--gradient-1);
       color: white;
       text-decoration: none;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
       transition: all 0.3s ease;
     }
 
-    .btn-signup:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+    .logo-dot {
+      position: absolute;
+      right: -8px;
+      bottom: 5px;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      border-radius: 50%;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-logo:hover .logo-dot {
+      transform: scale(1.5) translateY(-3px);
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.7);
+    }
+
+    .navbar-menu-toggle {
+      display: none;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin-right: 2rem;
+    }
+
+    .nav-item {
+      margin: 0 0.5rem;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.75rem 1.2rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: block;
+    }
+
+    .nav-link:before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: linear-gradient(to right, #00ff87, #60efff);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .nav-link:hover:before, 
+    .nav-link.active:before {
+      width: 60%;
+    }
+
+    .nav-link.active {
+      color: white;
+      font-weight: 600;
+    }
+
+    .nav-authentication {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .auth-btn {
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-btn.login {
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .auth-btn.signup {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile menu styles */
+    @media (max-width: 991px) {
+      .navbar-menu-toggle {
+        display: block;
+        cursor: pointer;
+        z-index: 1001;
+      }
+
+      .menu-icon {
+        width: 30px;
+        height: 20px;
+        position: relative;
+      }
+
+      .menu-icon span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: white;
+        border-radius: 3px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: .25s ease-in-out;
+      }
+
+      .menu-icon span:nth-child(1) {
+        top: 0px;
+      }
+
+      .menu-icon span:nth-child(2) {
+        top: 8px;
+      }
+
+      .menu-icon span:nth-child(3) {
+        top: 16px;
+      }
+
+      .menu-open .menu-icon span:nth-child(1) {
+        top: 8px;
+        transform: rotate(135deg);
+      }
+
+      .menu-open .menu-icon span:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+      }
+
+      .menu-open .menu-icon span:nth-child(3) {
+        top: 8px;
+        transform: rotate(-135deg);
+      }
+
+      .navbar-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 400px;
+        height: 100vh;
+        background: rgba(2, 6, 23, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        transition: right 0.3s ease;
+        padding: 2rem;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .menu-open .navbar-links {
+        right: 0;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 2rem;
+        width: 100%;
+      }
+
+      .nav-item {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .nav-link {
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .nav-authentication {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .auth-btn {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
     }
     
     /* Header with Particles */
@@ -182,6 +327,7 @@
       text-align: center;
       color: #fff;
       overflow: hidden;
+      margin-top: 80px;
     }
     
     #particles-js {
@@ -423,56 +569,6 @@
       opacity: 1;
     }
     
-    /* Mobile Responsiveness */
-    @media (max-width: 768px) {
-      .navbar {
-        padding: 1rem;
-      }
-      
-      .navbar.scrolled {
-        padding: 0.8rem 1rem;
-      }
-      
-      .nav-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-      
-      .logo {
-        font-size: 1.5rem;
-      }
-      
-      .nav-links {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-      
-      .nav-links a {
-        margin: 0.5rem 0;
-        width: 100%;
-        text-align: center;
-      }
-      
-      .page-header h1 {
-        font-size: 2.5rem;
-      }
-      
-      .page-header p {
-        font-size: 1.2rem;
-      }
-      
-      .section-title {
-        font-size: 2.2rem;
-      }
-      
-      .plans-table-container {
-        overflow-x: auto;
-      }
-    }
-
     /* Footer Styles */
     .footer {
       background: var(--dark);
@@ -623,17 +719,33 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-content">
-      <a href="index.html" class="logo">NotesRepo</a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="features.html" class="active">Features</a>
-        <a href="how-it-works.html">How It Works</a>
-        <div class="nav-buttons">
-          <a href="login.html" class="btn-login">Login</a>
-          <a href="signup.html" class="btn-signup">Sign Up</a>
+  <!-- Navigation - Replacing with Modern Navbar -->
+  <nav class="modern-navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <a href="/" class="logo">
+          NotesRepo
+          <span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <div class="navbar-menu-toggle">
+        <div class="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      
+      <div class="navbar-links">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="features.html" class="nav-link active">Features</a></li>
+          <li class="nav-item"><a href="how-it-works.html" class="nav-link">How It Works</a></li>
+        </ul>
+        <div class="nav-authentication">
+          <a href="login.html" class="auth-btn login">Login</a>
+          <a href="signup.html" class="auth-btn signup">Sign Up</a>
         </div>
       </div>
     </div>
@@ -757,6 +869,32 @@
         easing: 'ease-in-out',
         once: false
       });
+    });
+
+    // Sticky Navbar Effect
+    window.addEventListener("scroll", function () {
+      const navbar = document.querySelector(".modern-navbar");
+      if (navbar) {
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      }
+    });
+
+    // Navbar mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.querySelector('.navbar-menu-toggle');
+      const navbarLinks = document.querySelector('.navbar-links');
+      const body = document.body;
+      
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          body.classList.toggle('menu-open');
+          navbarLinks.classList.toggle('active');
+        });
+      }
     });
 
     // Initialize particles.js with optimized settings for better performance

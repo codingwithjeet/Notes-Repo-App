@@ -61,11 +61,12 @@
       font-size: 16px;
     }
 
-    /* Navbar */
-    .navbar {
+    /* Navbar - REMOVE OLD NAVBAR STYLES */
+    /* New Navbar Styles */
+    .modern-navbar {
       background-color: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
-      padding: 1.5rem 3rem;
+      padding: 0 2rem;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -74,96 +75,253 @@
       z-index: 1000;
       height: 80px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
     }
 
-    .nav-content {
+    .modern-navbar.scrolled {
+      background-color: rgba(2, 6, 23, 0.98);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      height: 70px;
+    }
+
+    .navbar-container {
       max-width: 1400px;
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 100%;
     }
 
-    .logo {
-      color: white;
+    .navbar-logo {
+      position: relative;
+    }
+
+    .navbar-logo .logo {
       font-size: 2rem;
       font-weight: 700;
+      color: white;
       text-decoration: none;
       position: relative;
-      overflow: hidden;
       display: inline-block;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.3s ease;
     }
 
-    .logo::after {
-      content: '';
+    .logo-dot {
+      position: absolute;
+      right: -8px;
+      bottom: 5px;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      border-radius: 50%;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-logo:hover .logo-dot {
+      transform: scale(1.5) translateY(-3px);
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.7);
+    }
+
+    .navbar-menu-toggle {
+      display: none;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin-right: 2rem;
+    }
+
+    .nav-item {
+      margin: 0 0.5rem;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.75rem 1.2rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: block;
+    }
+
+    .nav-link:before {
+      content: "";
       position: absolute;
       bottom: 0;
-      left: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 0;
       height: 2px;
-      background-color: var(--accent);
+      background: linear-gradient(to right, #00ff87, #60efff);
       transition: width 0.3s ease;
     }
 
-    .logo:hover::after {
-      width: 100%;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .nav-links a {
+    .nav-link:hover {
       color: white;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 30px;
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      transition: transform 0.5s ease;
-      z-index: -1;
-      border-radius: 30px;
-    }
-
-    .nav-links a:hover::before {
-      transform: translateX(100%);
-    }
-
-    .nav-links .login-btn {
-      background: var(--gradient-1);
-      color: white;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-    }
-
-    .nav-links .signup-btn {
-      background: var(--gradient-2);
-      color: white;
-      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-    }
-
-    .nav-links a:hover {
       transform: translateY(-3px);
     }
 
-    /* Sticky Navbar Effect */
-    .navbar.scrolled {
-      background-color: rgba(2, 6, 23, 0.95);
-      padding: 1rem 3rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    .nav-link:hover:before, 
+    .nav-link.active:before {
+      width: 60%;
+    }
+
+    .nav-link.active {
+      color: white;
+      font-weight: 600;
+    }
+
+    .nav-authentication {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .auth-btn {
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-btn.login {
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .auth-btn.signup {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile menu styles */
+    @media (max-width: 991px) {
+      .navbar-menu-toggle {
+        display: block;
+        cursor: pointer;
+        z-index: 1001;
+      }
+
+      .menu-icon {
+        width: 30px;
+        height: 20px;
+        position: relative;
+      }
+
+      .menu-icon span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: white;
+        border-radius: 3px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: .25s ease-in-out;
+      }
+
+      .menu-icon span:nth-child(1) {
+        top: 0px;
+      }
+
+      .menu-icon span:nth-child(2) {
+        top: 8px;
+      }
+
+      .menu-icon span:nth-child(3) {
+        top: 16px;
+      }
+
+      .menu-open .menu-icon span:nth-child(1) {
+        top: 8px;
+        transform: rotate(135deg);
+      }
+
+      .menu-open .menu-icon span:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+      }
+
+      .menu-open .menu-icon span:nth-child(3) {
+        top: 8px;
+        transform: rotate(-135deg);
+      }
+
+      .navbar-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 400px;
+        height: 100vh;
+        background: rgba(2, 6, 23, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        transition: right 0.3s ease;
+        padding: 2rem;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .menu-open .navbar-links {
+        right: 0;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 2rem;
+        width: 100%;
+      }
+
+      .nav-item {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .nav-link {
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .nav-authentication {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .auth-btn {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
     }
 
     /* Update hero section to work with particles */
@@ -1303,48 +1461,41 @@
   </style>
 </head>
 <body>
-  <!-- Dynamic Animated Header -->
-  <header class="dynamic-header">
-    <div class="header-content">
-      <div class="header-left">
-        <div class="logo-container">
-          <a href="/" class="logo">NotesRepo</a>
-          <div class="logo-glow"></div>
+  <!-- Replace old navbar with new navbar -->
+  <nav class="modern-navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <a href="/" class="logo">
+          NotesRepo
+          <span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <div class="navbar-menu-toggle">
+        <div class="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
-      <div class="header-right">
-        <nav class="floating-nav">
-          <div class="nav-links">
-            <a href="/features.html" class="nav-link">
-              <span class="link-text">Features</span>
-              <span class="link-icon"><i class="fas fa-star"></i></span>
-            </a>
-            <a href="/how-it-works.html" class="nav-link">
-              <span class="link-text">How It Works</span>
-              <span class="link-icon"><i class="fas fa-cogs"></i></span>
-            </a>
-            <a href="/login.html" class="nav-link login-btn">
-              <span class="link-text">Login</span>
-              <span class="link-icon"><i class="fas fa-sign-in-alt"></i></span>
-            </a>
-            <a href="/signup.html" class="nav-link signup-btn">
-              <span class="link-text">Sign Up</span>
-              <span class="link-icon"><i class="fas fa-user-plus"></i></span>
-            </a>
-          </div>
-        </nav>
+      
+      <div class="navbar-links">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="features.html" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="how-it-works.html" class="nav-link">How It Works</a></li>
+        </ul>
+        <div class="nav-authentication">
+          <a href="login.html" class="auth-btn login">Login</a>
+          <a href="signup.html" class="auth-btn signup">Sign Up</a>
+        </div>
       </div>
     </div>
-    <div class="header-decoration">
-      <div class="decoration-circle"></div>
-      <div class="decoration-line"></div>
-      <div class="decoration-dots"></div>
-    </div>
-  </header>
+  </nav>
 
-  <!-- Hero Section -->
+  <!-- Hero Section with Particles -->
+  <div id="particles-js"></div>
   <section class="hero">
-    <div id="particles-js"></div>
     <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
       <div class="hero-text">
         <div class="rotating-headlines">
@@ -1565,6 +1716,31 @@
         }
       },
       "retina_detect": true
+    });
+
+    // Script for navbar mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navbar mobile menu toggle
+      const menuToggle = document.querySelector('.navbar-menu-toggle');
+      const navbarLinks = document.querySelector('.navbar-links');
+      const body = document.body;
+      
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          body.classList.toggle('menu-open');
+          navbarLinks.classList.toggle('active');
+        });
+      }
+      
+      // Sticky navbar effect
+      const navbar = document.querySelector('.modern-navbar');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
     });
   </script>
 

@@ -25,6 +25,9 @@
       --card-bg: rgba(30, 30, 30, 0.9);
       --card-border: rgba(255,255,255,0.1);
       --gradient-bg: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
+      --gradient-1: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      --gradient-2: linear-gradient(135deg, var(--secondary) 0%, #f43f5e 100%);
+      --gradient-3: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
     }
     
     /* Global Styles */
@@ -58,108 +61,267 @@
       scroll-behavior: smooth;
     }
     
-    /* Navbar */
-    .navbar {
-      position: fixed;
-      width: 100%;
-      top: 0;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(26, 37, 47, 0.95);
+    /* Dynamic Header Styles - REMOVE OLD HEADER STYLES */
+    /* New Navbar Styles */
+    .modern-navbar {
+      background-color: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
-      z-index: 1000;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-    
-    .nav-content {
+      padding: 0 2rem;
       width: 100%;
+      display: flex;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+      height: 80px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .modern-navbar.scrolled {
+      background-color: rgba(2, 6, 23, 0.98);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      height: 70px;
+    }
+
+    .navbar-container {
       max-width: 1400px;
-      margin: 0 auto;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 100%;
     }
-    
-    .logo {
-      color: #fff;
+
+    .navbar-logo {
+      position: relative;
+    }
+
+    .navbar-logo .logo {
       font-size: 2rem;
       font-weight: 700;
+      color: white;
       text-decoration: none;
       position: relative;
-      overflow: hidden;
       display: inline-block;
+      background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.3s ease;
     }
-    
-    .logo::after {
-      content: '';
+
+    .logo-dot {
+      position: absolute;
+      right: -8px;
+      bottom: 5px;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      border-radius: 50%;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-logo:hover .logo-dot {
+      transform: scale(1.5) translateY(-3px);
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.7);
+    }
+
+    .navbar-menu-toggle {
+      display: none;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin-right: 2rem;
+    }
+
+    .nav-item {
+      margin: 0 0.5rem;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.75rem 1.2rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: block;
+    }
+
+    .nav-link:before {
+      content: "";
       position: absolute;
       bottom: 0;
-      left: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 0;
       height: 2px;
-      background-color: var(--accent);
+      background: linear-gradient(to right, #00ff87, #60efff);
       transition: width 0.3s ease;
     }
-    
-    .logo:hover::after {
-      width: 100%;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-    
-    .nav-links a {
+
+    .nav-link:hover {
       color: white;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 30px;
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      transition: transform 0.5s ease;
-      z-index: -1;
-      border-radius: 30px;
-    }
-    
-    .nav-links a:hover::before {
-      transform: translateX(100%);
-    }
-    
-    .nav-links a:hover {
       transform: translateY(-3px);
     }
-    
-    .login-btn, .signup-btn {
+
+    .nav-link:hover:before, 
+    .nav-link.active:before {
+      width: 60%;
+    }
+
+    .nav-link.active {
+      color: white;
+      font-weight: 600;
+    }
+
+    .nav-authentication {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .auth-btn {
+      color: white;
+      text-decoration: none;
       padding: 0.75rem 1.5rem;
       border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    
-    .login-btn {
-      background-color: var(--primary);
-      color: white;
-      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+
+    .auth-btn.login {
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
-    
-    .signup-btn {
-      background-color: var(--secondary);
-      color: white;
-      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+
+    .auth-btn.signup {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile menu styles */
+    @media (max-width: 991px) {
+      .navbar-menu-toggle {
+        display: block;
+        cursor: pointer;
+        z-index: 1001;
+      }
+
+      .menu-icon {
+        width: 30px;
+        height: 20px;
+        position: relative;
+      }
+
+      .menu-icon span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: white;
+        border-radius: 3px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: .25s ease-in-out;
+      }
+
+      .menu-icon span:nth-child(1) {
+        top: 0px;
+      }
+
+      .menu-icon span:nth-child(2) {
+        top: 8px;
+      }
+
+      .menu-icon span:nth-child(3) {
+        top: 16px;
+      }
+
+      .menu-open .menu-icon span:nth-child(1) {
+        top: 8px;
+        transform: rotate(135deg);
+      }
+
+      .menu-open .menu-icon span:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+      }
+
+      .menu-open .menu-icon span:nth-child(3) {
+        top: 8px;
+        transform: rotate(-135deg);
+      }
+
+      .navbar-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 400px;
+        height: 100vh;
+        background: rgba(2, 6, 23, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        transition: right 0.3s ease;
+        padding: 2rem;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .menu-open .navbar-links {
+        right: 0;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 2rem;
+        width: 100%;
+      }
+
+      .nav-item {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .nav-link {
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .nav-authentication {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .auth-btn {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
     }
     
     /* Page Header with Particles */
@@ -170,6 +332,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      margin-top: 80px;
     }
     
     #particles-js {
@@ -916,15 +1079,33 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-content">
-      <a href="index.html" class="logo">NotesRepo</a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="features.html">Features</a>
-        <a href="how-it-works.html">How It Works</a>
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="signup.html" class="signup-btn">Sign Up</a>
+  <nav class="modern-navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <a href="/" class="logo">
+          NotesRepo
+          <span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <div class="navbar-menu-toggle">
+        <div class="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      
+      <div class="navbar-links">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="features.html" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="how-it-works.html" class="nav-link active">How It Works</a></li>
+        </ul>
+        <div class="nav-authentication">
+          <a href="login.html" class="auth-btn login">Login</a>
+          <a href="signup.html" class="auth-btn signup">Sign Up</a>
+        </div>
       </div>
     </div>
   </nav>
@@ -1193,14 +1374,41 @@
       });
     });
 
-    // Accordions functionality
-    const accordionItems = document.querySelectorAll('.accordion-item');
-    accordionItems.forEach(item => {
-      const header = item.querySelector('.accordion-header');
-      header.addEventListener('click', () => {
-        item.classList.toggle('active');
-      });
+    // Sticky Navbar Effect
+    window.addEventListener("scroll", function () {
+      const header = document.querySelector(".dynamic-header");
+      if (header) {
+        if (window.scrollY > 50) {
+          header.style.background = "rgba(2, 6, 23, 0.95)";
+          header.style.padding = "0.8rem 2rem";
+          header.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.3)";
+        } else {
+          header.style.background = "rgba(15, 23, 42, 0.8)";
+          header.style.padding = "1rem 2rem";
+          header.style.boxShadow = "none";
+        }
+      }
     });
+
+    // Logo animation
+    const logo = document.querySelector('.logo');
+    if (logo) {
+      logo.addEventListener('mouseenter', function() {
+        const glow = document.querySelector('.logo-glow');
+        if (glow) {
+          glow.style.opacity = '1';
+          glow.style.transform = 'translate(-50%, -50%) scale(1.2)';
+        }
+      });
+
+      logo.addEventListener('mouseleave', function() {
+        const glow = document.querySelector('.logo-glow');
+        if (glow) {
+          glow.style.opacity = '0.5';
+          glow.style.transform = 'translate(-50%, -50%) scale(1)';
+        }
+      });
+    }
 
     // Initialize particles.js with optimized settings for better performance
     function initParticles() {
@@ -1352,6 +1560,30 @@
           console.log('Video is playing');
         });
       }
+    });
+
+    // Navbar mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.querySelector('.navbar-menu-toggle');
+      const navbarLinks = document.querySelector('.navbar-links');
+      const body = document.body;
+      
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          body.classList.toggle('menu-open');
+          navbarLinks.classList.toggle('active');
+        });
+      }
+      
+      // Sticky navbar effect
+      const navbar = document.querySelector('.modern-navbar');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
     });
   </script>
 </body>
