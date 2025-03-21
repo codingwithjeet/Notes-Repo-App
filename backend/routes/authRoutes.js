@@ -253,15 +253,26 @@ router.get("/csrf-token", (req, res) => {
 // 🔐 Registration route
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, userType } = req.body;
+    const { username, email, password, userType, firstName, lastName, class: userClass } = req.body;
 
     // Validate input
-    if (!username || !email || !password || !userType) {
+    if (!username || !email || !password || !userType || !firstName || !lastName) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     if (!["student", "teacher"].includes(userType)) {
       return res.status(400).json({ message: "Invalid user type" });
+    }
+
+    // Validate class field for students
+    if (userType === 'student') {
+      if (!userClass) {
+        return res.status(400).json({ message: "Class is required for student users" });
+      }
+      const validClasses = ['B.Sc St-Cs', 'BCA', 'B.Sc Mt-Cs', 'B.Sc Eco-St'];
+      if (!validClasses.includes(userClass)) {
+        return res.status(400).json({ message: "Invalid class selection" });
+      }
     }
     
     // Validate password strength
@@ -288,12 +299,15 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    // Create user with firstName and lastName
     const user = new User({
+      firstName,
+      lastName,
       username,
       email,
       password: hashedPassword,
-      userType
+      userType,
+      ...(userType === 'student' && { class: userClass })
     });
 
     await user.save();
@@ -323,7 +337,10 @@ router.post("/register", async (req, res) => {
         id: user._id,
         email: user.email,
         username: user.username,
-        userType: user.userType
+        userType: user.userType,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`
       }
     });
   } catch (error) {
@@ -347,8 +364,9 @@ router.get("/me", authenticateToken, async (req, res) => {
       email: user.email,
       userType: user.userType,
       username: user.username,
-      name: user.name,
-      fullName: user.fullName
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: `${user.firstName} ${user.lastName}`
     });
   } catch (error) {
     console.error("Error fetching user data:", error);

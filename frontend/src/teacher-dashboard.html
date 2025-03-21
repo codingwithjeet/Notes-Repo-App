@@ -1138,7 +1138,11 @@
                 // Store user data in sessionStorage
                 sessionStorage.setItem('user', JSON.stringify(userData));
                 
-                const userName = userData.name || userData.fullName || userData.username || 'Teacher';
+                // Use fullName if available, otherwise construct from firstName and lastName, fallback to username
+                const userName = userData.fullName || 
+                               (userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : null) || 
+                               userData.username || 
+                               'Teacher';
                 
                 // Update UI with user data
                 const usernameElement = document.getElementById('username');
@@ -1234,7 +1238,10 @@
                 const userData = sessionStorage.getItem('user');
                 if (userData) {
                     const user = JSON.parse(userData);
-                    teacherName = user.name || user.fullName || user.username || 'Not specified';
+                    teacherName = user.fullName || 
+                                (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : null) || 
+                                user.username || 
+                                'Not specified';
                 }
             } catch (error) {
                 console.warn('Error getting teacher name:', error);

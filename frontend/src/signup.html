@@ -517,8 +517,8 @@
   <!-- Signup Container -->
   <div class="signup-container">
     <div class="signup-header">
-      <h1>Create Account</h1>
-      <p>Join NotesRepo to share and access educational resources</p>
+      <h1>Create Your Account</h1>
+      <p>Join NotesRepo to access and share educational resources</p>
     </div>
     
     <div class="error-message" id="errorMessage"></div>
@@ -526,78 +526,102 @@
 
     <form id="signupForm" onsubmit="handleSignup(event)">
       <div class="form-group">
-        <label for="fullName">Full Name</label>
+        <label for="firstName">First Name</label>
         <div class="input-container">
-          <input type="text" id="fullName" required placeholder="Enter your full name" />
-          <i class="input-icon fas fa-user"></i>
+          <i class="fas fa-user"></i>
+          <input type="text" id="firstName" name="firstName" required minlength="2" placeholder="Enter your first name">
         </div>
       </div>
       
       <div class="form-group">
-        <label for="email">Email Address</label>
+        <label for="lastName">Last Name</label>
         <div class="input-container">
-          <input type="email" id="email" required placeholder="Enter your email" />
-          <i class="input-icon fas fa-envelope"></i>
+          <i class="fas fa-user"></i>
+          <input type="text" id="lastName" name="lastName" required minlength="2" placeholder="Enter your last name">
         </div>
       </div>
       
       <div class="form-group">
-        <label for="password">Create Password</label>
+        <label for="username">Username</label>
         <div class="input-container">
-          <input type="password" id="password" required placeholder="Enter your password" />
-          <i class="input-icon fas fa-lock"></i>
-          <i class="fas fa-eye-slash toggle-password"></i>
+          <i class="fas fa-user-circle"></i>
+          <input type="text" id="username" name="username" required minlength="3" placeholder="Choose a username">
         </div>
-        <div class="password-strength">
-          <span></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-container">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" name="email" required placeholder="Enter your email">
         </div>
-        <div class="password-criteria">
-          At least 8 characters with letters, numbers & symbols
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-container">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" name="password" required minlength="6" 
+                 placeholder="Create a password"
+                 pattern="^(?=.*[0-9])(?=.*[A-Z]).{6,}$"
+                 title="Password must be at least 6 characters long, contain at least one number and one uppercase letter">
+          <div class="password-strength">
+            <span></span>
+          </div>
+          <div class="password-criteria">
+            Password must be at least 6 characters with numbers and uppercase letters
+          </div>
         </div>
       </div>
       
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
         <div class="input-container">
-          <input type="password" id="confirmPassword" required placeholder="Re-enter your password" />
-          <i class="input-icon fas fa-lock"></i>
-          <i class="fas fa-eye-slash toggle-password"></i>
+          <i class="fas fa-lock"></i>
+          <input type="password" id="confirmPassword" name="confirmPassword" required 
+                 placeholder="Confirm your password">
+          <div class="password-match"></div>
         </div>
-        <div class="password-match"></div>
       </div>
       
       <div class="form-group">
-        <label for="userType">I am a:</label>
+        <label for="userType">I am a</label>
         <div class="input-container">
-          <select id="userType" required>
-            <option value="">Select User Type</option>
+          <i class="fas fa-user-graduate"></i>
+          <select id="userType" name="userType" required>
+            <option value="">Select your role</option>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
           </select>
-          <i class="input-icon fas fa-user-graduate"></i>
         </div>
       </div>
 
       <div class="form-group" id="classGroup" style="display: none;">
         <label for="class">Class</label>
         <div class="input-container">
-          <select id="class" required>
+          <i class="fas fa-chalkboard"></i>
+          <select id="class" name="class">
             <option value="">Select your class</option>
             <option value="B.Sc St-Cs">B.Sc St-Cs</option>
             <option value="BCA">BCA</option>
             <option value="B.Sc Mt-Cs">B.Sc Mt-Cs</option>
             <option value="B.Sc Eco-St">B.Sc Eco-St</option>
           </select>
-          <i class="input-icon fas fa-graduation-cap"></i>
         </div>
       </div>
       
-      <button type="submit" class="btn-primary" id="submitBtn">Create Account</button>
+      <div class="form-group" style="width: 100%;">
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+      </div>
     </form>
     
     <div class="footer-links">
-      <a href="login.html">Already have an account?</a>
-      <a href="/forgot-password">Forgot Password?</a>
+      <p>Already have an account? <a href="/login.html">Log In</a></p>
+      <a href="/" class="home-button">
+        <i class="fas fa-home"></i> Back to Home
+      </a>
     </div>
   </div>
 
@@ -860,18 +884,18 @@
       });
     });
 
-    // Show/hide class selection based on user type
+    // Show/hide class field based on user type
     document.getElementById('userType').addEventListener('change', function() {
-        const classGroup = document.getElementById('classGroup');
-        const classSelect = document.getElementById('class');
-        
-        if (this.value === 'student') {
-            classGroup.style.display = 'block';
-            classSelect.required = true;
-        } else {
-            classGroup.style.display = 'none';
-            classSelect.required = false;
-        }
+      const classGroup = document.getElementById('classGroup');
+      const classSelect = document.getElementById('class');
+      
+      if (this.value === 'student') {
+        classGroup.style.display = 'block';
+        classSelect.required = true;
+      } else {
+        classGroup.style.display = 'none';
+        classSelect.required = false;
+      }
     });
 
     // Update handleSignup function
@@ -880,16 +904,35 @@
         console.log("Signup form submitted");
         
         const errorMessage = document.getElementById("errorMessage");
+        const successMessage = document.getElementById("successMessage");
         errorMessage.style.display = "none";
+        successMessage.style.display = "none";
         
-        const username = document.getElementById("fullName").value;
-        const email = document.getElementById("email").value;
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
         const userType = document.getElementById("userType").value;
         const classValue = document.getElementById("class").value;
         
-        console.log("Form data:", { username, email, userType, class: classValue });
+        // Debug logging
+        console.log("Form field values:", {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            email: email,
+            userType: userType,
+            class: classValue,
+            passwordLength: password.length
+        });
+        
+        // Validate all required fields are filled
+        if (!firstName || !lastName || !username || !email || !password || !userType) {
+            showError("All fields are required");
+            return;
+        }
         
         // Validate passwords match
         if (password !== confirmPassword) {
@@ -910,16 +953,20 @@
         }
 
         try {
-            console.log("Sending registration request to server...");
+            console.log("Preparing registration request...");
             
             const requestBody = { 
+                firstName,
+                lastName,
                 username, 
                 email, 
                 password, 
                 userType,
                 ...(userType === 'student' && { class: classValue })
             };
-            console.log("Request payload:", requestBody);
+            
+            // Debug logging - show exact request payload
+            console.log("Request payload:", JSON.stringify(requestBody, null, 2));
             
             const response = await fetch("/api/auth/register", {
                 method: "POST",
@@ -936,7 +983,9 @@
             console.log("Server response data:", data);
 
             if (!response.ok) {
-                showError(data.message || "Registration failed. Please try again.");
+                const errorMsg = data.error || data.message || "Registration failed. Please try again.";
+                console.error("Registration failed:", errorMsg);
+                showError(errorMsg);
                 return;
             }
 
@@ -959,7 +1008,7 @@
             // Show success message before redirect
             showSuccess("Registration successful! Redirecting to login...");
             
-            // Redirect to login page after successful registration (with a slight delay for the success message)
+            // Redirect to login page after successful registration
             console.log("Will redirect to login page in 1.5 seconds");
             setTimeout(() => {
                 window.location.href = "/login.html";

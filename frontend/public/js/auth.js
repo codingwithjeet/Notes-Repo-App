@@ -2,6 +2,14 @@
  * Common authentication functions for client-side authorization
  */
 
+// Authentication state
+const authState = {
+    token: null,
+    csrfToken: null,
+    user: null,
+    initialized: false
+};
+
 // Check if user is authenticated
 function isAuthenticated() {
     const token = localStorage.getItem('jwt');
@@ -97,4 +105,136 @@ function logout() {
     
     // Redirect to login page
     window.location.href = '/login.html';
+}
+
+// Handle signup form submission
+async function handleSignup(event) {
+    event.preventDefault();
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.style.display = "none";
+    
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const userType = document.getElementById("userType").value;
+    const userClass = document.getElementById("class")?.value;
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+        showError("Passwords do not match");
+        return;
+    }
+
+    // Validate class field for students
+    if (userType === 'student' && !userClass) {
+        showError("Please select your class");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                username,
+                email,
+                password,
+                userType,
+                ...(userType === 'student' && { class: userClass })
+            }),
+            credentials: 'include' // Include cookies
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.message || "Registration failed. Please try again.");
+            return;
+        }
+
+        // Store auth data
+        authState.token = data.token;
+        authState.csrfToken = data.csrfToken;
+        authState.user = data.user;
+        
+        // Save to session storage
+        sessionStorage.setItem("accessToken", data.token);
+        sessionStorage.setItem("user", JSON.stringify(data.user));
+        
+        // Update UI
+        updateAuthUI();
+        
+        // Redirect based on user type
+        window.location.href = data.user.userType === "teacher" ? "/teacher-dashboard" : "/student-dashboard";
+    } catch (error) {
+        console.error("Registration error:", error);
+        showError("An error occurred. Please try again.");
+    }
+}
+
+// Helper function to show error messages
+function showError(message) {
+    const errorMessage = document.getElementById("errorMessage");
+    if (errorMessage) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+    }
+}
+
+// Update UI elements based on authentication state
+function updateAuthUI() {
+    const isAuthenticated = !!authState.token && !!authState.user;
+    
+    // Update navigation links
+    const navLinks = document.querySelectorAll('.nav-links');
+    navLinks.forEach(navLink => {
+        const teacherLinks = navLink.querySelectorAll('.teacher-only');
+        const studentLinks = navLink.querySelectorAll('.student-only');
+        const authLinks = navLink.querySelectorAll('.auth-only');
+        const guestLinks = navLink.querySelectorAll('.guest-only');
+        
+        if (isAuthenticated) {
+            // Show/hide based on role
+            teacherLinks.forEach(link => {
+                link.style.display = authState.user.userType === 'teacher' ? 'block' : 'none';
+            });
+            
+            studentLinks.forEach(link => {
+                link.style.display = authState.user.userType === 'student' ? 'block' : 'none';
+            });
+            
+            // Show auth-only links
+            authLinks.forEach(link => {
+                link.style.display = 'block';
+            });
+            
+            // Hide guest-only links
+            guestLinks.forEach(link => {
+                link.style.display = 'none';
+            });
+            
+        } else {
+            // Hide role-based and auth-only links
+            teacherLinks.forEach(link => { link.style.display = 'none'; });
+            studentLinks.forEach(link => { link.style.display = 'none'; });
+            authLinks.forEach(link => { link.style.display = 'none'; });
+            
+            // Show guest-only links
+            guestLinks.forEach(link => { link.style.display = 'block'; });
+        }
+    });
+    
+    // Update user info display if present
+    const userInfoElement = document.getElementById('userInfo');
+    if (userInfoElement && authState.user) {
+        userInfoElement.textContent = authState.user.username || authState.user.email;
+    }
 } 
