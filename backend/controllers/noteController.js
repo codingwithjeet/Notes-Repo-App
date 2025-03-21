@@ -147,7 +147,37 @@ exports.getTeacherNotes = async (req, res) => {
 // Get notes for students to access
 exports.getUserNotes = async (req, res) => {
   try {
-    const notes = await Note.find({})
+    // Get the user's information
+    const user = await User.findById(req.userId).select('userType class');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    let query = {};
+    
+    // For students, apply class-specific filtering
+    if (user.userType === 'student') {
+      if (!user.class) {
+        return res.status(400).json({ message: 'Your class is not set. Please update your profile.' });
+      }
+
+      query = {
+        $or: [
+          { isClassSpecific: false }, // Include non-class-specific notes
+          { 
+            isClassSpecific: true,
+            allowedClasses: user.class // Include class-specific notes for user's class
+          }
+        ]
+      };
+    }
+    // For teachers, show all notes
+    else if (user.userType === 'teacher') {
+      query = {};
+    }
+
+    const notes = await Note.find(query)
       .select('_id title description category uploadDate topic academicYear semester fileSize fileOriginalName tags subject unit teacherId')
       .populate({
         path: 'teacherId',

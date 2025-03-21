@@ -11,14 +11,21 @@
   <style>
     /* Global Styles */
     :root {
-      --primary: #3498db;
-      --primary-dark: #2980b9;
-      --secondary: #2c3e50;
-      --success: #2ecc71;
-      --error: #e74c3c;
-      --light: #f8f9fa;
-      --dark: #1a1a2e;
-      --text: #333;
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --accent: #06b6d4;
+      --text: #e2e8f0;
+      --text-light: #94a3b8;
+      --gradient-1: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      --gradient-2: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+      --gradient-3: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      --bg-light: #0f172a;
+      --bg-dark: #020617;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
       --border-radius: 12px;
       --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
@@ -37,11 +44,13 @@
       background-color: var(--light);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       overflow-x: hidden;
       position: relative;
       perspective: 1000px;
+      padding-bottom: 2rem;
     }
 
     body::before {
@@ -83,6 +92,8 @@
       overflow: hidden;
       transform-style: preserve-3d;
       border: 1px solid rgba(255, 255, 255, 0.2);
+      margin: 2rem auto;
+      flex-shrink: 0;
     }
 
     .login-container::before {
@@ -311,7 +322,7 @@
     }
 
     /* Footer Links */
-    .footer-links {
+    .login-footer-links {
       margin-top: 2rem;
       display: flex;
       justify-content: space-between;
@@ -325,7 +336,7 @@
       to { opacity: 1; }
     }
 
-    .footer-links a {
+    .login-footer-links a {
       color: var(--primary);
       text-decoration: none;
       font-size: 0.95rem;
@@ -334,7 +345,7 @@
       padding: 5px 0;
     }
 
-    .footer-links a::after {
+    .login-footer-links a::after {
       content: '';
       position: absolute;
       width: 0;
@@ -345,11 +356,11 @@
       transition: width 0.3s ease;
     }
 
-    .footer-links a:hover {
+    .login-footer-links a:hover {
       color: var(--primary-dark);
     }
 
-    .footer-links a:hover::after {
+    .login-footer-links a:hover::after {
       width: 100%;
     }
 
@@ -472,8 +483,135 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     }
 
-    .form-group input, .footer-links a {
+    .form-group input, .login-footer-links a {
       transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    /* Footer Styles */
+    .footer {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      padding: 4rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      margin-top: auto;
+      z-index: 1;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-section h3 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-section h3::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .footer-section p {
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .footer-nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-nav-links li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-links a {
+      color: var(--text-light);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .social-links a:hover {
+      color: var(--accent);
+      background: var(--gradient-1);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+    }
+
+    .footer-bottom p {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <script src="/js/auth.js"></script>
@@ -532,11 +670,51 @@
       <button type="submit" class="btn-primary" id="submitBtn">Sign In</button>
     </form>
 
-    <div class="footer-links">
+    <div class="login-footer-links">
       <a href="/forgot-password">Forgot Password?</a>
       <a href="signup.html">Create Account</a>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About NotesRepo</h3>
+        <p>NotesRepo is your premier platform for sharing and accessing educational resources. We connect students and teachers to create a collaborative learning environment.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul class="footer-nav-links">
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+          <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+          <li><a href="login.html"><i class="fas fa-chevron-right"></i> Login</a></li>
+          <li><a href="signup.html"><i class="fas fa-chevron-right"></i> Sign Up</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <ul class="footer-nav-links">
+          <li><a href="#"><i class="fas fa-envelope"></i> support@notesrepo.com</a></li>
+          <li><a href="#"><i class="fas fa-phone"></i> +91 9800537200</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i>Bangalore, India</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Connect With Us</h3>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 NotesRepo. All rights reserved.</p>
+    </div>
+  </footer>
 
   <!-- Home button -->
   <a href="index.html" class="home-button">

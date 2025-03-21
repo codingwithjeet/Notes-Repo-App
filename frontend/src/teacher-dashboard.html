@@ -16,8 +16,7 @@
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             padding: 20px;
             animation: bgPulse 15s infinite alternate;
             /* Improved scrolling for desktop */
@@ -37,6 +36,8 @@
             /* Better height handling for desktop */
             min-height: calc(100vh - 40px);
             align-items: start;
+            flex: 1;
+            margin: 0 auto;
         }
 
         /* Sidebar */
@@ -987,6 +988,259 @@
         .text-muted {
             color: #6c757d;
         }
+
+        /* Search Container Styles */
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .notes-header h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+            margin-left: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2);
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+        }
+
+        .search-container .clear-search {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            display: none;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-container .clear-search:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .search-container.has-text .clear-search {
+            display: block;
+        }
+
+        /* Responsive adjustments for search */
+        @media (max-width: 768px) {
+            .notes-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: 100%;
+                margin-left: 0;
+            }
+
+            .notes-header h2 {
+                text-align: center;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a i {
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(3px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 3rem 1rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .footer-section h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .footer-links a {
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Add auth script -->
@@ -1041,51 +1295,68 @@
         }
 
         // Initialize dashboard UI elements
-        function initDashboard() {
-            // Set up tab switching
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    switchTab(tab.getAttribute('data-tab'));
+        async function initDashboard() {
+            try {
+                // Set up tab switching
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        switchTab(tab.getAttribute('data-tab'));
+                    });
                 });
-            });
 
-            // Set up file input display
-            const fileInput = document.getElementById('noteFile');
-            const fileNameDisplay = document.getElementById('fileNameDisplay');
-            
-            if (fileInput && fileNameDisplay) {
-                fileInput.addEventListener('change', function() {
-                    fileNameDisplay.textContent = this.files.length ? this.files[0].name : 'No file selected';
-                });
-            }
+                // Set up search functionality
+                const searchInput = document.getElementById('searchNotes');
+                if (searchInput) {
+                    searchInput.addEventListener('input', handleSearch);
+                    searchInput.addEventListener('input', function() {
+                        const searchContainer = this.closest('.search-container');
+                        searchContainer.classList.toggle('has-text', this.value.length > 0);
+                    });
+                }
 
-            // Set up form submission
-            const uploadForm = document.getElementById('uploadForm');
-            if (uploadForm) {
-                uploadForm.addEventListener('submit', uploadNote);
-            }
+                // Set up file input display
+                const fileInput = document.getElementById('noteFile');
+                const fileNameDisplay = document.getElementById('fileNameDisplay');
+                
+                if (fileInput && fileNameDisplay) {
+                    fileInput.addEventListener('change', function() {
+                        fileNameDisplay.textContent = this.files.length ? this.files[0].name : 'No file selected';
+                    });
+                }
 
-            // Initialize tags functionality
-            const tagInput = document.getElementById('noteTags');
-            const tagsList = document.getElementById('tagsList');
+                // Set up form submission
+                const uploadForm = document.getElementById('uploadForm');
+                if (uploadForm) {
+                    uploadForm.addEventListener('submit', uploadNote);
+                }
 
-            if (tagInput && tagsList) {
-                tagInput.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' && this.value.trim()) {
-                        e.preventDefault();
-                        const tag = this.value.trim();
-                        if (!tags.includes(tag)) {
-                            tags.push(tag);
-                            updateTagsList();
+                // Initialize tags functionality
+                const tagInput = document.getElementById('noteTags');
+                const tagsList = document.getElementById('tagsList');
+
+                if (tagInput && tagsList) {
+                    tagInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' && this.value.trim()) {
+                            e.preventDefault();
+                            const tag = this.value.trim();
+                            if (!tags.includes(tag)) {
+                                tags.push(tag);
+                                updateTagsList();
+                            }
+                            this.value = '';
                         }
-                        this.value = '';
-                    }
-                });
-            }
+                    });
+                }
 
-            // Initialize class-specific visibility
-            initClassSpecificVisibility();
+                // Initialize class-specific visibility
+                initClassSpecificVisibility();
+
+                // Fetch initial notes
+                await fetchMyNotes();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
         }
 
         // Switch between tabs
@@ -1253,10 +1524,29 @@
                 const noteCard = document.createElement('div');
                 noteCard.className = 'note-card';
                 
+                // Add class-specific badge if applicable
+                const classSpecificBadge = note.isClassSpecific ? `
+                    <span class="note-category" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">
+                        <i class="fas fa-users"></i> Class-Specific
+                    </span>
+                ` : '';
+                
+                // Add allowed classes info if applicable
+                const allowedClassesInfo = note.isClassSpecific && note.allowedClasses && note.allowedClasses.length > 0 ? `
+                    <div class="note-detail-item">
+                        <i class="fas fa-users"></i>
+                        <span>
+                            <span class="note-detail-label">Visible to:</span>
+                            ${note.allowedClasses.join(', ')}
+                        </span>
+                    </div>
+                ` : '';
+                
                 noteCard.innerHTML = `
                     <div class="note-header">
                         <div class="note-title">${note.title || 'Untitled Note'}</div>
                         <span class="note-category">${note.category || 'Uncategorized'}</span>
+                        ${classSpecificBadge}
                     </div>
                     <div class="note-body">
                         <p class="note-description">${note.description || 'No description provided'}</p>
@@ -1303,6 +1593,7 @@
                                     ${formatFileSize(note.fileSize)}
                                 </span>
                             </div>
+                            ${allowedClassesInfo}
                         </div>
                     </div>
                     <div class="note-footer">
@@ -1416,6 +1707,11 @@
                 // Validate form values
                 if (!title || !description || !category || !academicYear || !semester || !topic || !file) {
                     throw new Error('Please fill all required fields');
+                }
+
+                // Validate class-specific settings
+                if (isClassSpecific && allowedClasses.length === 0) {
+                    throw new Error('Please select at least one class for class-specific notes');
                 }
                 
                 // Check file size
@@ -1876,6 +2172,43 @@
             initFileInput();
             // ... existing DOMContentLoaded code ...
         });
+
+        // Handle search functionality
+        function handleSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredNotes = searchTerm
+                ? myNotes.filter(note => {
+                    return (
+                        (note.title || '').toLowerCase().includes(searchTerm) ||
+                        (note.description || '').toLowerCase().includes(searchTerm) ||
+                        (note.category || '').toLowerCase().includes(searchTerm) ||
+                        (note.topic || '').toLowerCase().includes(searchTerm) ||
+                        (note.tags || []).some(tag => tag.toLowerCase().includes(searchTerm))
+                    );
+                })
+                : myNotes;
+            
+            displayMyNotes(filteredNotes);
+
+            // Show no results message if needed
+            const notesGrid = document.getElementById('notesGrid');
+            if (searchTerm && filteredNotes.length === 0) {
+                notesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No notes found matching "${searchTerm}"</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            const searchInput = document.getElementById('searchNotes');
+            searchInput.value = '';
+            searchInput.closest('.search-container').classList.remove('has-text');
+            displayMyNotes(myNotes);
+        }
     </script>
 </head>
 <body>
@@ -2015,6 +2348,14 @@
             
             <!-- Notes Tab Content -->
             <div id="notesContent" class="tab-content">
+                <div class="notes-header">
+                    <h2>My Notes</h2>
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchNotes" class="search-input" placeholder="Search by title, description, subject, or topic..." />
+                        <i class="fas fa-times clear-search" onclick="clearSearch()"></i>
+                    </div>
+                </div>
                 <div id="notesGrid" class="notes-grid">
                     <!-- Notes will be loaded here dynamically -->
                     <div class="empty-state">
@@ -2050,5 +2391,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About NotesRepo</h3>
+                <p>NotesRepo is your premier platform for sharing and accessing educational resources. We connect students and teachers to create a collaborative learning environment.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+                    <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+                    <li><a href="login.html"><i class="fas fa-chevron-right"></i> Login</a></li>
+                    <li><a href="signup.html"><i class="fas fa-chevron-right"></i> Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-envelope"></i> support@notesrepo.com</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> +91 9800537200</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i>Bangalore, India</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 NotesRepo. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
