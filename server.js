@@ -9,14 +9,20 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser'); // 🍪 Cookie parser for HTTP-only cookies
 const jwt = require("jsonwebtoken"); // 🔑 JWT for token verification
 const User = require("./backend/models/User"); // User model for role verification
+const Note = require("./backend/models/Note"); // Add Note model import
+const http = require('http'); // Add HTTP module
+const WebSocket = require('ws'); // Add WebSocket module
 require("./backend/passport"); // Import passport config
 
 const app = express();
+const server = http.createServer(app); // Create HTTP server
+const wss = new WebSocket.Server({ server }); // Create WebSocket server
 
 // Import routes 📂
 const authRoutes = require('./backend/routes/authRoutes'); // 🔒 Auth routes
 const uploadRoutes = require("./backend/routes/uploadRoutes"); // 📤 Upload routes
 const notesRoutes = require("./backend/routes/notesRoutes"); // 📝 Notes routes
+const adminRoutes = require("./backend/routes/adminRoutes"); // 👑 Admin routes
 
 const PORT = process.env.PORT || 3000; // 🎯 Set port
 
@@ -199,6 +205,7 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/notes", notesRoutes);
+app.use("/api/admin", adminRoutes); // Register admin routes
 app.use("/api/notes", uploadRoutes);  // Temporary fix to support both endpoints
 
 // CSRF Protection
@@ -378,10 +385,245 @@ app.use((req, res, next) => {
   next();
 });
 
-// Start server 🚀
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📁 File uploads directory: ${process.env.UPLOADS_PATH || "./uploads"}`);
+// WebSocket connection handling
+wss.on('connection', (ws) => {
+  console.log('New WebSocket connection');
+
+  // Send initial data
+  sendDashboardData(ws);
+
+  // Set up interval for periodic updates
+  const interval = setInterval(() => {
+    sendDashboardData(ws);
+  }, 5000); // Update every 5 seconds
+
+  ws.on('close', () => {
+    clearInterval(interval);
+  });
+});
+
+// Function to fetch and send dashboard data
+async function sendDashboardData(ws) {
+  try {
+    // Fetch users with type-based aggregation
+    const userStats = await User.aggregate([
+      {
+        $group: {
+          _id: '$userType',
+          count: { $sum: 1 },
+          users: { 
+            $push: {
+              fullName: { $concat: ['$firstName', ' ', '$lastName'] },
+              username: '$username',
+              email: '$email',
+              _id: '$_id'
+            }
+          }
+        }
+      }
+    ]);
+
+    // Process user statistics
+    const stats = {
+      teachers: { count: 0, users: [] },
+      students: { count: 0, users: [] }
+    };
+
+    userStats.forEach(stat => {
+      if (stat._id === 'teacher') {
+        stats.teachers = { count: stat.count, users: stat.users };
+      } else if (stat._id === 'student') {
+        stats.students = { count: stat.count, users: stat.users };
+      }
+    });
+
+    // Fetch notes with teacher information
+    const notes = await Note.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'teacherId',
+          foreignField: '_id',
+          as: 'teacher'
+        }
+      },
+      {
+        $unwind: '$teacher'
+      },
+      {
+        $group: {
+          _id: '$teacherId',
+          teacherName: { $first: '$teacher.firstName' },
+          notes: {
+            $push: {
+              title: '$title',
+              fileName: '$fileOriginalName',
+              uploadDate: '$uploadDate'
+            }
+          }
+        }
+      }
+    ]);
+
+    // Combine teacher data with their notes
+    const teachersWithNotes = stats.teachers.users.map(teacher => {
+      const teacherNotes = notes.find(n => n._id.toString() === teacher._id.toString());
+      return {
+        fullName: teacher.fullName,
+        username: teacher.username,
+        email: teacher.email,
+        notes: teacherNotes ? teacherNotes.notes : []
+      };
+    });
+
+    // Prepare dashboard data
+    const dashboardData = {
+      totalUsers: (stats.teachers.count + stats.students.count),
+      totalTeachers: stats.teachers.count,
+      totalStudents: stats.students.count,
+      totalNotes: notes.reduce((sum, teacher) => sum + teacher.notes.length, 0),
+      teachers: teachersWithNotes,
+      students: stats.students.users
+    };
+
+    // Send data only if the connection is still open
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(dashboardData));
+    }
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    // Send error message to client if connection is open
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ 
+        error: true, 
+        message: 'Error fetching dashboard data'
+      }));
+    }
+  }
+}
+
+// Admin authentication middleware
+const authenticateAdmin = async (req, res, next) => {
+  try {
+    // Get token from Authorization header
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Check if user exists and is an admin
+    const user = await User.findById(decoded.userId);
+    if (!user || user.userType !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    }
+    
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error('Admin authentication error:', error);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
+// Function to broadcast dashboard data to all connected clients
+function broadcastDashboardData() {
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      sendDashboardData(client);
+    }
+  });
+}
+
+// Admin delete routes
+app.delete('/api/admin/delete-user/:userId', authenticateAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Validate user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Delete user's notes if they are a teacher
+    if (user.userType === 'teacher') {
+      const notes = await Note.find({ teacherId: userId });
+      console.log(`Found ${notes.length} notes to delete for teacher ${userId}`);
+      
+      // Delete associated files
+      for (const note of notes) {
+        try {
+          if (note.fileName) {
+            const filePath = path.join(__dirname, 'uploads', note.fileName);
+            if (fs.existsSync(filePath)) {
+              await fs.promises.unlink(filePath);
+            }
+          }
+        } catch (error) {
+          console.error(`Error deleting file for note ${note._id}:`, error);
+        }
+      }
+
+      // Delete all notes from database
+      await Note.deleteMany({ teacherId: userId });
+    }
+
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+    
+    // Broadcast update
+    broadcastDashboardData();
+    
+    res.json({ success: true, message: 'User and associated data deleted successfully' });
+  } catch (error) {
+    console.error('Error in delete user:', error);
+    res.status(500).json({ error: 'Failed to delete user', details: error.message });
+  }
+});
+
+app.delete('/api/admin/delete-note/:noteId', authenticateAdmin, async (req, res) => {
+  try {
+    const { noteId } = req.params;
+    
+    // Validate note exists
+    const note = await Note.findById(noteId);
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+
+    // Delete associated file if exists
+    if (note.fileName) {
+      try {
+        const filePath = path.join(__dirname, 'uploads', note.fileName);
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }
+      } catch (error) {
+        console.error(`Error deleting file for note ${noteId}:`, error);
+      }
+    }
+
+    // Delete note from database
+    await Note.findByIdAndDelete(noteId);
+    
+    // Broadcast update
+    broadcastDashboardData();
+    
+    res.json({ success: true, message: 'Note deleted successfully' });
+  } catch (error) {
+    console.error('Error in delete note:', error);
+    res.status(500).json({ error: 'Failed to delete note', details: error.message });
+  }
+});
+
+// Start the server
+server.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
 
 // Global error handler

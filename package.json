@@ -28,7 +28,8 @@
     "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^13.0.0",

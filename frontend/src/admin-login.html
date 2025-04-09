@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Notes Repo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --accent: #06b6d4;
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            --gradient-2: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            --gradient-3: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --bg-light: #0f172a;
+            --bg-dark: #020617;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.25s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            position: relative;
+            perspective: 1000px;
+            padding-bottom: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(125deg, #6a11cb 0%, #2575fc 100%);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease-in-out infinite;
+            z-index: -2;
+        }
+
+        /* Particles container */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Login Container */
+        .admin-login-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem auto;
+            flex-shrink: 0;
+        }
+
+        .admin-login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            z-index: -1;
+            animation: pulseGlow 10s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate3d(0, 40px, -50px); }
+            to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
+        /* Header Text */
+        .admin-login-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: headingFadeIn 1s ease;
+        }
+
+        .admin-login-subtitle {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin: 1.5rem auto 2.5rem;
+            line-height: 1.6;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 100%;
+            border-left: 4px solid var(--primary);
+            animation: fadeInSlide 1.2s ease;
+            transform: translateZ(10px);
+        }
+
+        @keyframes headingFadeIn {
+            from { opacity: 0; transform: translate3d(0, -20px, 0); }
+            to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translate3d(-30px, 0, 0); }
+            to { opacity: 1; transform: translate3d(0, 0, 10px); }
+        }
+
+        /* Form Styles */
+        .admin-form-group {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: formItemFadeIn 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .admin-form-group:nth-child(1) { animation-delay: 0.2s; }
+        .admin-form-group:nth-child(2) { animation-delay: 0.3s; }
+
+        @keyframes formItemFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--secondary);
+            transition: all 0.3s;
+            transform-origin: left;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .admin-form-group input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            transition: all 0.3s;
+        }
+
+        .admin-form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+            background-color: #fff;
+        }
+
+        .admin-form-group input:focus + .input-icon {
+            color: var(--primary);
+        }
+
+        /* Button style */
+        .admin-login-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .admin-login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .admin-login-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .admin-login-btn:hover::before {
+            left: 100%;
+        }
+
+        .admin-login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--error);
+            background: rgba(231, 76, 60, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--error);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: auto;
+            z-index: 1;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .footer-section p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-nav-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            background: var(--gradient-1);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        .footer-bottom p {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .admin-login-container {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+                padding: 2rem;
+            }
+
+            .admin-login-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <div class="admin-login-container">
+        <h1 class="admin-login-title">Admin Portal</h1>
+        <p class="admin-login-subtitle">Sign in to access the admin dashboard</p>
+        
+        <div id="errorMessage" class="error-message">Invalid credentials. Please try again.</div>
+
+        <form id="adminLoginForm">
+            <div class="admin-form-group">
+                <label for="username">Username</label>
+                <div class="input-container">
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                    <i class="input-icon fas fa-user"></i>
+                </div>
+            </div>
+            <div class="admin-form-group">
+                <label for="password">Password</label>
+                <div class="input-container">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <i class="input-icon fas fa-lock"></i>
+                </div>
+            </div>
+            <button type="submit" class="admin-login-btn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About NotesRepo</h3>
+                <p>NotesRepo is your premier platform for sharing and accessing educational resources. We connect students and teachers to create a collaborative learning environment.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-nav-links">
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+                    <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+                    <li><a href="login.html"><i class="fas fa-chevron-right"></i> Login</a></li>
+                    <li><a href="signup.html"><i class="fas fa-chevron-right"></i> Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="footer-nav-links">
+                    <li><a href="#"><i class="fas fa-envelope"></i> support@notesrepo.com</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> +91 9800537200</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i>Bangalore, India</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 NotesRepo. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    animation: { enable: true, speed: 1, minimumValue: 0.1, sync: false }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    animation: { enable: true, speed: 2, minimumValue: 0.1, sync: false }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    outMode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detectOn: 'canvas',
+                events: {
+                    onHover: { enable: true, mode: 'repulse' },
+                    onClick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Check credentials
+            if (username === 'Admin001' && password === '21CMS@51') {
+                // Store admin session
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                // Redirect to admin dashboard
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                errorMessage.style.display = 'block';
+                errorMessage.style.animation = 'none';
+                setTimeout(() => {
+                    errorMessage.style.animation = 'shake 0.5s ease';
+                }, 10);
+            }
+        });
+    </script>
+</body>
+</html> 
