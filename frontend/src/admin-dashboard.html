@@ -41,6 +41,9 @@
             line-height: 1.5;
             min-height: 100vh;
             position: relative;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -59,20 +62,23 @@
         .admin-dashboard {
             position: relative;
             z-index: 1;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .dashboard-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
+            padding: 1rem 2rem;
             background: var(--card-background);
-            border-radius: 1rem;
+            border-radius: 0 0 1rem 1rem;
             box-shadow: var(--shadow-md);
+            margin: 0 1rem;
         }
 
         .dashboard-header h1 {
@@ -101,11 +107,38 @@
             box-shadow: var(--shadow-md);
         }
 
+        .dashboard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            scroll-behavior: smooth;
+        }
+
+        .dashboard-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .dashboard-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+
+        .dashboard-content::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .dashboard-content::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
         .stat-card {
@@ -155,6 +188,7 @@
             border-radius: 1rem;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
         }
 
         .tabs-header {
@@ -304,6 +338,7 @@
         /* Tab Content Styles */
         .tab-content {
             display: none;
+            scroll-margin-top: 100px;
         }
 
         .tab-content.active {
@@ -396,6 +431,35 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+
+        /* Add scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+            background: var(--primary-light);
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -406,70 +470,74 @@
             <div class="connection-status"></div>
         </div>
 
-        <div class="greeting-container">
-            <i class="fas fa-handshake greeting-icon"></i>
-            <div class="greeting-content">
-                <h2 class="greeting-message">Welcome, Admin!</h2>
+        <div class="dashboard-content">
+            <div class="greeting-section">
+                <h2 class="greeting-message"></h2>
+                <i class="greeting-icon"></i>
                 <p class="greeting-submessage">Keep up the good work !</p>
             </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTeachers">0</div>
+                    <div class="stat-label">Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalStudents">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalNotes">0</div>
+                    <div class="stat-label">Notes Uploaded</div>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button active" onclick="switchTab('teachers')">
+                        <i class="fas fa-chalkboard-teacher"></i> Teacher Details
+                    </button>
+                    <button class="tab-button" onclick="switchTab('students')">
+                        <i class="fas fa-user-graduate"></i> Student Details
+                    </button>
+                </div>
+
+                <div id="teachersTab" class="tab-content active">
+                    <table class="user-table" id="teacherTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Notes Uploaded</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div id="studentsTab" class="tab-content">
+                    <table class="user-table" id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="stats-container" id="statsSection">
-            <div class="stat-card">
-                <div class="stat-number" id="totalUsers">0</div>
-                <div class="stat-label">Total Users</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalTeachers">0</div>
-                <div class="stat-label">Teachers</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalStudents">0</div>
-                <div class="stat-label">Students</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalNotes">0</div>
-                <div class="stat-label">Notes Uploaded</div>
-            </div>
-        </div>
-
-        <div class="tabs-container" id="detailsSection">
-            <div class="tabs-header">
-                <button class="tab-button active" onclick="switchTab('teachers')">
-                    <i class="fas fa-chalkboard-teacher"></i> Teacher Details
-                </button>
-                <button class="tab-button" onclick="switchTab('students')">
-                    <i class="fas fa-user-graduate"></i> Student Details
-                </button>
-            </div>
-
-            <div id="teachersTab" class="tab-content active">
-                <table class="user-table" id="teacherTable">
-                    <thead>
-                        <tr>
-                            <th>Full Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Notes Uploaded</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div id="studentsTab" class="tab-content">
-                <table class="user-table" id="studentTable">
-                    <thead>
-                        <tr>
-                            <th>Full Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+    <div class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
     </div>
 
     <script>
@@ -703,6 +771,20 @@
 
             // Initialize WebSocket connection
             connectWebSocket();
+        });
+
+        // Add scroll to top functionality
+        document.addEventListener('scroll', function() {
+            const scrollToTop = document.querySelector('.scroll-to-top');
+            if (window.scrollY > 200) {
+                scrollToTop.classList.add('visible');
+            } else {
+                scrollToTop.classList.remove('visible');
+            }
+        });
+
+        document.querySelector('.scroll-to-top').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
 </body>
